@@ -1,6 +1,6 @@
 *.class
 *.log
-.deleteme
+**/deleteme*
 tmp/
 # sbt specific
 .cache
