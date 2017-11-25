@@ -6,8 +6,8 @@ import org.scalatest.Matchers._
 class DummyTest extends WordSpec {
 
   "something" should {
-    "fail" in {
-      true shouldBe false
+    "pass" in {
+      true shouldBe true
     }
   }
 
