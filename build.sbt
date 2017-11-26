@@ -1,6 +1,6 @@
 name := "shimrr"
 organization := "uk.camsw"
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.9"
 version := "1.0.0-SNAPSHOT"
 
 val scalatestVersion = "3.0.4"
