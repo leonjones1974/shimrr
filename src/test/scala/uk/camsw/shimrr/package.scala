@@ -2,13 +2,20 @@ package uk.camsw
 
 package object shimrr {
 
-  sealed trait Person
+  sealed trait Version
 
-  final case class Person_V1(firstName: String, surname: String, age: Int) extends Person
+  final case class BaseVersion(stringField1: String = "str1", stringField2: String = "str2", intField1: Int = 1) extends Version {
+    def withoutStringField1 = VersionWithoutStringField1(stringField2, intField1)
+    def withoutStringField2 = VersionWithoutStringField2(stringField1, intField1)
+    def withNoFields = VersionWithNoFields()
+  }
 
-  final case class Person_V2(firstName: String, surname: String) extends Person
+  final case class VersionWithoutStringField1(stringField2: String, intField1: Int) extends Version
 
-  final case class Person_V3(firstName: String) extends Person
+  final case class VersionWithoutStringField2(stringField1: String, intField1: Int) extends Version
 
+  final case class VersionWithoutIntField1(stringField1: String, stringField2: String) extends Version
+
+  final case class VersionWithNoFields() extends Version
 
 }

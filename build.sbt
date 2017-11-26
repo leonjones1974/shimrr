@@ -7,6 +7,7 @@ val scalatestVersion = "3.0.4"
 val scalacheckVersion = "1.13.5"
 val pegdownVersion = "1.6.0"
 val shapelessVersion = "2.3.2"
+val shapelessScalacheckVersion = "0.6.1"
 
 
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -14,7 +15,8 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
-  "com.chuusai" %% "shapeless" % shapelessVersion
+  "com.chuusai" %% "shapeless" % shapelessVersion,
+  "org.typelevel" % "shapeless-scalacheck_2.11" % shapelessScalacheckVersion % "test"
 )
 
 val testDependencies: Seq[ModuleID] = Seq(
