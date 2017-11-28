@@ -54,7 +54,6 @@ object Migration {
         genB.from(it)
     }
 
-
   implicit def cNilMigration[B, BRepr <: HList](
                                                  implicit genB: LabelledGeneric.Aux[B, BRepr]
                                                ): Migration[CNil, B] = Migration.instance(
