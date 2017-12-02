@@ -2,7 +2,7 @@ package uk.camsw.shimrr
 
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
-import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy}
+import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy, Widen, Witness}
 
 import scala.collection.GenSeq
 
@@ -100,7 +100,8 @@ object Migration {
   implicit def labelledHListMonoid[K <: Symbol, H, T <: HList](
                                                                 implicit
                                                                 mH: Lazy[Monoid[H]],
-                                                                mT: Monoid[T]
+                                                                mT: Monoid[T],
+                                                                witness: Witness.Aux[K]
                                                               ): Monoid[FieldType[K, H] :: T] = {
 
     new Monoid[FieldType[K, H] :: T] {
@@ -108,6 +109,7 @@ object Migration {
         println("Trying to use labelled hlist empty monoid")
         val empty = field[K](mH.value.empty) :: mT.empty
         println(s"Created empty: $empty")
+        println(s"The value of k is: ${witness.value}")
         empty
       }
 

@@ -3,11 +3,12 @@ package uk.camsw.shimrr
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import uk.camsw.shimrr.Migration._
-
 import cats.instances.int._
 import cats.instances.string._
+import cats.kernel.Monoid
 
 class MigrationTest extends WordSpec {
+
   val base = BaseVersion()
 
   "product.migrateTo" should {
@@ -68,10 +69,17 @@ class MigrationTest extends WordSpec {
       VersionWithNoFields.migrateTo[BaseVersion] shouldBe BaseVersion("", "", 0)
     }
 
-    "add missing fields - list - using monoid" in {
-      import cats.instances.int._
-      import cats.instances.string._
+    "add missing field - atom - using locally defined monoid" in {
+      implicit val strMonoid = new Monoid[String] {
+        override def empty = "NOT_IMPLEMENTED"
 
+        override def combine(x: String, y: String) = Monoid[String].combine(x, y)
+      }
+
+      VersionWithNoFields.migrateTo[BaseVersion] shouldBe BaseVersion("NOT_IMPLEMENTED", "NOT_IMPLEMENTED", 0)
+    }
+
+    "add missing fields - list - using monoid" in {
       val xs: List[Version] = List(VersionWithNoFields(), VersionWithoutStringField1("str2", 12), VersionWithoutStringField2("str1", 12), base)
       xs.migrateTo[BaseVersion] shouldBe List(
         BaseVersion("", "", 0),
