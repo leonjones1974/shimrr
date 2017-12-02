@@ -1,8 +1,8 @@
 package uk.camsw.shimrr
 
-import shapeless.labelled.FieldType
+import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
-import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy, labelled}
+import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy}
 
 import scala.collection.GenSeq
 
@@ -61,7 +61,7 @@ object Migration {
     Migration.instance(a => {
       println(s"Migrating using generic migration: $a")
       val migrated = m.migrate(genA.to(a))
-      println(s"Migrated generic ${a} => ${migrated}")
+      println(s"Migrated generic $a => $migrated")
       migrated
     })
 
@@ -91,9 +91,9 @@ object Migration {
 
 
   implicit val hnilMonoid: Monoid[HNil] = new Monoid[HNil] {
-    override def empty = HNil
+    override def empty: HNil.type = HNil
 
-    override def combine(x: HNil, y: HNil) = HNil
+    override def combine(x: HNil, y: HNil): HNil.type = HNil
   }
 
 
@@ -106,33 +106,15 @@ object Migration {
     new Monoid[FieldType[K, H] :: T] {
       override def empty = {
         println("Trying to use labelled hlist empty monoid")
-        val empty = labelled.field[K](mH.value.empty) :: mT.empty
-        println(s"Created empty: ${empty}")
+        val empty = field[K](mH.value.empty) :: mT.empty
+        println(s"Created empty: $empty")
         empty
       }
 
       override def combine(x: ::[FieldType[K, H], T], y: ::[FieldType[K, H], T]) = {
         println("Trying to combine labelled hlist monoid")
-        ???
+        field[K](mH.value.combine(x.head, y.head)) :: mT.combine(x.tail, y.tail)
       }
-    }
-  }
-
-  implicit def hListMonoid[H, T <: HList](
-                                           implicit
-                                           mH: Lazy[Monoid[H]],
-                                           mT: Monoid[T]
-                                         ): Monoid[H :: T] = {
-    println("trying to create hlist monoid")
-    //        println(s"zero value for h is: ${mH.empty}")
-    println(s"actual value for h is: ${mH.value.empty}")
-    println(s"zero value for t is: ${mT.empty}")
-
-    new Monoid[H :: T] {
-      override def empty = mH.value.empty :: mT.empty
-
-      override def combine(x: ::[H, T], y: ::[H, T]) =
-        mH.value.combine(x.head, y.head) :: mT.combine(x.tail, y.tail)
     }
   }
 
