@@ -7,7 +7,8 @@ import uk.camsw.shimrr.Migration._
 class MigrationTest extends WordSpec {
   val base = BaseVersion()
 
-  "migrateTo" should {
+  "product.migrateTo" should {
+
     "map matching fields to V+1" in {
       val migrated = base.migrateTo[BaseVersion]
       migrated shouldBe base
@@ -25,19 +26,39 @@ class MigrationTest extends WordSpec {
       base.migrateTo[VersionWithNoFields] shouldBe base.withNoFields
     }
 
-    "drop fields from co-products" in {
-      migrate[Version, VersionWithNoFields](base) shouldBe VersionWithNoFields()
+    "move fields" in {
+      base.migrateTo[VersionWithSwappedFields] shouldBe base.withSwappedFields
     }
-
-//    "add new fields" in {
-//      base.withoutStringField1.migrateTo[BaseVersion] shouldBe base.copy(stringField1 = "")
-//    }
   }
 
-  "genseq.migrateTo" should {
-    "drop removed fields from co-products" in {
+  "coproduct.migrateTo" should {
+    val x: Version = base
+
+    "drop removed fields - list" in {
       val xs: List[Version] = List(base, base.withoutStringField1)
       xs.migrateTo[VersionWithNoFields] shouldBe List(VersionWithNoFields(), VersionWithNoFields())
+    }
+
+    "map fields - atom" in {
+      x.migrateTo[BaseVersion] shouldBe base
+    }
+
+    "drop removed fields - atom" in {
+      x.migrateTo[VersionWithoutStringField1] shouldBe base.withoutStringField1
+    }
+
+    "move fields - atom" in {
+      x.migrateTo[VersionWithSwappedFields] shouldBe base.withSwappedFields
+    }
+
+    "move fields - list" in {
+      val xs: List[Version] = List(base, base)
+      xs.migrateTo[VersionWithSwappedFields] shouldBe List(base.withSwappedFields, base.withSwappedFields)
+    }
+
+    "move fields" in {
+      val xs: List[Version] = List(base, base)
+      xs.migrateTo[VersionWithSwappedFields] shouldBe List(base.withSwappedFields, base.withSwappedFields)
     }
   }
 
