@@ -4,6 +4,9 @@ import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import uk.camsw.shimrr.Migration._
 
+import cats.instances.int._
+import cats.instances.string._
+
 class MigrationTest extends WordSpec {
   val base = BaseVersion()
 
@@ -25,9 +28,14 @@ class MigrationTest extends WordSpec {
     "drop removed fields - variation 3" in {
       base.migrateTo[VersionWithNoFields] shouldBe base.withNoFields
     }
+    //
 
     "move fields" in {
       base.migrateTo[VersionWithSwappedFields] shouldBe base.withSwappedFields
+    }
+
+    "add missing fields - using monoid" in {
+      VersionWithoutStringField1("str2", 32).migrateTo[BaseVersion] shouldBe BaseVersion("", "str2", 32)
     }
   }
 
@@ -56,10 +64,21 @@ class MigrationTest extends WordSpec {
       xs.migrateTo[VersionWithSwappedFields] shouldBe List(base.withSwappedFields, base.withSwappedFields)
     }
 
-    "move fields" in {
-      val xs: List[Version] = List(base, base)
-      xs.migrateTo[VersionWithSwappedFields] shouldBe List(base.withSwappedFields, base.withSwappedFields)
+    "add missing fields - atom - using monoid" in {
+      VersionWithNoFields.migrateTo[BaseVersion] shouldBe BaseVersion("", "", 0)
+    }
+
+    "add missing fields - list - using monoid" in {
+      import cats.instances.int._
+      import cats.instances.string._
+
+      val xs: List[Version] = List(VersionWithNoFields(), VersionWithoutStringField1("str2", 12), VersionWithoutStringField2("str1", 12), base)
+      xs.migrateTo[BaseVersion] shouldBe List(
+        BaseVersion("", "", 0),
+        BaseVersion("", "str2", 12),
+        BaseVersion("str1", "", 12),
+        base
+      )
     }
   }
-
 }
