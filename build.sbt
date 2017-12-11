@@ -1,6 +1,6 @@
 name := "shimrr"
 organization := "uk.camsw"
-scalaVersion := "2.11.9"
+scalaVersion := "2.12.4"
 version := "1.0.0-SNAPSHOT"
 
 val scalatestVersion = "3.0.4"
@@ -14,10 +14,17 @@ val catsVersion = "1.0.0-MF"
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
+//scalacOptions += "-Yliteral-types"
+
+//inThisBuild(Seq(
+//  scalaOrganization := "org.typelevel",
+//  scalaVersion := "2.12.4-bin-typelevel-4"
+//))
+//
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
   "com.chuusai" %% "shapeless" % shapelessVersion,
-  "org.typelevel" % "shapeless-scalacheck_2.11" % shapelessScalacheckVersion % "test"
+  "org.typelevel" % "shapeless-scalacheck_2.12" % shapelessScalacheckVersion % "test"
 )
 
 val testDependencies: Seq[ModuleID] = Seq(
@@ -27,13 +34,20 @@ val testDependencies: Seq[ModuleID] = Seq(
 )
 
 val catsDependencies: Seq[ModuleID] = Seq(
-  "org.typelevel" % "cats-macros_2.11" % catsVersion,
-  "org.typelevel" % "cats-core_2.11" % catsVersion,
-  "org.typelevel" % "cats-kernel_2.11" % catsVersion
+  "org.typelevel" % "cats-macros_2.12" % catsVersion,
+  "org.typelevel" % "cats-core_2.12" % catsVersion,
+  "org.typelevel" % "cats-kernel_2.12" % catsVersion
+)
+
+val macroCompatDependencies: Seq[ModuleID] = Seq(
+  "org.typelevel" %% "macro-compat" % "1.1.1",
+  "org.scala-lang" % "scala-compiler" % "2.12.4" % "provided",
+  compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.patch)
 )
 
 libraryDependencies ++= catsDependencies
 libraryDependencies ++= shapelessDependencies
+libraryDependencies ++= macroCompatDependencies
 libraryDependencies ++= testDependencies
 
 

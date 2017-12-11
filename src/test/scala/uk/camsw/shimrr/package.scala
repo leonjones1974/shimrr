@@ -16,6 +16,8 @@ package object shimrr {
 
   case class VersionWithSwappedFields(stringField2: String, intField1: Int, stringField1: String) extends Version
 
+  case class VersionWithStringField1(stringField1: String) extends Version
+
   case class VersionWithoutStringField1(stringField2: String, intField1: Int) extends Version
 
   case class VersionWithoutStringField2(stringField1: String, intField1: Int) extends Version
