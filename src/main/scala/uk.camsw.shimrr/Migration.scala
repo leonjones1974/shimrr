@@ -22,13 +22,6 @@ object Migration {
 
   def migrate[A, B](a: A)(implicit m: Migration[A, B]): B = m.migrate(a)
 
-  implicit class MigrationOps[A](a: A) {
-    def migrateTo[B](implicit migration: Migration[A, B]): B = migration.migrate(a)
-  }
-
-  implicit class MigrationGenSeqOps[A](xs: GenSeq[A]) {
-    def migrateTo[B](implicit migration: Migration[A, B]): GenSeq[B] = xs map migration.migrate
-  }
 
 }
 

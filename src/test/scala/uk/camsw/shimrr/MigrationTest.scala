@@ -6,8 +6,9 @@ import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import shapeless.HNil
 import uk.camsw.shimrr.Migration._
+import syntax._
 
-object MigrationTestDsl {
+object TestMigrationRules {
 
   import shapeless.syntax.singleton.mkSingletonOps
 
@@ -21,7 +22,7 @@ object MigrationTestDsl {
 
 class MigrationTest extends WordSpec with MigrationInstances {
 
-  import MigrationTestDsl._
+  import TestMigrationRules._
 
   type DEFAULTERS = fieldDefaulters.type
 

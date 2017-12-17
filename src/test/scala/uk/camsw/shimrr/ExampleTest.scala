@@ -1,9 +1,9 @@
 package uk.camsw.shimrr
 
-import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import shapeless.HNil
-import uk.camsw.shimrr.Migration._
+import org.scalatest.Matchers._
+
 
 sealed trait Customer
 
@@ -13,8 +13,7 @@ case class CustomerV2(name: String, age: Int) extends Customer
 
 case class CustomerV3(age: Int, name: String) extends Customer
 
-
-object MigrationRules {
+object ExampleMigrationRules {
 
   import shapeless.syntax.singleton.mkSingletonOps
 
@@ -28,7 +27,10 @@ object MigrationRules {
 
 class ExampleTest extends WordSpec with MigrationInstances {
 
-  import MigrationRules._
+  import ExampleMigrationRules._
+
+  // We need to import the syntax to get our migrateTo extension
+  import syntax._
 
   // We must specify the type of our field defaulter
   type DEFAULTERS = fieldDefaulters.type
