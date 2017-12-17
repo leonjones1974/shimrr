@@ -3,7 +3,7 @@ package uk.camsw.shimrr
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
-import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
+import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 
 import scala.language.experimental.macros
 
@@ -29,9 +29,9 @@ trait MigrationContext {
 
   protected def fieldDefaults: FIELD_DEFAULTS
 
-  implicit def cNilMigration[T <: Coproduct, B, BRepr](implicit
-                                                       genB: LabelledGeneric.Aux[B, BRepr]
-                                                      ): Migration[T, B] =
+  implicit def cNilMigration[T <: CNil, B, BRepr](implicit
+                                                  genB: LabelledGeneric.Aux[B, BRepr]
+                                                 ): Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
