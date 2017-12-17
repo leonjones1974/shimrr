@@ -79,14 +79,14 @@ trait MigrationContext {
 
   implicit def recordDefaulter[K <: Symbol, H, T <: HList](
                                                             implicit
-                                                            mT: Defaulter[T],
-                                                            selector: Selector.Aux[FIELD_DEFAULTS, K, H]
+                                                            selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+                                                            dT: Defaulter[T]
                                                           ): Defaulter[FieldType[K, H] :: T] = {
 
 
     new Defaulter[FieldType[K, H] :: T] {
       val empty: ::[FieldType[K, H], FieldType[K, T]] = {
-        field[K](selector(fieldDefaults)) :: field[K](mT.empty)
+        field[K](selector(fieldDefaults)) :: field[K](dT.empty)
       }
     }
   }
