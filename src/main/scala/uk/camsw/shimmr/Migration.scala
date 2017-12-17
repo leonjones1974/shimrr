@@ -11,6 +11,12 @@ trait Defaulter[A] {
   def empty: A
 }
 
+object Defaulter {
+  def instance[A](a: => A): Defaulter[A] = new Defaulter[A] {
+    override def empty = a
+  }
+}
+
 trait Migration[A, B] {
   def migrate(a: A): B
 }
@@ -81,15 +87,10 @@ trait MigrationContext {
                                                             implicit
                                                             selector: Selector.Aux[FIELD_DEFAULTS, K, H],
                                                             dT: Defaulter[T]
-                                                          ): Defaulter[FieldType[K, H] :: T] = {
-
-
-    new Defaulter[FieldType[K, H] :: T] {
-      val empty: ::[FieldType[K, H], FieldType[K, T]] = {
-        field[K](selector(fieldDefaults)) :: field[K](dT.empty)
-      }
+                                                          ): Defaulter[FieldType[K, H] :: T] =
+    Defaulter.instance {
+      field[K](selector(fieldDefaults)) :: field[K](dT.empty)
     }
-  }
 
 
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
