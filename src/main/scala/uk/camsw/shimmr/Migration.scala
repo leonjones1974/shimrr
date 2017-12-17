@@ -57,15 +57,21 @@ trait MigrationContext {
     )
 
 
-  implicit def productMigration[A, ARepr <: HList, B, BRepr <: HList, Common <: HList, Added <: HList, Unaligned <: HList, Mapped <: HList](implicit
-                                                                                                                                            genA: LabelledGeneric.Aux[A, ARepr],
-                                                                                                                                            genB: LabelledGeneric.Aux[B, BRepr],
-                                                                                                                                            inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
-                                                                                                                                            diff: hlist.Diff.Aux[BRepr, Common, Added],
-                                                                                                                                            defaulter: Defaulter[Added],
-                                                                                                                                            prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
-                                                                                                                                            align: hlist.Align[Unaligned, BRepr]
-                                                                                                                                           ): Migration[A, B] =
+  implicit def productMigration[
+  A, ARepr <: HList,
+  B, BRepr <: HList,
+  Common <: HList,
+  Added <: HList,
+  Unaligned <: HList,
+  Mapped <: HList](implicit
+                   genA: LabelledGeneric.Aux[A, ARepr],
+                   genB: LabelledGeneric.Aux[B, BRepr],
+                   inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
+                   diff: hlist.Diff.Aux[BRepr, Common, Added],
+                   defaulter: Defaulter[Added],
+                   prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
+                   align: hlist.Align[Unaligned, BRepr]
+                  ): Migration[A, B] =
     Migration.instance {
       a =>
         genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
