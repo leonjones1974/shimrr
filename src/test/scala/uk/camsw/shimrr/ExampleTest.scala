@@ -13,30 +13,31 @@ case class CustomerV2(name: String, age: Int) extends Customer
 
 case class CustomerV3(age: Int, name: String) extends Customer
 
-object ExampleMigrationRules {
+trait ExampleMigrationRules {
 
   import shapeless.syntax.singleton.mkSingletonOps
 
-  val DefaultAge = -99
+  private[shimrr] val DefaultAge = -99
 
-  val fieldDefaulters =
+  private[shimrr] val fieldDefaulters =
     'name ->> "Leon" ::
       'age ->> DefaultAge ::
       HNil
 }
 
-class ExampleTest extends WordSpec with MigrationContext {
+class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRules {
 
-  import ExampleMigrationRules._
+  // We need to pull in our migration rules
+//  import ExampleMigrationRules._
 
   // We need to import the syntax to get our migrateTo extension
   import syntax._
 
   // We must specify the type of our field defaulter
-  type DEFAULTERS = fieldDefaulters.type
+  type FIELD_DEFAULTS = fieldDefaulters.type
 
   // And provide a stable instance of it
-  val defaulters = fieldDefaulters
+  val fieldDefaults = fieldDefaulters
 
 
   "Given we have setup field defaulters, we can migrate from V1 to V2" in {

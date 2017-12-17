@@ -25,9 +25,9 @@ object Migration {
 
 trait MigrationContext {
 
-  type DEFAULTERS <: HList
+  type FIELD_DEFAULTS <: HList
 
-  def defaulters: DEFAULTERS
+  def fieldDefaults: FIELD_DEFAULTS
 
   implicit def cNilMigration[T <: Coproduct, B, BRepr](implicit
                                                        genB: LabelledGeneric.Aux[B, BRepr]
@@ -74,13 +74,13 @@ trait MigrationContext {
   implicit def recordDefaulter[K <: Symbol, H, T <: HList](
                                                             implicit
                                                             mT: Defaulter[T],
-                                                            selector: Selector.Aux[DEFAULTERS, K, H]
+                                                            selector: Selector.Aux[FIELD_DEFAULTS, K, H]
                                                           ): Defaulter[FieldType[K, H] :: T] = {
 
 
     new Defaulter[FieldType[K, H] :: T] {
       val empty: ::[FieldType[K, H], FieldType[K, T]] = {
-        field[K](selector(defaulters)) :: field[K](mT.empty)
+        field[K](selector(fieldDefaults)) :: field[K](mT.empty)
       }
     }
   }
