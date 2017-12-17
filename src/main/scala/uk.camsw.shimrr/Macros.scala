@@ -11,7 +11,8 @@ object Test {
 
   def baz(is: Int*): Int = macro TestMacro.bazImpl
 
-  def helloWorld(format: String): String = macro TestMacro.helloWorldImpl
+  def helloWorld(format: Symbol, name: String): String = macro TestMacro.helloWorldImpl
+//  def helloWorld2(format: Symbol): String = macro TestMacro.helloWorldImpl2
 
   def sayIt(): String = {
     "I said it"
@@ -29,44 +30,86 @@ class TestMacro(val c: whitebox.Context) {
 
   def bazImpl(is: Tree*): Tree = q""" 13 """
 
-//  def helloWorldImpl(format: c.Tree): Tree = {
+//  def helloWorldImpl2(format: c.Expr[scala.Symbol]): Tree = {
+//    import shapeless.syntax.singleton._
 //    format match {
-//      case This(_) =>
-//        true
-//      case l@Literal(_) =>
-//        println(s"got a literal: ${l}")
-//        true
-//      case Ident(name) =>
+////      case This(_) =>
+////        true
+////      case l@Literal(_) =>
+////        println(s"got a literal: ${l}")
+////        true
+//      case ex:Expr[scala.Symbol] =>
+////        println(s"Got an exp: ${zz}")
+//        //println(s"evaluated: ${c.eval(ex)}")
+//        val x = c.Expr[scala.Symbol](c.untypecheck(format.tree.duplicate))
+//        println(s"compile-time value is: ${c.eval(x)}")
+//        q""
+//      case i@Ident(name) =>
 //        println(s"got an ident: ${name}")
-//      //        ident.symbol.isStable
-//      case select@Select(objExpr, term) =>
-//        println(s"got something else: ${select}")
-//        println(s"term: ${term}")
-//        println(s"obj: ${objExpr}")
-//        val x = q"$objExpr.${term.toTermName}"
-//        println(s"expression is: ${x}")
-//        val f: c.Tree = c.parse(s"say_fish")
-//        val z = q"$f($x)"
+//        println(s"ident: ${i}")
+//        println(s"1 ${i.isBackquoted}")
+//        println(s"2${i.isDef}")
+//        println(s"3 ${i.isEmpty}")
+//        println(s"4 ${i.isTerm}")
+//        println(s"5 ${i.isType}")
+//        println(s"6 ${i.symbol}")
+//
+//        val arg = c.parse(s"${name}")
+//        println(s"Arg is: ${arg}")
+//        println("resolved arg is: " + q"${name.toTermName}")
+//        println(s"evaluated: ${c.eval(format)}")
+////        println(showRaw(c.enclosingClass))
+//        println(showRaw(c.enclosingMethod))
+//
+////        c.enclosingClass.children.find{
+////          case x:ValDef =>
+////            println(s"got valDef: ${x}")
+////            true
+////          case o =>
+////            println()
+////            println(s"Got: ${o}")
+////            true
+////        }
+////        val Constant(Literal(v: Symbol)) = arg
+////        println(s"v: ${v}")
+//
+//
+//        val f: c.Tree = c.parse(s"sayItSym")
+//
+//        val z = q"$f($i)"
 //        println(s"full expr is: ${z}")
-//        x
-//
-//
-//      //        isConstant(c) (objExpr) && select.symbol.isStable
-//      //for implicit values
-//      //      case Apply(TypeApply(Select(Select(This(TypeName("scala")), TermName("Predef")), TermName("implicitly")), _), _) =>
-//      //        true
-//      case otherwise =>
-//        println(s"otherwise: ${otherwise}")
-//        println(s"reified: ${reify(otherwise)}")
-//        false
+//        z
+////      case select@Select(objExpr, term) =>
+////        println(s"got something else: ${select}")
+////        println(s"term: ${term}")
+////        println(s"obj: ${objExpr}")
+////        val x = q"$objExpr.${term.toTermName}"
+////        println(s"expression is: ${x}")
+////        val f: c.Tree = c.parse(s"say_fish")
+////        val z = q"$f($x)"
+////        println(s"full expr is: ${z}")
+////        x
+////
+////
+////      //        isConstant(c) (objExpr) && select.symbol.isStable
+////      //for implicit values
+////      //      case Apply(TypeApply(Select(Select(This(TypeName("scala")), TermName("Predef")), TermName("implicitly")), _), _) =>
+////      //        true
+////      case otherwise =>
+////        println(s"otherwise: ${otherwise}")
+////        println(s"reified: ${reify(otherwise)}")
+////        false
 //    }
-//    //    val Literal(Constant(s_format: String)) = format.tree
-//    //    val f: c.Tree = c.parse(s"say_$s_format()")
-//    val f: c.Tree = c.parse(s"say_fish")
-//    q"$f"
+////    //    val Literal(Constant(s_format: String)) = format.tree
+////    //    val f: c.Tree = c.parse(s"say_$s_format()")
+////    val f: c.Tree = c.parse(s"""sayIt("leon")""")
+////    q"$f"
 //  }
 
-  def helloWorldImpl(format: c.Tree): Tree = {
+  def helloWorldImpl(format: c.Tree, name: c.Expr[String]): Tree = {
+
+    val Literal(Constant(s_name: String)) = name.tree
+
     format match {
       case select@Select(objExpr, term) =>
         println(s"got something else: ${select}")
@@ -78,6 +121,13 @@ class TestMacro(val c: whitebox.Context) {
         val z = q"$f($x)"
         println(s"full expr is: ${z}")
         z
+      case i@Ident(name) =>
+        println(s"got an ident: ${name}")
+        println(s"ident: ${i}")
+        val f: c.Tree = c.parse(s"sayIt_$name")
+//        val z = q"$f($x)"
+        println(s"full expr is: ${f}")
+        f
     }
   }
 }

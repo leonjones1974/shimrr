@@ -1,6 +1,6 @@
 name := "shimrr"
 organization := "uk.camsw"
-scalaVersion := "2.12.4"
+//scalaVersion := "2.12.4"
 version := "1.0.0-SNAPSHOT"
 
 val scalatestVersion = "3.0.4"
@@ -14,13 +14,13 @@ val catsVersion = "1.0.0-MF"
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
-//scalacOptions += "-Yliteral-types"
+scalacOptions += "-Yliteral-types"
 
-//inThisBuild(Seq(
-//  scalaOrganization := "org.typelevel",
-//  scalaVersion := "2.12.4-bin-typelevel-4"
-//))
-//
+inThisBuild(Seq(
+  scalaOrganization := "org.typelevel",
+  scalaVersion := "2.12.4-bin-typelevel-4"
+))
+
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
   "com.chuusai" %% "shapeless" % shapelessVersion,
