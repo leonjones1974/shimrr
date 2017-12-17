@@ -75,7 +75,7 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
     )
   }
 
-  "New fields with associated default, fail to compile" in {
+  "New fields without associated default, fail to compile" in {
     case class CustomerV4(name: String, postCode: String)
     assertTypeError("""CustomerV1("Leon").migrateTo[CustomerV4]""")
   }
