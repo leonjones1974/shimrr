@@ -1,13 +1,16 @@
 package uk.camsw.shimrr
 
-import shapeless.labelled._
+import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
-import shapeless.syntax.SingletonOps
 import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 
 import scala.collection.GenSeq
 import scala.language.experimental.macros
+
+trait Defaulter[A] {
+  def empty: A
+}
 
 trait Migration[A, B] {
   def migrate(a: A): B
@@ -26,6 +29,12 @@ object Migration {
   implicit class MigrationGenSeqOps[A](xs: GenSeq[A]) {
     def migrateTo[B](implicit migration: Migration[A, B]): GenSeq[B] = xs map migration.migrate
   }
+
+}
+
+trait MigrationInstances {
+  type DEFAULTERS <: HList
+  def defaulters: DEFAULTERS
 
 
   implicit def cnilMigration[T <: Coproduct, B, BRepr](implicit
@@ -56,11 +65,6 @@ object Migration {
     )
 
 
-  trait Defaulter[A] {
-    def empty: A
-  }
-
-
   implicit def productMigration[A, ARepr <: HList, B, BRepr <: HList, Common <: HList, Added <: HList, Unaligned <: HList, Mapped <: HList](implicit
                                                                                                                                             genA: LabelledGeneric.Aux[A, ARepr],
                                                                                                                                             genB: LabelledGeneric.Aux[B, BRepr],
@@ -74,6 +78,20 @@ object Migration {
       a =>
         genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
     }
+
+  implicit def recordDefaulter[K <: Symbol, H, T <: HList](
+                                                            implicit
+                                                            mT: Defaulter[T],
+                                                            selector: Selector.Aux[DEFAULTERS, K, H]
+                                                          ): Defaulter[FieldType[K, H] :: T] = {
+
+
+    new Defaulter[FieldType[K, H] :: T] {
+      val empty: ::[FieldType[K, H], FieldType[K, T]] = {
+        field[K](selector(defaulters)) :: field[K](mT.empty)
+      }
+    }
+  }
 
 
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
