@@ -14,7 +14,7 @@ case class CustomerV2(name: String, age: Int) extends Customer
 case class CustomerV3(age: Int, name: String) extends Customer
 
 
-object ExampleDsl {
+object MigrationRules {
 
   import shapeless.syntax.singleton.mkSingletonOps
 
@@ -26,9 +26,9 @@ object ExampleDsl {
       HNil
 }
 
-class Example extends WordSpec with MigrationInstances {
+class ExampleTest extends WordSpec with MigrationInstances {
 
-  import ExampleDsl._
+  import MigrationRules._
 
   // We must specify the type of our field defaulter
   type DEFAULTERS = fieldDefaulters.type
