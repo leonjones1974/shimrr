@@ -6,7 +6,9 @@ A type-safe, read-repair shim dsl
 http://camsw.darktech.org:8080/job/shimmr
 
 ### To Build and test
-`sbt clean update test
+```bash
+sbt clean update test
+```
 
 ### Examples
 
