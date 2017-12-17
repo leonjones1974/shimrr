@@ -19,26 +19,22 @@ trait ExampleMigrationRules {
 
   private[shimrr] val DefaultAge = -99
 
-  private[shimrr] val fieldDefaulters =
+  private[shimrr] val defaultRules =
     'name ->> "Leon" ::
       'age ->> DefaultAge ::
       HNil
+
+  // We must specify the type of our field defaulter
+  type FIELD_DEFAULTS = defaultRules.type
 }
 
 class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRules {
 
-  // We need to pull in our migration rules
-//  import ExampleMigrationRules._
-
-  // We need to import the syntax to get our migrateTo extension
+  // We need to import the syntax to get our migrateTo extensions
   import syntax._
 
-  // We must specify the type of our field defaulter
-  type FIELD_DEFAULTS = fieldDefaulters.type
-
-  // And provide a stable instance of it
-  val fieldDefaults = fieldDefaulters
-
+  // And provide a stable reference to our field defaults
+  val fieldDefaults = defaultRules
 
   "Given we have setup field defaulters, we can migrate from V1 to V2" in {
     CustomerV1("Leon").migrateTo[CustomerV2] shouldBe CustomerV2("Leon", DefaultAge)

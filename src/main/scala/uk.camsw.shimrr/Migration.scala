@@ -25,9 +25,9 @@ object Migration {
 
 trait MigrationContext {
 
-  type FIELD_DEFAULTS <: HList
+  protected type FIELD_DEFAULTS <: HList
 
-  def fieldDefaults: FIELD_DEFAULTS
+  protected def fieldDefaults: FIELD_DEFAULTS
 
   implicit def cNilMigration[T <: Coproduct, B, BRepr](implicit
                                                        genB: LabelledGeneric.Aux[B, BRepr]
