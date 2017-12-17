@@ -11,7 +11,7 @@ http://camsw.darktech.org:8080/job/shimmr
 ### Examples
 
 ####
-`
+```scala
 trait ExampleMigrationRules {
 
   import shapeless.syntax.singleton.mkSingletonOps
@@ -75,6 +75,6 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
 
 }
 
-`
+```
 
 
