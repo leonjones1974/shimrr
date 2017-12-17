@@ -23,14 +23,15 @@ inThisBuild(Seq(
 
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
-  "com.chuusai" %% "shapeless" % shapelessVersion,
-  "org.typelevel" % "shapeless-scalacheck_2.12" % shapelessScalacheckVersion % "test"
+  "com.chuusai" %% "shapeless" % shapelessVersion
 )
 
 val testDependencies: Seq[ModuleID] = Seq(
   "org.pegdown" % "pegdown" % pegdownVersion % "test",
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
-  "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test"
+  "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test",
+  "org.typelevel" % "shapeless-scalacheck_2.12" % shapelessScalacheckVersion % "test",
+  "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6"
 )
 
 val catsDependencies: Seq[ModuleID] = Seq(

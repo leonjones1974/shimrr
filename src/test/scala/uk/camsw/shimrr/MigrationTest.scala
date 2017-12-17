@@ -7,64 +7,57 @@ import org.scalatest.WordSpec
 import shapeless.HNil
 import uk.camsw.shimrr.Migration._
 
-object Dsl {
+object MigrationTestDsl {
 
   import shapeless.syntax.singleton.mkSingletonOps
+
   val fieldDefaulters =
-    (
-      'stringField1 ->> {
-        "STR1"
-      }) ::
-      (
-      'stringField2 ->> {
-        "STR2"
-      }) ::
-      (
-      'intField1 ->> {
-        -99
-      }) ::
+    'stringField1 ->> "STR1" ::
+      'stringField2 ->> "STR2" ::
+      'intField1 ->> -99 ::
       HNil
 
 }
 
-
 class MigrationTest extends WordSpec with MigrationInstances {
-  import Dsl._
+
+  import MigrationTestDsl._
 
   type DEFAULTERS = fieldDefaulters.type
+
   def defaulters: DEFAULTERS = fieldDefaulters
 
-  val base = BaseVersion()
+  val base = Str1Str2Int1()
 
   "product.migrateTo" should {
 
     "map matching fields to V+1" in {
-      val migrated = base.migrateTo[BaseVersion]
+      val migrated = base.migrateTo[Str1Str2Int1]
       migrated shouldBe base
     }
 
     "drop removed fields - variation 1" in {
-      base.migrateTo[VersionWithoutStringField1] shouldBe base.withoutStringField1
+      base.migrateTo[Str2Int1] shouldBe base.withoutStringField1
     }
 
     "drop removed fields - variation 2" in {
-      base.migrateTo[VersionWithoutStringField2] shouldBe base.withoutStringField2
+      base.migrateTo[Str1Int1] shouldBe base.withoutStringField2
     }
 
     "drop removed fields - variation 3" in {
-      base.migrateTo[VersionWithNoFields] shouldBe base.withNoFields
+      base.migrateTo[NoFields] shouldBe base.withNoFields
     }
 
     "move fields" in {
-      base.migrateTo[VersionWithSwappedFields] shouldBe base.withSwappedFields
+      base.migrateTo[Str2Int1Str1] shouldBe base.withSwappedFields
     }
 
     "add missing fields - using monoid" in {
-      VersionWithoutStringField1("str2", 32).migrateTo[BaseVersion] shouldBe BaseVersion("STR1", "str2", 32)
-      VersionWithOnlyIntField(32).migrateTo[BaseVersion] shouldBe BaseVersion("STR1", "STR2", 32)
-      VersionWithNoFields.migrateTo[BaseVersion] shouldBe BaseVersion("STR1", "STR2", -99)
-      VersionWithOnlyIntField(15).migrateTo[VersionWithoutStringField1] shouldBe VersionWithoutStringField1("STR2", 15)
-      VersionWithStringField1("str1").migrateTo[VersionWithOnlyIntField] shouldBe VersionWithOnlyIntField(-99)
+      Str2Int1("str2", 32).migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "str2", 32)
+      Int1(32).migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "STR2", 32)
+      NoFields.migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "STR2", -99)
+      Int1(15).migrateTo[Str2Int1] shouldBe Str2Int1("STR2", 15)
+      Str1("str1").migrateTo[Int1] shouldBe Int1(-99)
     }
   }
 
@@ -73,37 +66,37 @@ class MigrationTest extends WordSpec with MigrationInstances {
 
     "drop removed fields - list" in {
       val xs: List[Version] = List(base, base.withoutStringField1)
-      xs.migrateTo[VersionWithNoFields] shouldBe List(VersionWithNoFields(), VersionWithNoFields())
+      xs.migrateTo[NoFields] shouldBe List(NoFields(), NoFields())
     }
 
     "map fields - atom" in {
-      x.migrateTo[BaseVersion] shouldBe base
+      x.migrateTo[Str1Str2Int1] shouldBe base
     }
 
     "drop removed fields - atom" in {
-      x.migrateTo[VersionWithoutStringField1] shouldBe base.withoutStringField1
+      x.migrateTo[Str2Int1] shouldBe base.withoutStringField1
     }
 
     "move fields - atom" in {
-      x.migrateTo[VersionWithSwappedFields] shouldBe base.withSwappedFields
+      x.migrateTo[Str2Int1Str1] shouldBe base.withSwappedFields
     }
 
     "move fields - list" in {
       val xs: List[Version] = List(base, base)
-      xs.migrateTo[VersionWithSwappedFields] shouldBe List(base.withSwappedFields, base.withSwappedFields)
+      xs.migrateTo[Str2Int1Str1] shouldBe List(base.withSwappedFields, base.withSwappedFields)
     }
 
     "add missing fields - atom - using monoid" in {
-      val x: Version = VersionWithStringField1("str1")
-      x.migrateTo[BaseVersion] shouldBe BaseVersion("str1", "STR2", -99)
+      val x: Version = Str1("str1")
+      x.migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "STR2", -99)
     }
 
     "add missing fields - list - using monoid" in {
-      val xs: List[Version] = List(VersionWithStringField1("str1"), VersionWithOnlyIntField(10), VersionWithNoFields(), base)
-      xs.migrateTo[BaseVersion] shouldBe List(
-        BaseVersion("str1", "STR2", -99),
-        BaseVersion("STR1", "STR2", 10),
-        BaseVersion("STR1", "STR2", -99),
+      val xs: List[Version] = List(Str1("str1"), Int1(10), NoFields(), base)
+      xs.migrateTo[Str1Str2Int1] shouldBe List(
+        Str1Str2Int1("str1", "STR2", -99),
+        Str1Str2Int1("STR1", "STR2", 10),
+        Str1Str2Int1("STR1", "STR2", -99),
         base
       )
     }

@@ -23,28 +23,28 @@ package object shimrr {
 
   }
 
-  case class BaseVersion(stringField1: String = "str1", stringField2: String = "str2", intField1: Int = 1) extends Version {
-    def withoutStringField1 = VersionWithoutStringField1(stringField2, intField1)
+  case class Str1Str2Int1(stringField1: String = "str1", stringField2: String = "str2", intField1: Int = 1) extends Version {
+    def withoutStringField1 = Str2Int1(stringField2, intField1)
 
-    def withoutStringField2 = VersionWithoutStringField2(stringField1, intField1)
+    def withoutStringField2 = Str1Int1(stringField1, intField1)
 
-    def withNoFields = VersionWithNoFields()
+    def withNoFields = NoFields()
 
-    def withSwappedFields = VersionWithSwappedFields(stringField2, intField1, stringField1)
+    def withSwappedFields = Str2Int1Str1(stringField2, intField1, stringField1)
   }
 
-  case class VersionWithSwappedFields(stringField2: String, intField1: Int, stringField1: String) extends Version
+  case class Str2Int1Str1(stringField2: String, intField1: Int, stringField1: String) extends Version
 
-  case class VersionWithStringField1(stringField1: String) extends Version
+  case class Str1(stringField1: String) extends Version
 
-  case class VersionWithoutStringField1(stringField2: String, intField1: Int) extends Version
+  case class Str2Int1(stringField2: String, intField1: Int) extends Version
 
-  case class VersionWithoutStringField2(stringField1: String, intField1: Int) extends Version
+  case class Str1Int1(stringField1: String, intField1: Int) extends Version
 
-  case class VersionWithOnlyIntField(intField1: Int) extends Version
+  case class Int1(intField1: Int) extends Version
 
-  case class VersionWithoutIntField1(stringField1: String, stringField2: String) extends Version
+  case class Str1Str2(stringField1: String, stringField2: String) extends Version
 
-  case class VersionWithNoFields() extends Version
+  case class NoFields() extends Version
 
 }
