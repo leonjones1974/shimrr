@@ -4,9 +4,46 @@ import cats.instances.int._
 import cats.instances.string._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
+import shapeless.{::, HList, HNil, Lazy}
+import shapeless.labelled.{FieldType, field}
+import shapeless.ops.record.Selector
 import uk.camsw.shimrr.Migration._
 
+object Dsl {
+
+  import shapeless.syntax.singleton.mkSingletonOps
+  val funs2 =
+    (
+      'stringField1 ->> {
+        "STR1"
+      }) :: (
+      'stringField2 ->> {
+        "STR2"
+      }) :: (
+      'intField1 ->> {
+        -99
+      }) :: HNil
+
+}
+
 class MigrationTest extends WordSpec {
+  import Dsl._
+
+
+
+  implicit def recordDefaulter[K <: Symbol, H, T <: HList](
+                                                            implicit
+                                                            mT: Lazy[Defaulter[T]],
+                                                            selector: Lazy[Selector.Aux[funs2.type, K, H]]
+                                                          ): Defaulter[FieldType[K, H] :: T] = {
+
+
+    new Defaulter[FieldType[K, H] :: T] {
+      val empty = {
+        field[K](selector.value(funs2)) :: field[K](mT.value.empty)
+      }
+    }
+  }
 
   val base = BaseVersion()
 

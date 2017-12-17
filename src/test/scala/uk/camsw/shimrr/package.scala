@@ -1,8 +1,27 @@
 package uk.camsw
 
+import shapeless.HNil
+
 package object shimrr {
 
   sealed trait Version
+
+  object Version {
+//    import shapeless.syntax.singleton._
+//    val funs2 =
+//      (
+//        'stringField1 ->> {
+//          "STR1"
+//        }) :: (
+//        'stringField2 ->> {
+//          "STR2"
+//        }) :: (
+//        'intField1 ->> {
+//          -99
+//        }) :: HNil
+
+
+  }
 
   case class BaseVersion(stringField1: String = "str1", stringField2: String = "str2", intField1: Int = 1) extends Version {
     def withoutStringField1 = VersionWithoutStringField1(stringField2, intField1)

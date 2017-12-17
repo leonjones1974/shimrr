@@ -3,6 +3,7 @@ package uk.camsw.shimrr
 import shapeless.labelled._
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
+import shapeless.syntax.SingletonOps
 import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 
 import scala.collection.GenSeq
@@ -54,37 +55,11 @@ object Migration {
       m.migrate(genA.to(a))
     )
 
-  import shapeless.syntax.singleton._
-
-  val funs2 =
-    (
-      'stringField1 ->> {
-        "STR1"
-      }) :: (
-      'stringField2 ->> {
-        "STR2"
-      }) :: (
-      'intField1 ->> {
-        -99
-      }) :: HNil
 
   trait Defaulter[A] {
     def empty: A
   }
 
-  implicit def recordDefaulter[K <: Symbol, H, T <: HList](
-                                                            implicit
-                                                            mT: Defaulter[T],
-                                                            selector: Selector.Aux[funs2.type, K, H]
-                                                          ): Defaulter[FieldType[K, H] :: T] = {
-
-
-    new Defaulter[FieldType[K, H] :: T] {
-      val empty: ::[FieldType[K, H], FieldType[K, T]] = {
-        field[K](selector(funs2)) :: field[K](mT.empty)
-      }
-    }
-  }
 
   implicit def productMigration[A, ARepr <: HList, B, BRepr <: HList, Common <: HList, Added <: HList, Unaligned <: HList, Mapped <: HList](implicit
                                                                                                                                             genA: LabelledGeneric.Aux[A, ARepr],
