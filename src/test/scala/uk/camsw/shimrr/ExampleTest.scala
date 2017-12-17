@@ -25,7 +25,7 @@ object ExampleMigrationRules {
       HNil
 }
 
-class ExampleTest extends WordSpec with MigrationInstances {
+class ExampleTest extends WordSpec with MigrationContext {
 
   import ExampleMigrationRules._
 

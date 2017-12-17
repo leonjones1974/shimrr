@@ -20,7 +20,7 @@ object TestMigrationRules {
 
 }
 
-class MigrationTest extends WordSpec with MigrationInstances {
+class MigrationTest extends WordSpec with MigrationContext {
 
   import TestMigrationRules._
 

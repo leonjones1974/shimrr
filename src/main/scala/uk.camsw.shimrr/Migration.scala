@@ -23,12 +23,13 @@ object Migration {
 
 }
 
-trait MigrationInstances {
+trait MigrationContext {
+
   type DEFAULTERS <: HList
+
   def defaulters: DEFAULTERS
 
-
-  implicit def cnilMigration[T <: Coproduct, B, BRepr](implicit
+  implicit def cNilMigration[T <: Coproduct, B, BRepr](implicit
                                                        genB: LabelledGeneric.Aux[B, BRepr]
                                                       ): Migration[T, B] =
     Migration.instance(a =>
