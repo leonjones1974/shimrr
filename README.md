@@ -10,9 +10,13 @@ http://camsw.darktech.org:8080/job/shimmr
 sbt clean update test
 ```
 
-### Examples
+## The backlog
+### Where is trello
+https://trello.com/b/tsoNCghn/shimmr
 
-####
+## Example
+
+###
 ```scala
 trait ExampleMigrationRules {
 
@@ -21,10 +25,11 @@ trait ExampleMigrationRules {
   private[shimrr] val DefaultAge = -99
 
 
-  // Here we define our rules for defaulting fields.  Currently there must be an entry for every new field added since V1 and they apply globally across
+  // Here we define our rules for defaulting fields.
+  // Currently there must be an entry for every new field added
+  // and they apply globally across
   // all possible migrations for a given coproduct
   private[shimrr] val fieldDefaultRules =
-    'name ->> "Leon" ::
       'age ->> DefaultAge ::
       HNil
 
