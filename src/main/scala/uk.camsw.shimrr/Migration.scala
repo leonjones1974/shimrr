@@ -5,7 +5,6 @@ import shapeless.ops.hlist
 import shapeless.ops.record.Selector
 import shapeless.{:+:, ::, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 
-import scala.collection.GenSeq
 import scala.language.experimental.macros
 
 trait Defaulter[A] {
@@ -18,10 +17,9 @@ trait Migration[A, B] {
 
 object Migration {
 
-  def lift[A, B](f: A => B): Migration[A, B] = (a: A) => f(a)
+  def instance[A, B](f: A => B): Migration[A, B] = (a: A) => f(a)
 
   def migrate[A, B](a: A)(implicit m: Migration[A, B]): B = m.migrate(a)
-
 
 }
 
@@ -33,7 +31,7 @@ trait MigrationInstances {
   implicit def cnilMigration[T <: Coproduct, B, BRepr](implicit
                                                        genB: LabelledGeneric.Aux[B, BRepr]
                                                       ): Migration[T, B] =
-    Migration.lift(a =>
+    Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
 
@@ -42,7 +40,7 @@ trait MigrationInstances {
                                                                             mH: Migration[H, B],
                                                                             mT: Migration[T, B]
                                                                            ): Migration[H :+: T, B] =
-    Migration.lift {
+    Migration.instance {
       case Inl(h) =>
         mH.migrate(h)
       case Inr(t) =>
@@ -53,7 +51,7 @@ trait MigrationInstances {
                                                                             genA: Generic.Aux[A, ARepr],
                                                                             genB: LabelledGeneric.Aux[B, BRepr],
                                                                             m: Migration[ARepr, B]): Migration[A, B] =
-    Migration.lift(a =>
+    Migration.instance(a =>
       m.migrate(genA.to(a))
     )
 
@@ -67,7 +65,7 @@ trait MigrationInstances {
                                                                                                                                             prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
                                                                                                                                             align: hlist.Align[Unaligned, BRepr]
                                                                                                                                            ): Migration[A, B] =
-    Migration.lift {
+    Migration.instance {
       a =>
         genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
     }
