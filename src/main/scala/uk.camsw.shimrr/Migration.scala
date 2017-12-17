@@ -74,36 +74,45 @@ object Migration {
 
   val funs =
     ('stringField1 ->> {
-      "CUSTOM"
+      "STR1"
     }) :: HNil
 
+  val funs2 =
+    (
+      'stringField1 ->> {
+        "STR1"
+      }) :: (
+      'stringField2 ->> {
+        "STR2"
+      }) :: (
+      'intField1 ->> {
+        -99
+      }) :: HNil
 
-  object poly extends Poly1 {
-    implicit def apply[K, V](
-                              implicit
-                              selector: Selector.Aux[funs.type, K, V]) =
-      at[FieldType[K, V]] { v => selector(funs) }
-  }
 
   implicit def labelledHListMonoid[K <: Symbol, H, T <: HList](
                                                                 implicit
-                                                                //                                                                mH: Lazy[Monoid[FieldType[K, H]]],
-                                                                //                                                                mT: Monoid[T],
                                                                 mT: Monoid[T],
-                                                                selector: Selector.Aux[funs.type, K, H]
-
+                                                                selector: Selector.Aux[funs2.type, K, H]
                                                               ): Monoid[FieldType[K, H] :: T] = {
 
 
     new Monoid[FieldType[K, H] :: T] {
       override def empty = {
         println("Trying to use labelled hlist empty monoid")
-        println(s"selector: ${selector(funs)}")
-        field[K](selector(funs)) :: field[K](mT.empty)
+        println(s"selector: ${selector(funs2)}")
+        field[K](selector(funs2)) :: field[K](mT.empty)
       }
 
       override def combine(x: ::[FieldType[K, H], T], y: ::[FieldType[K, H], T]) = ???
     }
+  }
+
+  object poly extends Poly1 {
+    implicit def apply[K, V](
+                              implicit
+                              selector: Selector.Aux[funs.type, K, V]) =
+      at[FieldType[K, V]] { v => selector(funs) }
   }
 
   implicit def fieldMonoid[K <: Symbol, A]: Monoid[FieldType[K, A]] = new Monoid[FieldType[K, A]] {

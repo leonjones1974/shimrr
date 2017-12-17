@@ -4,9 +4,6 @@ import cats.instances.int._
 import cats.instances.string._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import shapeless.labelled.FieldType
-import shapeless.ops.record.Selector
-import shapeless.{HNil, Poly1, Witness}
 import uk.camsw.shimrr.Migration._
 
 
@@ -32,14 +29,17 @@ class MigrationTest extends WordSpec {
     "drop removed fields - variation 3" in {
       base.migrateTo[VersionWithNoFields] shouldBe base.withNoFields
     }
-    //
 
     "move fields" in {
       base.migrateTo[VersionWithSwappedFields] shouldBe base.withSwappedFields
     }
 
     "add missing fields - using monoid" in {
-      VersionWithoutStringField1("str2", 32).migrateTo[BaseVersion] shouldBe BaseVersion("", "str2", 32)
+      VersionWithoutStringField1("str2", 32).migrateTo[BaseVersion] shouldBe BaseVersion("STR1", "str2", 32)
+      VersionWithOnlyIntField(32).migrateTo[BaseVersion] shouldBe BaseVersion("STR1", "STR2", 32)
+      VersionWithNoFields.migrateTo[BaseVersion] shouldBe BaseVersion("STR1", "STR2", -99)
+      VersionWithOnlyIntField(15).migrateTo[VersionWithoutStringField1] shouldBe VersionWithoutStringField1("STR2", 15)
+      VersionWithStringField1("str1").migrateTo[VersionWithOnlyIntField] shouldBe VersionWithOnlyIntField(-99)
     }
   }
 
@@ -245,14 +245,14 @@ class MigrationTest extends WordSpec {
     //      VersionWithNoFields.migrateTo[BaseVersion] shouldBe BaseVersion("CUSTOM", "", 0)
     //    }
 
-    "add missing fields - list - using monoid" in {
-      val xs: List[Version] = List(VersionWithNoFields(), VersionWithoutStringField1("str2", 12), VersionWithoutStringField2("str1", 12), base)
-      xs.migrateTo[BaseVersion] shouldBe List(
-        BaseVersion("", "", 0),
-        BaseVersion("", "str2", 12),
-        BaseVersion("str1", "", 12),
-        base
-      )
-    }
+//    "add missing fields - list - using monoid" in {
+//      val xs: List[Version] = List(VersionWithNoFields(), VersionWithoutStringField1("str2", 12), VersionWithoutStringField2("str1", 12), base)
+//      xs.migrateTo[BaseVersion] shouldBe List(
+//        BaseVersion("", "", 0),
+//        BaseVersion("", "str2", 12),
+//        BaseVersion("str1", "", 12),
+//        base
+//      )
+//    }
   }
 }

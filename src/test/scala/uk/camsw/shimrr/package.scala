@@ -22,6 +22,8 @@ package object shimrr {
 
   case class VersionWithoutStringField2(stringField1: String, intField1: Int) extends Version
 
+  case class VersionWithOnlyIntField(intField1: Int) extends Version
+
   case class VersionWithoutIntField1(stringField1: String, stringField2: String) extends Version
 
   case class VersionWithNoFields() extends Version
