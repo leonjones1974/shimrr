@@ -19,13 +19,16 @@ trait ExampleMigrationRules {
 
   private[shimrr] val DefaultAge = -99
 
-  private[shimrr] val defaultRules =
+
+  // Here we define our rules for defaulting fields.  Currently there must be an entry for every new field added since V1 and they apply globally across
+  // all possible migrations for a given coproduct
+  private[shimrr] val fieldDefaultRules =
     'name ->> "Leon" ::
       'age ->> DefaultAge ::
       HNil
 
   // We must specify the type of our field defaulter
-  type FIELD_DEFAULTS = defaultRules.type
+  type FIELD_DEFAULTS = fieldDefaultRules.type
 }
 
 class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRules {
@@ -34,7 +37,7 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
   import syntax._
 
   // And provide a stable reference to our field defaults
-  val fieldDefaults = defaultRules
+  val fieldDefaults = fieldDefaultRules
 
   "Given we have setup field defaulters, we can migrate from V1 to V2" in {
     CustomerV1("Leon").migrateTo[CustomerV2] shouldBe CustomerV2("Leon", DefaultAge)
