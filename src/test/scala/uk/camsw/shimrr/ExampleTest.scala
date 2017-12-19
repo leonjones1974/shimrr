@@ -1,5 +1,6 @@
 package uk.camsw.shimrr
 
+import cats.Monoid
 import org.scalatest.WordSpec
 import shapeless.HNil
 import org.scalatest.Matchers._
@@ -14,7 +15,7 @@ case class CustomerV2(name: String, age: Int) extends Customer
 
 case class CustomerV3(age: Int, name: String) extends Customer
 
-case class CustomerV4(name: String, postCode: String) extends Customer
+case class CustomerV4(name: String, postCode: String, age: Int, rating: Int) extends Customer
 
 trait ExampleMigrationRules {
 
@@ -26,8 +27,9 @@ trait ExampleMigrationRules {
   // Here we define our rules for defaulting fields.  Currently there must be an entry for every new field added since V1 and they apply globally across
   // all possible migrations for a given coproduct
   private[shimrr] val fieldDefaultRules =
-      'age ->> DefaultAge ::
-      HNil
+  'age ->> DefaultAge ::
+    'rating ->> 1 ::
+  HNil
 
   // We must specify the type of our field defaulter
   type FIELD_DEFAULTS = fieldDefaultRules.type
