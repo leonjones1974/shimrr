@@ -14,6 +14,8 @@ case class CustomerV2(name: String, age: Int) extends Customer
 
 case class CustomerV3(age: Int, name: String) extends Customer
 
+case class CustomerV4(name: String, postCode: String) extends Customer
+
 trait ExampleMigrationRules {
 
   import shapeless.syntax.singleton.mkSingletonOps
@@ -70,7 +72,6 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
   }
 
   "New fields without associated default, fail to compile" in {
-    case class CustomerV4(name: String, postCode: String)
     illTyped("""CustomerV1("Leon").migrateTo[CustomerV4]""")
   }
 
