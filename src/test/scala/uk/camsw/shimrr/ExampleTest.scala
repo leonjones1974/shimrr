@@ -1,6 +1,5 @@
 package uk.camsw.shimrr
 
-import cats.Monoid
 import org.scalatest.WordSpec
 import shapeless.HNil
 import org.scalatest.Matchers._
@@ -76,5 +75,7 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
   "New fields without associated default, fail to compile" in {
     illTyped("""CustomerV1("Leon").migrateTo[CustomerV4]""")
   }
+
+
 
 }
