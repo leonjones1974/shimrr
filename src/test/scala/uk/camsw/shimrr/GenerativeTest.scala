@@ -33,13 +33,13 @@ class GenerativeTest extends FreeSpec
   with GenMigrationRules
   with ScalacheckShapeless {
 
-  def migrationTest[T]: Any = macro QuasiquotesGenerator.generateTest[T]
+  def anyCanBeMigratedToAny[T]: Any = macro QuasiquotesGenerator.generateTest[T]
 
   import syntax._
 
   "Given a coproduct with globally defined migration rules" - {
 
-    migrationTest[Version]
+    anyCanBeMigratedToAny[Version]
 
   }
 
