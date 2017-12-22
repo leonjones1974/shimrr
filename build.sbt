@@ -24,6 +24,8 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 //))
 //
 
+logBuffered in Test := false
+
 val shapelessDependencies: Seq[ModuleID] = Seq(
   "com.chuusai" %% "shapeless" % shapelessVersion
 )

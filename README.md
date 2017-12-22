@@ -84,4 +84,37 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
 
 ```
 
+### Generative testing
+Utilising shapeless-scalacheck it is possible to generate migrations for all combinations of a given coproduct
+Implicit resolution is exercised at compile time via macro usage
+Currently only supports FreeSpec
+```scala
+
+trait VersionGlobalMigrationRules {
+
+  private[shimrr] val globalFieldDefaults =
+    'stringField1 ->> "STR1" ::
+      'stringField2 ->> "STR2" ::
+      'intField1 ->> -99 ::
+      HNil
+
+  // We must specify the type of our field defaulter
+  type FIELD_DEFAULTS = globalFieldDefaults.type
+}
+
+
+class ExampleGenerativeTest extends MigrationFreeSpec
+  with VersionGlobalMigrationRules {
+
+  "Given a coproduct with globally defined migration rules" - {
+
+    anyCanBeMigratedToAny[Version]
+
+  }
+
+  override val fieldDefaults: FIELD_DEFAULTS = globalFieldDefaults
+}
+
+```
+
 

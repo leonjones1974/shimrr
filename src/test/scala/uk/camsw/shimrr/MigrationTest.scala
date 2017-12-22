@@ -4,9 +4,8 @@ import cats.instances.int._
 import cats.instances.string._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import shapeless.{Generic, HNil}
-import uk.camsw.shimrr.Migration._
-import syntax._
+import shapeless.HNil
+import uk.camsw.shimrr.syntax._
 
 object TestMigrationRules {
 
