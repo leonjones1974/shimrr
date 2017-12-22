@@ -1,6 +1,6 @@
 package uk.camsw.shimrr
 
-import org.scalacheck.ScalacheckShapeless
+import org.scalacheck.{Arbitrary, ScalacheckShapeless}
 import org.scalatest.FreeSpec
 import shapeless.HNil
 import uk.camsw.shimmr._

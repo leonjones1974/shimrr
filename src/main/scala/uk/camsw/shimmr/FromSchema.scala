@@ -112,9 +112,9 @@ object QuasiquotesGenerator {
       q"""
          "Migrating from " + ${in.toString} + "~>" + ${out.toString} in {
             val inObj = implicitly[Arbitrary[$in]]
-               GeneratorDrivenPropertyChecks.forAll((from: $in) => {
-                 from.migrateTo[$out]
-               })
+            org.scalatest.prop.GeneratorDrivenPropertyChecks.forAll((from: $in) => {
+              from.migrateTo[$out]
+            })
          }
        """
     }
