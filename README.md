@@ -85,9 +85,11 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
 ```
 
 ### Generative testing
+
 Utilising shapeless-scalacheck it is possible to generate migrations for all combinations of a given coproduct
 Implicit resolution is exercised at compile time via macro usage
 Currently only supports FreeSpec
+
 ```scala
 
 trait VersionGlobalMigrationRules {
@@ -106,6 +108,7 @@ trait VersionGlobalMigrationRules {
 class ExampleGenerativeTest extends MigrationFreeSpec
   with VersionGlobalMigrationRules {
 
+  // Generate randomly shaped instances of Version subclasses and migrate them to all other Version subclasses
   "Given a coproduct with globally defined migration rules" - {
 
     anyCanBeMigratedToAny[Version]
@@ -113,6 +116,46 @@ class ExampleGenerativeTest extends MigrationFreeSpec
   }
 
   override val fieldDefaults: FIELD_DEFAULTS = globalFieldDefaults
+}
+
+```
+
+### Lazy defaulting of fields via function
+
+In this instance we generate nextCount lazily, incrementing the counter
+This could be used to allow us to retrospectively index events, or even
+call out to other services to populate newly identified fields
+
+```scala
+trait LazyVersionGlobalMigrationRules {
+
+  private val counter = new AtomicInteger(0)
+  private def nextCount: () => Int = () => counter.incrementAndGet()
+
+  private[shimrr] val lazyFieldDefaults =
+    'stringField1 ->> "STR1" ::
+      'stringField2 ->> "STR2" ::
+      'intField1 ->> nextCount ::
+      HNil
+
+  // We must specify the type of our field defaulter
+  type FIELD_DEFAULTS = lazyFieldDefaults.type
+}
+
+
+class LazyFieldDefaults extends FreeSpec
+  with MigrationContext
+  with LazyVersionGlobalMigrationRules {
+
+  override val fieldDefaults: FIELD_DEFAULTS = lazyFieldDefaults
+
+  "function can be used to default field" in {
+    val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+    val v2 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+
+    v1.intField1 shouldBe 1
+    v2.intField1 shouldBe 2
+  }
 }
 
 ```
