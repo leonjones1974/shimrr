@@ -31,7 +31,6 @@ trait GenMigrationRules {
 
 class GenerativeTest extends FreeSpec
   with MigrationFreeSpec
-  with MigrationContext
   with GenMigrationRules
   with ScalacheckShapeless {
 
