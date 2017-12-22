@@ -4,7 +4,7 @@ import cats.instances.int._
 import cats.instances.string._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import shapeless.HNil
+import shapeless.{Generic, HNil}
 import uk.camsw.shimrr.Migration._
 import syntax._
 
@@ -101,6 +101,5 @@ class MigrationTest extends WordSpec with MigrationContext {
         base
       )
     }
-
   }
 }

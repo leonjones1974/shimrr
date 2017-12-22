@@ -14,7 +14,7 @@ case class CustomerV2(name: String, age: Int) extends Customer
 
 case class CustomerV3(age: Int, name: String) extends Customer
 
-case class CustomerV4(name: String, postCode: String, age: Int, rating: Int) extends Customer
+case class CustomerV4(name: String, postCode: String, age: Int) extends Customer
 
 trait ExampleMigrationRules {
 
@@ -27,8 +27,7 @@ trait ExampleMigrationRules {
   // all possible migrations for a given coproduct
   private[shimrr] val fieldDefaultRules =
   'age ->> DefaultAge ::
-    'rating ->> 1 ::
-  HNil
+    HNil
 
   // We must specify the type of our field defaulter
   type FIELD_DEFAULTS = fieldDefaultRules.type
@@ -75,7 +74,6 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
   "New fields without associated default, fail to compile" in {
     illTyped("""CustomerV1("Leon").migrateTo[CustomerV4]""")
   }
-
 
 
 }
