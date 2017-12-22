@@ -3,7 +3,7 @@ package uk.camsw.shimrr
 import org.scalatest.FreeSpec
 import shapeless.HNil
 import uk.camsw.shimmr._
-import uk.camsw.shimmr.test.MigrationFreeSpec
+import uk.camsw.shimmr.test.{MigrationFreeSpec, MigrationFreeSpecOps}
 
 import scala.language.experimental.macros
 import scala.reflect.runtime.{universe => ru}
@@ -28,8 +28,7 @@ trait GenMigrationRules {
   type FIELD_DEFAULTS = fieldDefaultRules.type
 }
 
-class GenerativeTest extends FreeSpec
-  with MigrationFreeSpec
+class GenerativeTest extends MigrationFreeSpec
   with GenMigrationRules {
 
   def anyCanBeMigratedToAny[T]: Any = macro QuasiquotesGenerator.generateTest[T]
