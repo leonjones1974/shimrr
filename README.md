@@ -122,8 +122,8 @@ class ExampleGenerativeTest extends MigrationFreeSpec
 
 ### Lazy defaulting of fields via function
 
-In this instance we generate nextCount lazily, incrementing the counter
-This could be used to allow us to retrospectively index events, or even
+In this instance we generate nextCount lazily, incrementing the counter.
+This could be used to allow us to retrospectively index events or even
 call out to other services to populate newly identified fields
 
 ```scala
