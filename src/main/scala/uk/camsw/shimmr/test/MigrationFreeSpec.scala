@@ -15,7 +15,6 @@ trait MigrationFreeSpecOps extends MigrationContext with ScalacheckShapeless {
 
 abstract class MigrationFreeSpec extends FreeSpec with MigrationFreeSpecOps
 
-
 object MigrationFreeSpecMacros {
 
   def generateAnyToAny[A: c.WeakTypeTag](c: blackbox.Context): c.Expr[Any] = {
@@ -25,14 +24,14 @@ object MigrationFreeSpecMacros {
     val productsT = coproduct.typeSymbol.asClass.knownDirectSubclasses.map(_.asType)
 
     val tests = for {
-      in <- productsT
-      out <- productsT
+      inT <- productsT
+      outT <- productsT
     } yield {
       q"""
-         "Migrating from " + ${in.toString} + "~>" + ${out.toString} in {
-            val inObj = implicitly[org.scalacheck.Arbitrary[$in]]
-            org.scalatest.prop.GeneratorDrivenPropertyChecks.forAll((from: $in) => {
-              uk.camsw.shimrr.Migration.migrate[$in, $out](from)
+         "Migrating from " + ${inT.toString} + "~>" + ${outT.toString} in {
+            val inObj = implicitly[org.scalacheck.Arbitrary[$inT]]
+            org.scalatest.prop.GeneratorDrivenPropertyChecks.forAll((in: $inT) => {
+              uk.camsw.shimrr.Migration.migrate[$inT, $outT](in)
             })
          }
        """
