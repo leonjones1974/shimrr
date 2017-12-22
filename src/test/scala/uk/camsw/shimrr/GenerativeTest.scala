@@ -4,6 +4,7 @@ import org.scalacheck.ScalacheckShapeless
 import org.scalatest.FreeSpec
 import shapeless.HNil
 import uk.camsw.shimmr._
+import uk.camsw.shimmr.test.MigrationFreeSpec
 
 import scala.language.experimental.macros
 import scala.reflect.runtime.{universe => ru}
@@ -29,6 +30,7 @@ trait GenMigrationRules {
 }
 
 class GenerativeTest extends FreeSpec
+  with MigrationFreeSpec
   with MigrationContext
   with GenMigrationRules
   with ScalacheckShapeless {

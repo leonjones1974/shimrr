@@ -30,7 +30,6 @@ val shapelessDependencies: Seq[ModuleID] = Seq(
 
 val testDependencies: Seq[ModuleID] = Seq(
   "org.pegdown" % "pegdown" % pegdownVersion % "test",
-  "org.scalatest" %% "scalatest" % scalatestVersion % "test",
   "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test",
   "org.typelevel" % "shapeless-scalacheck_2.12" % shapelessScalacheckVersion % "test",
   "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6"
@@ -52,10 +51,15 @@ val splainDependencies: Seq[ModuleID] = Seq(
   compilerPlugin("io.tryp" % "splain" % "0.2.7" cross CrossVersion.patch)
 )
 
+val testLibDependencies: Seq[ModuleID] = Seq(
+  "org.scalatest" %% "scalatest" % scalatestVersion
+)
+
 libraryDependencies ++= splainDependencies
 libraryDependencies ++= catsDependencies
 libraryDependencies ++= shapelessDependencies
 libraryDependencies ++= macroCompatDependencies
+libraryDependencies ++= testLibDependencies
 libraryDependencies ++= testDependencies
 
 
