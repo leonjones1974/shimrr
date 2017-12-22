@@ -1,12 +1,7 @@
 package uk.camsw.shimrr
 
 import shapeless.HNil
-import uk.camsw.shimmr._
 import uk.camsw.shimmr.test.MigrationFreeSpec
-
-import scala.language.experimental.macros
-import scala.reflect.runtime.{universe => ru}
-
 
 trait GenMigrationRules {
 
@@ -29,8 +24,6 @@ trait GenMigrationRules {
 
 class GenerativeTest extends MigrationFreeSpec
   with GenMigrationRules {
-
-  def anyCanBeMigratedToAny[T]: Any = macro QuasiquotesGenerator.generateTest[T]
 
   "Given a coproduct with globally defined migration rules" - {
 
