@@ -8,7 +8,7 @@ import shapeless.syntax.singleton.mkSingletonOps
 import syntax._
 import org.scalatest.Matchers._
 
-trait LazyVersionGlobalMigrationRules {
+trait LazyFieldRules {
 
   private val counter = new AtomicInteger(0)
 
@@ -25,7 +25,7 @@ trait LazyVersionGlobalMigrationRules {
 
 class LazyFieldTest extends FreeSpec
   with MigrationContext
-  with LazyVersionGlobalMigrationRules {
+  with LazyFieldRules {
 
   override val fieldDefaults: FIELD_DEFAULTS = lazyFieldDefaults
 

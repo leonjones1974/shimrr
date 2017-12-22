@@ -4,7 +4,7 @@ import shapeless.HNil
 import uk.camsw.shimrr.test.MigrationFreeSpec
 import shapeless.syntax.singleton.mkSingletonOps
 
-trait VersionGlobalMigrationRules {
+trait GenerativeTestRules {
 
   private[shimrr] val globalFieldDefaults =
     'stringField1 ->> "STR1" ::
@@ -17,8 +17,8 @@ trait VersionGlobalMigrationRules {
 }
 
 
-class ExampleGenerativeTest extends MigrationFreeSpec
-  with VersionGlobalMigrationRules {
+class GenerativeTest extends MigrationFreeSpec
+  with GenerativeTestRules {
 
   "Given a coproduct with globally defined migration rules" - {
 

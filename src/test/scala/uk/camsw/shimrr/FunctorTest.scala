@@ -5,7 +5,7 @@ import shapeless.HNil
 import org.scalatest.Matchers._
 import syntax._
 
-class FunctorMigrationTest extends FreeSpec
+class FunctorTest extends FreeSpec
   with MigrationContext {
 
   type FIELD_DEFAULTS = HNil.type
