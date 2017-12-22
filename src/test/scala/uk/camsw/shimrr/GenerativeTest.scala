@@ -1,6 +1,5 @@
 package uk.camsw.shimrr
 
-import org.scalacheck.ScalacheckShapeless
 import org.scalatest.FreeSpec
 import shapeless.HNil
 import uk.camsw.shimmr._
@@ -31,8 +30,7 @@ trait GenMigrationRules {
 
 class GenerativeTest extends FreeSpec
   with MigrationFreeSpec
-  with GenMigrationRules
-  with ScalacheckShapeless {
+  with GenMigrationRules {
 
   def anyCanBeMigratedToAny[T]: Any = macro QuasiquotesGenerator.generateTest[T]
 
