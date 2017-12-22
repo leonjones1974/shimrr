@@ -1,7 +1,7 @@
 package uk.camsw.shimrr
 
 import cats.Monoid
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, ScalacheckShapeless}
 import org.scalatest.FreeSpec
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import shapeless.{Generic, HList, HNil}
@@ -38,13 +38,16 @@ trait GenMigrationRules {
 //@TestForType[Version]("fish")
 class Test
 
-class GenerativeTest extends FreeSpec with MigrationContext with GenMigrationRules {
+class GenerativeTest extends FreeSpec
+  with MigrationContext
+  with GenMigrationRules
+  with ScalacheckShapeless {
 
-//  val f = new Foo("hello")
-//  println("my field: " + f.myField)
+  //  val f = new Foo("hello")
+  //  println("my field: " + f.myField)
 
-//  println(s"f: ${f}")
-//  val x = new Test("fi")
+  //  println(s"f: ${f}")
+  //  val x = new Test("fi")
 
   def eval(expr: Class[_]): Unit = macro evalImpl
 
@@ -54,19 +57,18 @@ class GenerativeTest extends FreeSpec with MigrationContext with GenMigrationRul
 
   def migrationTest[T]: Any = macro QuasiquotesGenerator.generateTest[T]
 
-//  evalT[Version]
+  //  evalT[Version]
 
   import syntax._
-  import org.scalacheck.ScalacheckShapeless._
 
-  import org.scalatest.Matchers._
   "Given a set of coproducts" - {
     import uk.camsw.shimmr.Macros.Url._
     import cats.instances.int._
 
-//    "migrate" in {
-      migrationTest[Version]
-//    }
+
+    //    "migrate" in {
+    migrationTest[Version]
+    //    }
   }
 
   override protected def fieldDefaults = fieldDefaultRules
