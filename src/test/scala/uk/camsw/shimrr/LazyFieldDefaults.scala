@@ -11,12 +11,11 @@ import org.scalatest.Matchers._
 trait LazyVersionGlobalMigrationRules {
 
   private val counter = new AtomicInteger(0)
+
   private def nextCount: () => Int = () => counter.incrementAndGet()
 
   private[shimrr] val lazyFieldDefaults =
-    'stringField1 ->> "STR1" ::
-      'stringField2 ->> "STR2" ::
-      'intField1 ->> nextCount ::
+    'intField1 ->> nextCount ::
       HNil
 
   // We must specify the type of our field defaulter

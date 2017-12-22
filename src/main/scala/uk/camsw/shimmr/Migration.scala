@@ -102,10 +102,10 @@ trait MigrationContext {
     }
   }
 
-
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
     val empty: HNil.type = HNil
   }
+
 
 }
 

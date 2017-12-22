@@ -133,8 +133,6 @@ trait LazyVersionGlobalMigrationRules {
   private def nextCount: () => Int = () => counter.incrementAndGet()
 
   private[shimrr] val lazyFieldDefaults =
-    'stringField1 ->> "STR1" ::
-      'stringField2 ->> "STR2" ::
       'intField1 ->> nextCount ::
       HNil
 
