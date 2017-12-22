@@ -1,12 +1,9 @@
 package uk.camsw.shimrr
 
-import cats.Monoid
-import org.scalacheck.{Arbitrary, ScalacheckShapeless}
+import org.scalacheck.ScalacheckShapeless
 import org.scalatest.FreeSpec
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import shapeless.{Generic, HList, HNil}
+import shapeless.HNil
 import uk.camsw.shimmr._
-import uk.camsw.shimmr.Macros.evalImpl
 
 import scala.language.experimental.macros
 import scala.reflect.runtime.{universe => ru}
@@ -31,8 +28,6 @@ trait GenMigrationRules {
   type FIELD_DEFAULTS = fieldDefaultRules.type
 }
 
-class Test
-
 class GenerativeTest extends FreeSpec
   with MigrationContext
   with GenMigrationRules
@@ -42,14 +37,10 @@ class GenerativeTest extends FreeSpec
 
   import syntax._
 
-  "Given a set of coproducts" - {
-    import uk.camsw.shimmr.Macros.Url._
-    import cats.instances.int._
+  "Given a coproduct with globally defined migration rules" - {
 
-
-    //    "migrate" in {
     migrationTest[Version]
-    //    }
+
   }
 
   override protected def fieldDefaults = fieldDefaultRules
