@@ -4,8 +4,8 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
-import uk.camsw.shimmr.test.MigrationFreeSpec
 import uk.camsw.shimrr.syntax._
+import uk.camsw.shimrr.test.MigrationFreeSpec
 
 trait SameTypeMappingVersionGlobalMigrationRules {
 
@@ -26,6 +26,7 @@ class SameTypeMappingTest extends MigrationFreeSpec
 
   "mapping can be performed using normal functor once migration is complete" in {
     val products = Gen.listOfN(1000, Arbitrary.arbitrary[Version])
+    import cats.instances.list._
 
     GeneratorDrivenPropertyChecks.forAll((versions: List[Version]) => {
       versions.migrateTo[Str1Str2Int1]

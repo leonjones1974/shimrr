@@ -2,11 +2,10 @@ package uk.camsw.shimrr
 
 import org.scalatest.WordSpec
 import shapeless.HNil
-import org.scalatest.Matchers._
 import shapeless.test.illTyped
+import org.scalatest.Matchers._
 
-
-sealed trait Customer
+sealed trait Customer extends Versioned
 
 case class CustomerV1(name: String) extends Customer
 
@@ -63,6 +62,7 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
       CustomerV2("Leon", 43),
       CustomerV3(43, "Leon")
     )
+    import cats.instances.list._
 
     xs.migrateTo[CustomerV3] shouldBe List(
       CustomerV3(DefaultAge, "Leon"),
@@ -74,6 +74,5 @@ class ExampleTest extends WordSpec with MigrationContext with ExampleMigrationRu
   "New fields without associated default, fail to compile" in {
     illTyped("""CustomerV1("Leon").migrateTo[CustomerV4]""")
   }
-
 
 }

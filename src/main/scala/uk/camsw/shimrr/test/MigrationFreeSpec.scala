@@ -1,8 +1,8 @@
-package uk.camsw.shimmr.test
+package uk.camsw.shimrr.test
 
 import org.scalacheck.ScalacheckShapeless
 import org.scalatest.FreeSpec
-import uk.camsw.shimrr.MigrationContext
+import uk.camsw.shimrr.{MigrationContext, Versioned}
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
@@ -10,7 +10,7 @@ import scala.reflect.macros.blackbox
 trait MigrationFreeSpecOps extends MigrationContext with ScalacheckShapeless {
   this: FreeSpec =>
 
-  def anyCanBeMigratedToAny[T]: Any = macro MigrationFreeSpecMacros.generateAnyToAny[T]
+  def anyCanBeMigratedToAny[A <: Versioned]: Any = macro MigrationFreeSpecMacros.generateAnyToAny[A]
 }
 
 abstract class MigrationFreeSpec extends FreeSpec with MigrationFreeSpecOps

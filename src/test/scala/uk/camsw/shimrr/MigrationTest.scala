@@ -6,6 +6,8 @@ import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import shapeless.HNil
 import uk.camsw.shimrr.syntax._
+import cats.instances.list._
+import shapeless.test.illTyped
 
 object TestMigrationRules {
 
@@ -55,9 +57,19 @@ class MigrationTest extends WordSpec with MigrationContext {
     "add missing fields - using monoid" in {
       Str2Int1("str2", 32).migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "str2", 32)
       Int1(32).migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "STR2", 32)
-      NoFields.migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "STR2", -99)
+      NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("STR1", "STR2", -99)
       Int1(15).migrateTo[Str2Int1] shouldBe Str2Int1("STR2", 15)
       Str1("str1").migrateTo[Int1] shouldBe Int1(-99)
+    }
+
+    "things which aren't Versioned cannot be migrated from" in {
+      case class NotVersioned()
+      illTyped("""NotVersioned().migrateTo[NoFields]""")
+    }
+
+    "things which aren't Versioned cannot be migrated to" in {
+      case class NotVersioned()
+      illTyped("""NoFields().migrateTo[NotVersioned]""")
     }
   }
 

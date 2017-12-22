@@ -6,6 +6,9 @@ import shapeless.ops.record.Selector
 import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 
 import scala.language.experimental.macros
+import scala.language.higherKinds
+
+trait Versioned
 
 trait Defaulter[A] {
   def empty: A
@@ -13,7 +16,7 @@ trait Defaulter[A] {
 
 object Defaulter {
   def instance[A](a: => A): Defaulter[A] = new Defaulter[A] {
-    override def empty = a
+    override def empty: A = a
   }
 }
 
@@ -23,9 +26,9 @@ trait Migration[A, B] {
 
 object Migration {
 
-  def instance[A, B](f: A => B): Migration[A, B] = (a: A) => f(a)
+  def instance[A, B <: Versioned](f: A => B): Migration[A, B] = (a: A) => f(a)
 
-  def migrate[A, B](a: A)(implicit m: Migration[A, B]): B = m.migrate(a)
+  def migrate[A <: Versioned, B <: Versioned](a: A)(implicit m: Migration[A, B]): B = m.migrate(a)
 
 }
 
@@ -35,18 +38,19 @@ trait MigrationContext {
 
   protected def fieldDefaults: FIELD_DEFAULTS
 
-  implicit def cNilMigration[T <: CNil, B, BRepr](implicit
-                                                  genB: LabelledGeneric.Aux[B, BRepr]
-                                                 ): Migration[T, B] =
+
+  implicit def cNilMigration[T <: CNil, B <: Versioned, BRepr](implicit
+                                                               genB: LabelledGeneric.Aux[B, BRepr]
+                                                              ): Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
 
-  implicit def coproductReprMigration[H, T <: Coproduct, B, BRepr <: HList](implicit
-                                                                            genB: LabelledGeneric.Aux[B, BRepr],
-                                                                            mH: Migration[H, B],
-                                                                            mT: Migration[T, B]
-                                                                           ): Migration[H :+: T, B] =
+  implicit def coproductReprMigration[H, T <: Coproduct, B <: Versioned, BRepr <: HList](implicit
+                                                                                         genB: LabelledGeneric.Aux[B, BRepr],
+                                                                                         mH: Migration[H, B],
+                                                                                         mT: Migration[T, B]
+                                                                                        ): Migration[H :+: T, B] =
     Migration.instance {
       case Inl(h) =>
         mH.migrate(h)
@@ -54,7 +58,7 @@ trait MigrationContext {
         mT.migrate(t)
     }
 
-  implicit def coproductMigration[A, B, ARepr <: Coproduct, BRepr <: HList](implicit
+  implicit def coproductMigration[A, B <: Versioned, ARepr <: Coproduct, BRepr <: HList](implicit
                                                                             genA: Generic.Aux[A, ARepr],
                                                                             genB: LabelledGeneric.Aux[B, BRepr],
                                                                             m: Migration[ARepr, B]): Migration[A, B] =
@@ -65,7 +69,7 @@ trait MigrationContext {
 
   implicit def productMigration[
   A, ARepr <: HList,
-  B, BRepr <: HList,
+  B <: Versioned, BRepr <: HList,
   Common <: HList,
   Added <: HList,
   Unaligned <: HList](
@@ -84,10 +88,10 @@ trait MigrationContext {
     }
 
   implicit def literalRecordDefaulter[K <: Symbol, H, T <: HList](
-                                                            implicit
-                                                            selector: Selector.Aux[FIELD_DEFAULTS, K, H],
-                                                            dT: Defaulter[T]
-                                                          ): Defaulter[FieldType[K, H] :: T] =
+                                                                   implicit
+                                                                   selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+                                                                   dT: Defaulter[T]
+                                                                 ): Defaulter[FieldType[K, H] :: T] =
     Defaulter.instance {
       field[K](selector(fieldDefaults)) :: field[K](dT.empty)
     }

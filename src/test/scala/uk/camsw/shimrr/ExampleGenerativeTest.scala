@@ -1,7 +1,7 @@
 package uk.camsw.shimrr
 
 import shapeless.HNil
-import uk.camsw.shimmr.test.MigrationFreeSpec
+import uk.camsw.shimrr.test.MigrationFreeSpec
 import shapeless.syntax.singleton.mkSingletonOps
 
 trait VersionGlobalMigrationRules {

@@ -23,7 +23,7 @@ trait LazyVersionGlobalMigrationRules {
 }
 
 
-class LazyFieldDefaults extends FreeSpec
+class LazyFieldTest extends FreeSpec
   with MigrationContext
   with LazyVersionGlobalMigrationRules {
 
