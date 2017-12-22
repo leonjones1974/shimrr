@@ -83,7 +83,7 @@ trait MigrationContext {
         genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
     }
 
-  implicit def recordDefaulter[K <: Symbol, H, T <: HList](
+  implicit def literalRecordDefaulter[K <: Symbol, H, T <: HList](
                                                             implicit
                                                             selector: Selector.Aux[FIELD_DEFAULTS, K, H],
                                                             dT: Defaulter[T]
@@ -91,6 +91,16 @@ trait MigrationContext {
     Defaulter.instance {
       field[K](selector(fieldDefaults)) :: field[K](dT.empty)
     }
+
+  implicit def fRecordDefaulter[K <: Symbol, H, T <: HList](
+                                                             implicit
+                                                             selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
+                                                             dT: Defaulter[T]
+                                                           ): Defaulter[FieldType[K, H] :: T] = {
+    Defaulter.instance {
+      field[K](selector(fieldDefaults)()) :: field[K](dT.empty)
+    }
+  }
 
 
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
