@@ -31,11 +31,6 @@ trait GenMigrationRules {
   type FIELD_DEFAULTS = fieldDefaultRules.type
 }
 
-//
-//@FromSchema("/fish/flop")
-//class Foo
-
-//@TestForType[Version]("fish")
 class Test
 
 class GenerativeTest extends FreeSpec
@@ -43,21 +38,7 @@ class GenerativeTest extends FreeSpec
   with GenMigrationRules
   with ScalacheckShapeless {
 
-  //  val f = new Foo("hello")
-  //  println("my field: " + f.myField)
-
-  //  println(s"f: ${f}")
-  //  val x = new Test("fi")
-
-  def eval(expr: Class[_]): Unit = macro evalImpl
-
-  def evalT[T]: Monoid[T] = macro Macros.evalTImpl[T]
-
-  def evalStr[T](expr: String): Any = macro Macros.evalStrImpl[T]
-
   def migrationTest[T]: Any = macro QuasiquotesGenerator.generateTest[T]
-
-  //  evalT[Version]
 
   import syntax._
 
