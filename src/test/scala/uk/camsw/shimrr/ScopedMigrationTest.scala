@@ -4,6 +4,7 @@ import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
+import uk.camsw.shimrr.instances._
 import uk.camsw.shimrr.syntax._
 
 class ScopedMigrationTest extends FreeSpec {
