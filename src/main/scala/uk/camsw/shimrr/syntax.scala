@@ -12,12 +12,11 @@ trait MigrationOps {
   implicit class MigrationOps[A <: Versioned](a: A) {
 
     def migrateTo[B <: Versioned](implicit
-                                  m: Migration[A, B],
-                                  genA: Generic[A]
+                                  genA: Generic[A],
+                                  m: Migration[A, B]
                                  ): B = m.migrate(a)
 
   }
-
 }
 
 object syntax extends MigrationOps

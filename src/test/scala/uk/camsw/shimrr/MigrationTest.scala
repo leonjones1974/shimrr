@@ -8,26 +8,16 @@ import shapeless.HNil
 import uk.camsw.shimrr.syntax._
 import cats.instances.list._
 import shapeless.test.illTyped
+import shapeless.syntax.singleton.mkSingletonOps
+import instances._
 
-object TestMigrationRules {
+class MigrationTest extends WordSpec {
 
-  import shapeless.syntax.singleton.mkSingletonOps
+  implicit val ctx = MigrationContext('stringField1 ->> "STR1" ::
+    'stringField2 ->> "STR2" ::
+    'intField1 ->> -99 ::
+    HNil)
 
-  val fieldDefaulters =
-    'stringField1 ->> "STR1" ::
-      'stringField2 ->> "STR2" ::
-      'intField1 ->> -99 ::
-      HNil
-
-}
-
-class MigrationTest extends WordSpec with MigrationContext {
-
-  import TestMigrationRules._
-
-  type FIELD_DEFAULTS = fieldDefaulters.type
-
-  def fieldDefaults: FIELD_DEFAULTS = fieldDefaulters
 
   val base = Str1Str2Int1()
 

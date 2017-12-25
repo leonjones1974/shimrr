@@ -1,15 +1,11 @@
 package uk.camsw.shimrr
 
 import org.scalatest.FreeSpec
-import shapeless.HNil
 import org.scalatest.Matchers._
-import syntax._
+import uk.camsw.shimrr.syntax._
+import instances._
 
-class FunctorTest extends FreeSpec
-  with MigrationContext {
-
-  type FIELD_DEFAULTS = HNil.type
-  override val fieldDefaults: FIELD_DEFAULTS = HNil
+class FunctorTest extends FreeSpec {
 
   "can migrate any functor F[Versioned]" - {
     "Some " in {

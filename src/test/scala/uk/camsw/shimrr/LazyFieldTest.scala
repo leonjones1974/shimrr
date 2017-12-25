@@ -3,31 +3,20 @@ package uk.camsw.shimrr
 import java.util.concurrent.atomic.AtomicInteger
 
 import org.scalatest.FreeSpec
+import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
-import syntax._
-import org.scalatest.Matchers._
+import uk.camsw.shimrr.syntax._
+import instances._
 
-trait LazyFieldRules {
+class LazyFieldTest extends FreeSpec {
 
   private val counter = new AtomicInteger(0)
-
   private def nextCount: () => Int = () => counter.incrementAndGet()
 
-  private[shimrr] val lazyFieldDefaults =
-    'intField1 ->> nextCount ::
-      HNil
-
-  // We must specify the type of our field defaulter
-  type FIELD_DEFAULTS = lazyFieldDefaults.type
-}
-
-
-class LazyFieldTest extends FreeSpec
-  with MigrationContext
-  with LazyFieldRules {
-
-  override val fieldDefaults: FIELD_DEFAULTS = lazyFieldDefaults
+  implicit val ctx = MigrationContext(
+    'intField1 ->> nextCount :: HNil
+  )
 
   "function can be used to default field" in {
     val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
