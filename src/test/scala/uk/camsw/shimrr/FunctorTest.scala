@@ -6,10 +6,9 @@ import org.scalatest.Matchers._
 import syntax._
 
 class FunctorTest extends FreeSpec
-  with MigrationContext {
+  with MigrationContext[HNil] {
 
-  type FIELD_DEFAULTS = HNil.type
-  override val fieldDefaults: FIELD_DEFAULTS = HNil
+  override val fieldDefaults: HNil.type = HNil
 
   "can migrate any functor F[Versioned]" - {
     "Some " in {

@@ -5,11 +5,9 @@ import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
 
-trait MigrationContext {
+trait MigrationContext[FIELD_DEFAULTS <: HList] {
 
-  protected type FIELD_DEFAULTS <: HList
-
-  protected def fieldDefaults: FIELD_DEFAULTS
+  val fieldDefaults: FIELD_DEFAULTS
 
 
   implicit def cNilMigration[T <: CNil, B <: Versioned, BRepr](implicit
@@ -83,5 +81,5 @@ trait MigrationContext {
     val empty: HNil.type = HNil
   }
 
-
 }
+

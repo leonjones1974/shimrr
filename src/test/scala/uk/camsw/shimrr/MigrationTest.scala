@@ -21,13 +21,9 @@ object TestMigrationRules {
 
 }
 
-class MigrationTest extends WordSpec with MigrationContext {
+class MigrationTest extends WordSpec with MigrationContext[TestMigrationRules.fieldDefaulters.type] {
 
-  import TestMigrationRules._
-
-  type FIELD_DEFAULTS = fieldDefaulters.type
-
-  def fieldDefaults: FIELD_DEFAULTS = fieldDefaulters
+  val fieldDefaults = TestMigrationRules.fieldDefaulters
 
   val base = Str1Str2Int1()
 

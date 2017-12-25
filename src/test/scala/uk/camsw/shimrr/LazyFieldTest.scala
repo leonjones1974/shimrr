@@ -8,7 +8,7 @@ import shapeless.syntax.singleton.mkSingletonOps
 import syntax._
 import org.scalatest.Matchers._
 
-trait LazyFieldRules {
+object LazyFieldRules {
 
   private val counter = new AtomicInteger(0)
 
@@ -24,10 +24,9 @@ trait LazyFieldRules {
 
 
 class LazyFieldTest extends FreeSpec
-  with MigrationContext
-  with LazyFieldRules {
+  with MigrationContext[LazyFieldRules.lazyFieldDefaults.type] {
 
-  override val fieldDefaults: FIELD_DEFAULTS = lazyFieldDefaults
+  override val fieldDefaults = LazyFieldRules.lazyFieldDefaults
 
   "function can be used to default field" in {
     val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
