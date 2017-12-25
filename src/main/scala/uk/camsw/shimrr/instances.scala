@@ -15,7 +15,6 @@ object instances {
     )
 
   implicit def coproductReprMigration[H, T <: Coproduct, B <: Versioned, BRepr <: HList](implicit
-                                                                                         genB: LabelledGeneric.Aux[B, BRepr],
                                                                                          mH: Migration[H, B],
                                                                                          mT: Migration[T, B]
                                                                                         ): Migration[H :+: T, B] =

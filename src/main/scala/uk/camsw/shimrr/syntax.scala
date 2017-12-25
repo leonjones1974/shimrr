@@ -1,7 +1,6 @@
 package uk.camsw.shimrr
 
 import cats.syntax.all._
-import shapeless.Generic
 
 trait MigrationOps {
 
@@ -12,11 +11,11 @@ trait MigrationOps {
   implicit class MigrationOps[A <: Versioned](a: A) {
 
     def migrateTo[B <: Versioned](implicit
-                                  genA: Generic[A],
                                   m: Migration[A, B]
                                  ): B = m.migrate(a)
 
   }
+
 }
 
 object syntax extends MigrationOps

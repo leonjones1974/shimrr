@@ -22,7 +22,6 @@ class ScopedMigrationTest extends FreeSpec {
         implicit val ctx = MigrationContext(
           defaults =  'stringField2 ->> "str2" :: HNil
         )
-
         Str1("str1").migrateTo[Str1Str2] shouldBe Str1Str2("str1", "str2")
       }
     }
