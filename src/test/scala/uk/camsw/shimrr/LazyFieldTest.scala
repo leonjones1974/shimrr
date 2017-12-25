@@ -18,8 +18,6 @@ object LazyFieldRules {
     'intField1 ->> nextCount ::
       HNil
 
-  // We must specify the type of our field defaulter
-  type FIELD_DEFAULTS = lazyFieldDefaults.type
 }
 
 

@@ -12,10 +12,7 @@ object GenerativeTestRules {
       'intField1 ->> -99 ::
       HNil
 
-  // We must specify the type of our field defaulter
-  type FIELD_DEFAULTS = globalFieldDefaults.type
 }
-
 
 class GenerativeTest extends MigrationFreeSpec[GenerativeTestRules.globalFieldDefaults.type] {
 
