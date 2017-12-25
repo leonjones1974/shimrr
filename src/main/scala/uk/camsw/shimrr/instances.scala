@@ -9,7 +9,7 @@ object instances {
 
   implicit def cNilMigration[T <: CNil, B <: ReadRepair, BRepr](implicit
                                                                 genB: LabelledGeneric.Aux[B, BRepr]
-                                                              ): Migration[T, B] =
+                                                               ): Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
@@ -17,7 +17,7 @@ object instances {
   implicit def coproductReprMigration[H, T <: Coproduct, B <: ReadRepair, BRepr <: HList](implicit
                                                                                           mH: Migration[H, B],
                                                                                           mT: Migration[T, B]
-                                                                                        ): Migration[H :+: T, B] =
+                                                                                         ): Migration[H :+: T, B] =
     Migration.instance {
       case Inl(h) =>
         mH.migrate(h)
@@ -74,6 +74,13 @@ object instances {
       field[K](selector(ctx.fieldDefaults)()) :: field[K](dT.empty)
     }
   }
+
+//  implicit def scopedLiteralRecordDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](implicit
+//                                                                                                 ctx: MigrationContext[FIELD_DEFAULTS],
+//                                                                                                 selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+//                                                                                                 dT: Defaulter[T]
+//                                                                                                ): Defaulter[FieldType[K, H] :: T] = ???
+
 
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
     val empty: HNil.type = HNil

@@ -27,16 +27,17 @@ class ScopedMigrationTest extends FreeSpec {
       }
     }
 
-    "according to type hierarchy" in {
-      sealed trait Entity extends ReadRepair
-      sealed trait Customer extends Entity
-      case class CustomerV1(name: String) extends Customer
-      case class CustomerV2(name: String, age: Int) extends Customer
+    sealed trait Entity extends ReadRepair
+    sealed trait Customer extends Entity
+    case class CustomerV1(name: String) extends Customer
+    case class CustomerV2(name: String, age: Int) extends Customer
+    case class CustomerV3(name: String, age: Int) extends Customer
 
-      sealed trait Supplier extends Entity
-      case class SupplierV1(companyName: String) extends Supplier
-      case class SupplierV2(companyName: String, age: Int) extends Supplier
+    sealed trait Supplier extends Entity
+    case class SupplierV1(companyName: String) extends Supplier
+    case class SupplierV2(companyName: String, age: Int) extends Supplier
 
+    "according to type hierarchy - non-typesafe" in {
       List[Entity](
         CustomerV1("cust1"),
         SupplierV1("supp1")
@@ -50,7 +51,14 @@ class ScopedMigrationTest extends FreeSpec {
           implicit val ctx = MigrationContext('age ->> 1 :: HNil)
           s.migrateTo[SupplierV2]
       } should contain only (CustomerV2("cust1", 25), SupplierV2("supp1", 1))
+    }
 
+    "according to specific version - typesafe" in {
+      implicit val ctxV1 = ScopedMigrationContext[CustomerV1]('age ->> 25 :: HNil)
+      implicit val ctxV2 = ScopedMigrationContext[CustomerV2]('age ->> 51 :: HNil)
+
+//      CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
+//      CustomerV1("name").migrateTo[CustomerV3] shouldBe CustomerV2("name", 51)
     }
   }
 }
