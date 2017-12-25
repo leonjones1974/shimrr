@@ -1,3 +1,3 @@
 package uk.camsw.shimrr
 
-trait Versioned
+trait ReadRepair

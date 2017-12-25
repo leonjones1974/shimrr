@@ -7,16 +7,16 @@ import shapeless.ops.record.Selector
 
 object instances {
 
-  implicit def cNilMigration[T <: CNil, B <: Versioned, BRepr](implicit
-                                                               genB: LabelledGeneric.Aux[B, BRepr]
+  implicit def cNilMigration[T <: CNil, B <: ReadRepair, BRepr](implicit
+                                                                genB: LabelledGeneric.Aux[B, BRepr]
                                                               ): Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
 
-  implicit def coproductReprMigration[H, T <: Coproduct, B <: Versioned, BRepr <: HList](implicit
-                                                                                         mH: Migration[H, B],
-                                                                                         mT: Migration[T, B]
+  implicit def coproductReprMigration[H, T <: Coproduct, B <: ReadRepair, BRepr <: HList](implicit
+                                                                                          mH: Migration[H, B],
+                                                                                          mT: Migration[T, B]
                                                                                         ): Migration[H :+: T, B] =
     Migration.instance {
       case Inl(h) =>
@@ -25,10 +25,10 @@ object instances {
         mT.migrate(t)
     }
 
-  implicit def coproductMigration[A, B <: Versioned, ARepr <: Coproduct, BRepr <: HList](implicit
-                                                                                         genA: Generic.Aux[A, ARepr],
-                                                                                         genB: LabelledGeneric.Aux[B, BRepr],
-                                                                                         m: Migration[ARepr, B]): Migration[A, B] =
+  implicit def coproductMigration[A, B <: ReadRepair, ARepr <: Coproduct, BRepr <: HList](implicit
+                                                                                          genA: Generic.Aux[A, ARepr],
+                                                                                          genB: LabelledGeneric.Aux[B, BRepr],
+                                                                                          m: Migration[ARepr, B]): Migration[A, B] =
     Migration.instance(a =>
       m.migrate(genA.to(a))
     )
@@ -36,7 +36,7 @@ object instances {
 
   implicit def productMigration[
   A, ARepr <: HList,
-  B <: Versioned, BRepr <: HList,
+  B <: ReadRepair, BRepr <: HList,
   Common <: HList,
   Added <: HList,
   Unaligned <: HList](

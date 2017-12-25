@@ -2,7 +2,7 @@ package uk.camsw.shimrr.test
 
 import org.scalacheck.ScalacheckShapeless
 import org.scalatest.FreeSpec
-import uk.camsw.shimrr.Versioned
+import uk.camsw.shimrr.ReadRepair
 import scala.language.experimental.macros
 
 import scala.reflect.macros.blackbox
@@ -10,7 +10,7 @@ import scala.reflect.macros.blackbox
 trait MigrationFreeSpecOps extends ScalacheckShapeless {
   this: FreeSpec =>
 
-  def anyCanBeMigratedToAny[A <: Versioned]: Any = macro MigrationFreeSpecMacros.generateAnyToAny[A]
+  def anyCanBeMigratedToAny[A <: ReadRepair]: Any = macro MigrationFreeSpecMacros.generateAnyToAny[A]
 }
 
 abstract class MigrationFreeSpec extends FreeSpec with MigrationFreeSpecOps

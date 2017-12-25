@@ -2,7 +2,7 @@ package uk.camsw.shimrr
 
 import shapeless.HList
 
-trait MigrationContext[FIELD_DEFAULTS <: HList] {
+private[shimrr] trait MigrationContext[FIELD_DEFAULTS <: HList] {
   type OUT = FIELD_DEFAULTS
   val fieldDefaults: FIELD_DEFAULTS
 }
