@@ -12,3 +12,16 @@ trait ProductService {
   def allProducts(): Iterable[Bicycle]
 
 }
+
+object ProductService {
+
+  /**
+    * You aren't a big fan of the cake pattern, so you opt for simple injection of your repository
+    * implementation
+    */
+  def apply(productRepository: ProductRepository): ProductService = new ProductService {
+    val repository:ProductRepository = productRepository
+
+    override def allProducts(): Iterable[Bicycle] = repository.findAll()
+  }
+}
