@@ -6,7 +6,8 @@ For some reason (known only to management) they have decided to build their own 
 rather than take one *off the shelf*
 
 Someone down the pub mentioned that micro-services solve all problems both now and forever, 
-thus you have been given the task of creating a service that manages the *Product Catalogue*
+thus you have been given the task of creating a service that allow querying of the *Product Catalogue*
+Another team (that doesn't exist yet) will be dealing with the Create/ Update and Delete functionality
 
 Of course, *big data* techniques must be applied everywhere at all times, thus your CTO has opted 
 for *no-sql* style storage back-end
