@@ -19,8 +19,11 @@ class FunctorTest extends FreeSpec {
     }
 
     "List" in {
-      import cats.instances.list._
       List(Str1("str1")).migrateTo[NoFields] shouldBe List(NoFields())
+    }
+
+    "Iterable" in {
+      Iterable(Str1("str1")).migrateTo[NoFields] shouldBe Iterable(NoFields())
     }
   }
 }

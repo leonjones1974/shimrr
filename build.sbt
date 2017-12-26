@@ -9,6 +9,7 @@ val pegdownVersion = "1.6.0"
 val shapelessVersion = "2.3.2"
 val shapelessScalacheckVersion = "0.6.1"
 val catsVersion = "1.0.0-MF"
+val alleycatsVersion = "1.0.0-RC2"
 
 
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -31,7 +32,8 @@ val testDependencies: Seq[ModuleID] = Seq(
 val catsDependencies: Seq[ModuleID] = Seq(
   "org.typelevel" % "cats-macros_2.12" % catsVersion,
   "org.typelevel" % "cats-core_2.12" % catsVersion,
-  "org.typelevel" % "cats-kernel_2.12" % catsVersion
+  "org.typelevel" % "cats-kernel_2.12" % catsVersion,
+  "org.typelevel" %% "alleycats-core" % alleycatsVersion
 )
 
 val macroCompatDependencies: Seq[ModuleID] = Seq(
