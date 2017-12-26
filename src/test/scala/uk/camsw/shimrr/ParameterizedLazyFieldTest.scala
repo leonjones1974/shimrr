@@ -73,7 +73,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
 
       implicit val ctx = MigrationContext.scoped[NoFields](
         'stringField1 ->> arity0 ::
-        'stringField2 ->> arity1 ::
+          'stringField2 ->> arity1 ::
           'intField1 ->> 5 :: HNil
       )
 
@@ -81,19 +81,26 @@ class ParameterizedLazyFieldTest extends FreeSpec {
     }
 
 
-    //    "still can't use to scope hlists" in {
-    //      val nextCount: Str1 => Int = _ => 0
-    //
-    //      implicit val str1 = MigrationContext.scoped[Str1Str2](
-    //        'stringField2 ->> "str2" ::
-    //        'intField1 ->> 0 :: HNil
-    //      )
-    //
-    ////      implicit val str1Str2 = MigrationContext.scoped[Str1Str2](
-    ////        'intField1 ->> nextCount :: HNil
-    ////      )
-    //
-    //      Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Int1(0)
-    //    }
+//    "scopes can be applied to heterogeneous lists" in {
+//
+//      implicit val str1str2 = MigrationContext.scoped[Str1Str2](
+//        'intField1 ->> 0 :: HNil
+//      )
+//
+//      implicit val str1 = MigrationContext.scoped[Str1](
+//        'stringField2 ->> "str2" ::
+//          'intField1 ->> 0 :: HNil
+//      )
+//
+//      val xs = List[Version](
+//        Str1Str2("str1", "str2"),
+//        Str1("str1"),
+//      )
+//
+//      xs.migrateTo[Str1Str2Int1] shouldBe List(
+//        Str1Str2Int1("str1", "str2", 0),
+//        Str1Str2Int1("str1", "str2", 0)
+//      )
+//    }
   }
 }

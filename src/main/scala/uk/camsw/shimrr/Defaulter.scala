@@ -1,12 +1,12 @@
 package uk.camsw.shimrr
 
 trait Defaulter[F] {
-  def empty: F
+  def default: F
 }
 
 object Defaulter {
   def instance[F](block: => F): Defaulter[F] = new Defaulter[F] {
-    override def empty: F = block
+    override def default: F = block
   }
 }
 
