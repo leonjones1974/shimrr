@@ -62,8 +62,8 @@ object ProductService {
 
       // You rebuild and everything is happy
       // You run the test and everything is happy
+      // Because you are curious you change the field name in the rule and it breaks compilation again
 
-      // You add the single liner and all your tests pass!
       repository.findAll().migrateTo[BicycleV4]
     }
   }
