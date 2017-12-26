@@ -77,7 +77,7 @@ object instances {
 
   implicit def literalRecordDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
                                                                                             implicit
-                                                                                            ctx: MigrationContext[FIELD_DEFAULTS],
+                                                                                            ctx: GlobalMigrationContext[FIELD_DEFAULTS],
                                                                                             selector: Selector.Aux[FIELD_DEFAULTS, K, H],
                                                                                             dT: Defaulter[T]
                                                                                           ): Defaulter[FieldType[K, H] :: T] =
@@ -87,7 +87,7 @@ object instances {
 
   implicit def lazyRecordDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
                                                                                          implicit
-                                                                                         ctx: MigrationContext[FIELD_DEFAULTS],
+                                                                                         ctx: GlobalMigrationContext[FIELD_DEFAULTS],
                                                                                          selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
                                                                                          dT: Defaulter[T]
                                                                                        ): Defaulter[FieldType[K, H] :: T] = {

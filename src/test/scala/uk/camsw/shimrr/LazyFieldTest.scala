@@ -14,7 +14,7 @@ class LazyFieldTest extends FreeSpec {
   private val counter = new AtomicInteger(0)
   private def nextCount: () => Int = () => counter.incrementAndGet()
 
-  implicit val ctx = MigrationContext(
+  implicit val ctx = MigrationContext.global(
     'intField1 ->> nextCount :: HNil
   )
 

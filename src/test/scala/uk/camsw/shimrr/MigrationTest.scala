@@ -13,7 +13,7 @@ import instances._
 
 class MigrationTest extends WordSpec {
 
-  implicit val ctx = MigrationContext('stringField1 ->> "STR1" ::
+  implicit val ctx = MigrationContext.global('stringField1 ->> "STR1" ::
     'stringField2 ->> "STR2" ::
     'intField1 ->> -99 ::
     HNil)
