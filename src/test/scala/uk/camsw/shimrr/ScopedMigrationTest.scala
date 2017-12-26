@@ -30,8 +30,9 @@ class ScopedMigrationTest extends FreeSpec {
     sealed trait Entity extends ReadRepair
     sealed trait Customer extends Entity
     case class CustomerV1(name: String) extends Customer
+    case class CustomerV1Dup(name: String) extends Customer
     case class CustomerV2(name: String, age: Int) extends Customer
-    case class CustomerV3(name: String, age: Int) extends Customer
+    case class CustomerV3(name: String, age: Int, shoeSize: Double) extends Customer
 
     sealed trait Supplier extends Entity
     case class SupplierV1(companyName: String) extends Supplier
@@ -54,11 +55,16 @@ class ScopedMigrationTest extends FreeSpec {
     }
 
     "according to specific version - typesafe" in {
-      implicit val ctxV1 = ScopedMigrationContext[CustomerV1]('age ->> 25 :: HNil)
-      implicit val ctxV2 = ScopedMigrationContext[CustomerV2]('age ->> 51 :: HNil)
 
-//      CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
-//      CustomerV1("name").migrateTo[CustomerV3] shouldBe CustomerV2("name", 51)
+      implicit val ctxV1 = ScopedMigrationContext[CustomerV1]('age ->> 25 :: HNil)
+      implicit val ctxV2 = ScopedMigrationContext[CustomerV1Dup]('age ->> 51 :: HNil)
+
+      CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
+      CustomerV1Dup("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 51)
+    }
+
+    "according to coproduct - typesafe" in {
+      
     }
   }
 }

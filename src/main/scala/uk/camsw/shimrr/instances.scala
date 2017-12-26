@@ -54,6 +54,27 @@ object instances {
         genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
     }
 
+  //todo: If this ever works, dry it up
+  implicit def scopedProductMigration[
+  A, ARepr <: HList,
+  B <: ReadRepair, BRepr <: HList,
+  Common <: HList,
+  Added <: HList,
+  Unaligned <: HList](
+                       implicit
+                       genA: LabelledGeneric.Aux[A, ARepr],
+                       genB: LabelledGeneric.Aux[B, BRepr],
+                       inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
+                       diff: hlist.Diff.Aux[BRepr, Common, Added],
+                       defaulter: ScopedDefaulter[A, Added],
+                       prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
+                       align: hlist.Align[Unaligned, BRepr]
+                     ): Migration[A, B] =
+    Migration.instance {
+      a =>
+        genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
+    }
+
   implicit def literalRecordDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
                                                                                             implicit
                                                                                             ctx: MigrationContext[FIELD_DEFAULTS],
@@ -75,12 +96,14 @@ object instances {
     }
   }
 
-//  implicit def scopedLiteralRecordDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](implicit
-//                                                                                                 ctx: MigrationContext[FIELD_DEFAULTS],
-//                                                                                                 selector: Selector.Aux[FIELD_DEFAULTS, K, H],
-//                                                                                                 dT: Defaulter[T]
-//                                                                                                ): Defaulter[FieldType[K, H] :: T] = ???
-
+  implicit def scopedLiteralRecordDefaulter[A <: ReadRepair, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](implicit
+                                                                                                                  ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
+                                                                                                                  selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+                                                                                                                  dT: Defaulter[T]
+                                                                                                                 ): ScopedDefaulter[A, FieldType[K, H] :: T] =
+    ScopedDefaulter.instance[A] {
+      field[K](selector(ctx.fieldDefaults)) :: field[K](dT.empty)
+    }
 
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
     val empty: HNil.type = HNil

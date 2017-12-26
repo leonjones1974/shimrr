@@ -15,8 +15,13 @@ trait ScopedDefaulter[A, F] {
 }
 
 object ScopedDefaulter {
-  def apply[A, F](block: => F): ScopedDefaulter[A, F] = new ScopedDefaulter[A, F] {
-    override def empty = block
+
+  class Builder[A] {
+    def apply[F](block: F): ScopedDefaulter[A, F] = new ScopedDefaulter[A, F] {
+      override def empty = block
+    }
   }
+
+  def instance[A] = new Builder[A]
 }
 

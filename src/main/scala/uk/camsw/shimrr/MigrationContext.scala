@@ -14,14 +14,15 @@ object MigrationContext {
 }}
 
 private[shimrr] trait ScopedMigrationContext[A <: ReadRepair, FIELD_DEFAULTS <: HList] {
-
+  type OUT = FIELD_DEFAULTS
+  val fieldDefaults: FIELD_DEFAULTS
 }
 
 object ScopedMigrationContext {
 
   class Builder[A <: ReadRepair] {
     def apply[FIELD_DEFAULTS <: HList](defaults: FIELD_DEFAULTS): ScopedMigrationContext[A, FIELD_DEFAULTS] = new ScopedMigrationContext[A, FIELD_DEFAULTS] {
-
+      override val fieldDefaults: FIELD_DEFAULTS = defaults
     }
   }
 
