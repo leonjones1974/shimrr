@@ -12,19 +12,10 @@ val catsVersion = "1.0.0-MF"
 
 
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
-//scalacOptions += "-P:splain:compact:true"
-
-//scalacOptions += "-Yliteral-types"
-//scalacOptions += "-P:splain:compact:true"
-//inThisBuild(Seq(
-//  scalaOrganization := "org.typelevel",
-//  scalaVersion := "2.12.4-bin-typelevel-4"
-//))
-//
-
 logBuffered in Test := false
+
+unmanagedSourceDirectories in Compile += baseDirectory.value / "src/examples/scala"
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
   "com.chuusai" %% "shapeless" % shapelessVersion
