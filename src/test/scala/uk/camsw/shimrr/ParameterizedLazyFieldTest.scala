@@ -26,26 +26,74 @@ class ParameterizedLazyFieldTest extends FreeSpec {
 
       implicit val ctx = MigrationContext.scoped[NoFields](
         'stringField1 ->> str1 ::
-        'stringField2 ->> str2 ::
-        'intField1 ->> nextCount :: HNil
+          'stringField2 ->> str2 ::
+          'intField1 ->> nextCount :: HNil
       )
 
       NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }
 
-//    "still can't use to scope hlists" in {
-//      val nextCount: Str1 => Int = _ => 0
-//
-//      implicit val str1 = MigrationContext.scoped[Str1Str2](
-//        'stringField2 ->> "str2" ::
-//        'intField1 ->> 0 :: HNil
-//      )
-//
-////      implicit val str1Str2 = MigrationContext.scoped[Str1Str2](
-////        'intField1 ->> nextCount :: HNil
-////      )
-//
-//      Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Int1(0)
-//    }
+    "arity0 and arity1 can be mixed and matched" in {
+      val arity0 = () => "str2"
+      val arity1: Str1 => Int = _ => 5
+
+      implicit val ctx = MigrationContext.scoped[Str1](
+        'stringField2 ->> arity0 ::
+          'intField1 ->> arity1 :: HNil
+      )
+
+      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
+    }
+
+    "arity0 and literal can be mixed and matched" in {
+      val arity0 = () => "str2"
+
+      implicit val ctx = MigrationContext.scoped[Str1](
+        'stringField2 ->> arity0 ::
+          'intField1 ->> 5 :: HNil
+      )
+
+      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
+    }
+
+    "arity1 and literal can be mixed and matched" in {
+      val arity1 = (_: Str1) => "str2"
+
+      implicit val ctx = MigrationContext.scoped[Str1](
+        'stringField2 ->> arity1 ::
+          'intField1 ->> 5 :: HNil
+      )
+
+      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
+    }
+
+    "arity 0, arity1 and literal can be mixed and matched" in {
+      val arity0 = () => "str1"
+      val arity1 = (_: NoFields) => "str2"
+
+      implicit val ctx = MigrationContext.scoped[NoFields](
+        'stringField1 ->> arity0 ::
+        'stringField2 ->> arity1 ::
+          'intField1 ->> 5 :: HNil
+      )
+
+      NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
+    }
+
+
+    //    "still can't use to scope hlists" in {
+    //      val nextCount: Str1 => Int = _ => 0
+    //
+    //      implicit val str1 = MigrationContext.scoped[Str1Str2](
+    //        'stringField2 ->> "str2" ::
+    //        'intField1 ->> 0 :: HNil
+    //      )
+    //
+    ////      implicit val str1Str2 = MigrationContext.scoped[Str1Str2](
+    ////        'intField1 ->> nextCount :: HNil
+    ////      )
+    //
+    //      Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Int1(0)
+    //    }
   }
 }

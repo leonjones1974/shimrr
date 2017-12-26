@@ -119,10 +119,10 @@ object instances {
   implicit def scopedLazyRecordDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](implicit
                                                                                                  ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
                                                                                                  selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
-                                                                                                 dT: Defaulter[T]
+                                                                                                 dT: ScopedDefaulter[A, T]
                                                                                                 ): ScopedDefaulter[A, FieldType[K, H] :: T] =
-    ScopedDefaulter.instance[A] { _ =>
-      field[K](selector(ctx.fieldDefaults)()) :: field[K](dT.empty)
+    ScopedDefaulter.instance[A] { a =>
+      field[K](selector(ctx.fieldDefaults)()) :: field[K](dT.defaultFor(a))
     }
 
   implicit val hNilDefaulter: Defaulter[HNil] = new Defaulter[HNil] {
@@ -130,8 +130,8 @@ object instances {
   }
 
   implicit def hNilScopedDefaulter[A, FIELD_DEFAULTS <: HList](
-                                     implicit
-                                     ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
-                                     ): ScopedDefaulter[A, HNil]  =
+                                                                implicit
+                                                                ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
+                                                              ): ScopedDefaulter[A, HNil] =
     ScopedDefaulter.instance(_ => HNil)
 }

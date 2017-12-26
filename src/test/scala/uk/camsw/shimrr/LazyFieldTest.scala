@@ -39,7 +39,7 @@ class LazyFieldTest extends FreeSpec {
       def str2Name: () => String = () => "str2"
 
       implicit val ctx = MigrationContext.scoped[Str1](
-        'stringField2 ->> "str2" ::
+        'stringField2 ->> str2Name ::
           'intField1 ->> nextCount :: HNil
       )
 

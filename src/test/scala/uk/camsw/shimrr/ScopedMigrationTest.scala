@@ -95,5 +95,7 @@ class ScopedMigrationTest extends FreeSpec {
         CustomerV2("name", 51)
       )
     }
+
+
   }
 }
