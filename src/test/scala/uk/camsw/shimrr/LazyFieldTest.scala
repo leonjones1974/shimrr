@@ -11,18 +11,39 @@ import instances._
 
 class LazyFieldTest extends FreeSpec {
 
-  private val counter = new AtomicInteger(0)
-  private def nextCount: () => Int = () => counter.incrementAndGet()
+  "using a global context" - {
+    val counter = new AtomicInteger(0)
 
-  implicit val ctx = MigrationContext.global(
-    'intField1 ->> nextCount :: HNil
-  )
+    def nextCount: () => Int = () => counter.incrementAndGet()
 
-  "function can be used to default field" in {
-    val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
-    val v2 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+    implicit val ctx = MigrationContext.global(
+      'intField1 ->> nextCount :: HNil
+    )
 
-    v1.intField1 shouldBe 1
-    v2.intField1 shouldBe 2
+    "an arity0 function can be used to default a field" in {
+      val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+      val v2 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+
+      v1.intField1 shouldBe 1
+      v2.intField1 shouldBe 2
+    }
+  }
+
+  "using a scoped context" - {
+    val counter = new AtomicInteger(0)
+
+    def nextCount: () => Int = () => counter.incrementAndGet()
+
+    implicit val ctx = MigrationContext.scoped[Str1Str2](
+      'intField1 ->> nextCount :: HNil
+    )
+
+    "an arity0 function can be used to default a field" in {
+      val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+      val v2 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
+
+      v1.intField1 shouldBe 1
+      v2.intField1 shouldBe 2
+    }
   }
 }
