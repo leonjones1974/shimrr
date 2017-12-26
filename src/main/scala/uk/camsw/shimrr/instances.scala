@@ -1,9 +1,9 @@
 package uk.camsw.shimrr
 
-import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
+import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 
 object instances {
 
@@ -54,7 +54,7 @@ object instances {
         genB.from(align(prepend(defaulter.empty, inter(genA.to(a)))))
     }
 
-  //todo: If this ever works, dry it up
+  //todo: need some extraction between scoped and global
   implicit def scopedProductMigration[
   A, ARepr <: HList,
   B <: ReadRepair, BRepr <: HList,

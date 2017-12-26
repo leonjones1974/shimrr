@@ -24,6 +24,7 @@ object MigrationContext {
   }
 
   def scoped[A <: ReadRepair] = new ScopedBuilder[A]
+
 }
 
 
