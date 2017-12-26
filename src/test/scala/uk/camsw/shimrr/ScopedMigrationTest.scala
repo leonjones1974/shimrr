@@ -10,7 +10,7 @@ import cats.instances.all._
 
 class ScopedMigrationTest extends FreeSpec {
 
-  sealed trait Entity extends ReadRepair
+  sealed trait Entity
   sealed trait Customer extends Entity
   case class CustomerV1(name: String) extends Customer
   case class CustomerV1Dup(name: String) extends Customer
