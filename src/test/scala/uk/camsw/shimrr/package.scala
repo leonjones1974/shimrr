@@ -2,7 +2,7 @@ package uk.camsw
 
 package object shimrr {
 
-  sealed trait Version extends ReadRepair
+  sealed trait Version
 
   case class Str1Str2Int1(stringField1: String = "str1", stringField2: String = "str2", intField1: Int = 1) extends Version {
     def withoutStringField1 = Str2Int1(stringField2, intField1)

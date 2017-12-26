@@ -7,14 +7,14 @@ import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, Labe
 
 object instances {
 
-  implicit def cNilMigration[T <: CNil, B <: ReadRepair, BRepr](implicit
+  implicit def cNilMigration[T <: CNil, B , BRepr](implicit
                                                                 genB: LabelledGeneric.Aux[B, BRepr]
                                                                ): Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
 
-  implicit def coproductReprMigration[H, T <: Coproduct, B <: ReadRepair, BRepr <: HList](implicit
+  implicit def coproductReprMigration[H, T <: Coproduct, B , BRepr <: HList](implicit
                                                                                           mH: Migration[H, B],
                                                                                           mT: Migration[T, B]
                                                                                          ): Migration[H :+: T, B] =
@@ -25,7 +25,7 @@ object instances {
         mT.migrate(t)
     }
 
-  implicit def coproductMigration[A, B <: ReadRepair, ARepr <: Coproduct, BRepr <: HList](implicit
+  implicit def coproductMigration[A, B , ARepr <: Coproduct, BRepr <: HList](implicit
                                                                                           genA: Generic.Aux[A, ARepr],
                                                                                           genB: LabelledGeneric.Aux[B, BRepr],
                                                                                           m: Migration[ARepr, B]): Migration[A, B] =
@@ -36,7 +36,7 @@ object instances {
 
   implicit def productMigration[
   A, ARepr <: HList,
-  B <: ReadRepair, BRepr <: HList,
+  B , BRepr <: HList,
   Common <: HList,
   Added <: HList,
   Unaligned <: HList](
@@ -57,7 +57,7 @@ object instances {
   //todo: need some extraction between scoped and global
   implicit def scopedProductMigration[
   A, ARepr <: HList,
-  B <: ReadRepair, BRepr <: HList,
+  B , BRepr <: HList,
   Common <: HList,
   Added <: HList,
   Unaligned <: HList](
@@ -96,7 +96,7 @@ object instances {
     }
   }
 
-  implicit def scopedLiteralRecordDefaulter[A <: ReadRepair, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](implicit
+  implicit def scopedLiteralRecordDefaulter[A , FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](implicit
                                                                                                                   ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
                                                                                                                   selector: Selector.Aux[FIELD_DEFAULTS, K, H],
                                                                                                                   dT: Defaulter[T]

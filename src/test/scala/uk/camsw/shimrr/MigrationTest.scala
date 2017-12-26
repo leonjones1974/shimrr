@@ -52,15 +52,6 @@ class MigrationTest extends WordSpec {
       Str1("str1").migrateTo[Int1] shouldBe Int1(-99)
     }
 
-    "things which aren't Versioned cannot be migrated from" in {
-      case class NotVersioned()
-      illTyped("""NotVersioned().migrateTo[NoFields]""")
-    }
-
-    "things which aren't Versioned cannot be migrated to" in {
-      case class NotVersioned()
-      illTyped("""NoFields().migrateTo[NotVersioned]""")
-    }
   }
 
   "coproduct.migrateTo" should {
