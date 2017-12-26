@@ -38,11 +38,11 @@ class ScopedMigrationTest extends FreeSpec {
     case class SupplierV1(companyName: String) extends Supplier
     case class SupplierV2(companyName: String, age: Int) extends Supplier
 
-    "according to type hierarchy - non-typesafe" in {
+    "according to coproduct - non-typesafe" in {
       List[Entity](
         CustomerV1("cust1"),
         SupplierV1("supp1")
-      ).migrate {
+      ).migrateUnsafe {
         case c: Customer =>
           //noinspection TypeAnnotation
           implicit val ctx = MigrationContext('age ->> 25 :: HNil)
@@ -63,8 +63,11 @@ class ScopedMigrationTest extends FreeSpec {
       CustomerV1Dup("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 51)
     }
 
-    "according to coproduct - typesafe" in {
-      
-    }
+//    "according to coproduct - typesafe" in {
+//      implicit val ctxV1 = ScopedMigrationContext[Customer]('age ->> 25 :: HNil)
+//
+//      CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
+//
+//    }
   }
 }
