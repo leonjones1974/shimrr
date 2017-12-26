@@ -1,6 +1,7 @@
 package uk.camsw.shimrr
 
 import cats.syntax.all._
+import scala.language.higherKinds
 
 trait MigrationOps {
 

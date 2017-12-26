@@ -1,6 +1,6 @@
 package uk.camsw.shimrr
 
-import shapeless.HList
+import shapeless.{HList, HNil}
 
 trait MigrationContext[FIELD_DEFAULTS <: HList] {
   type OUT = FIELD_DEFAULTS
@@ -13,7 +13,7 @@ private[shimrr] trait ScopedMigrationContext[A <: ReadRepair, FIELD_DEFAULTS <: 
 
 object MigrationContext {
 
-  def global[FIELD_DEFAULTS <: HList](defaults: FIELD_DEFAULTS): GlobalMigrationContext[FIELD_DEFAULTS] = new GlobalMigrationContext[FIELD_DEFAULTS] {
+  def global[FIELD_DEFAULTS <: HList](defaults: FIELD_DEFAULTS = HNil): GlobalMigrationContext[FIELD_DEFAULTS] = new GlobalMigrationContext[FIELD_DEFAULTS] {
     override val fieldDefaults: FIELD_DEFAULTS = defaults
   }
 
