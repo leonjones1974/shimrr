@@ -8,17 +8,25 @@ import uk.camsw.shimrr.instances._
 import uk.camsw.shimrr.syntax._
 import cats.instances.all._
 
+//todo: See how much we really need this different set of classes
 class ScopedMigrationTest extends FreeSpec {
 
   sealed trait Entity
+
   sealed trait Customer extends Entity
+
   case class CustomerV1(name: String) extends Customer
+
   case class CustomerV1Dup(name: String) extends Customer
+
   case class CustomerV2(name: String, age: Int) extends Customer
+
   case class CustomerV3(name: String, age: Int, shoeSize: Double) extends Customer
 
   sealed trait Supplier extends Entity
+
   case class SupplierV1(companyName: String) extends Supplier
+
   case class SupplierV2(companyName: String, age: Int) extends Supplier
 
   "Migration rules can be scoped" - {
@@ -57,12 +65,20 @@ class ScopedMigrationTest extends FreeSpec {
     }
 
     "for individual migrations (atom)" in {
-
       implicit val V1toV2 = MigrationContext.scoped[CustomerV1]('age ->> 25 :: HNil)
       implicit val V1DupToV2 = MigrationContext.scoped[CustomerV1Dup]('age ->> 51 :: HNil)
 
       CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
       CustomerV1Dup("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 51)
+    }
+
+    "for individual migrations with more than one field missing" in {
+      implicit val str1 = MigrationContext.scoped[Str1](
+        'stringField2 ->> "str2" ::
+          'intField1 ->> 0 :: HNil
+      )
+
+      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 0)
     }
 
     "for individual migrations (list)" in {

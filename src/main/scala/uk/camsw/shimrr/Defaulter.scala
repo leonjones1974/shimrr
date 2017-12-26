@@ -11,15 +11,13 @@ object Defaulter {
 }
 
 trait ScopedDefaulter[A, F] {
-  def empty: F
+  def defaultFor(a: A): F
 }
 
 object ScopedDefaulter {
 
   class Builder[A] {
-    def apply[F](block: F): ScopedDefaulter[A, F] = new ScopedDefaulter[A, F] {
-      override def empty = block
-    }
+    def apply[F](f: A => F): ScopedDefaulter[A, F] = (a: A) => f(a)
   }
 
   def instance[A] = new Builder[A]
