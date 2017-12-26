@@ -15,7 +15,7 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
 logBuffered in Test := false
 
-unmanagedSourceDirectories in Compile += baseDirectory.value / "src/examples/scala"
+unmanagedSourceDirectories in Test += baseDirectory.value / "src/examples/scala"
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
   "com.chuusai" %% "shapeless" % shapelessVersion

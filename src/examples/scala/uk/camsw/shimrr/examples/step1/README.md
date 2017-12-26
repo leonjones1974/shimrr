@@ -22,7 +22,7 @@ As a potential customer
 ## Getting Started
 
 Because you listened during the mandatory *We Are Agile* presentation given by your *agile coach* during your induction
-you decide to start by creating a simple service, with hard-coded product definitions stored in-memory
+you decide to begin by creating a simple service, with hard-coded product definitions stored in-memory
 
 When you speak to *business* (also the CTO) you discover that:
 - You only sell bicycles
@@ -31,7 +31,7 @@ When you speak to *business* (also the CTO) you discover that:
     - model
     - price (which you decide to model as a float because nobody told you about rounding errors during induction)
     
-## You decide start by creating
+## You begin creating
 - The model
 - A service, providing access to all products
 - An in-memory store (which you decide to abstract at this stage as you know something *bigger* is coming)

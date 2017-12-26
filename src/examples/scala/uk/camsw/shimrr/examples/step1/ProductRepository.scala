@@ -14,3 +14,13 @@ trait ProductRepository {
   def findAll(): Iterable[Bicycle]
 
 }
+
+object InMemoryRepository extends ProductRepository {
+  /**
+    * @return all the bicycles we sell
+    */
+  override def findAll(): Iterable[Bicycle] = List(
+    Bicycle("Raleigh", "Grifter", 124.99f),
+    Bicycle("Diamond Back", "Grind 2018", 230f)
+  )
+}
