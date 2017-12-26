@@ -100,10 +100,10 @@ object instances {
                                                                                                          implicit
                                                                                                          ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
                                                                                                          selector: Selector.Aux[FIELD_DEFAULTS, K, (A) => H],
-                                                                                                         dT: Defaulter[T]
+                                                                                                         dT: ScopedDefaulter[A, T]
                                                                                                        ): ScopedDefaulter[A, FieldType[K, H] :: T] = {
     ScopedDefaulter.instance[A] { a =>
-      field[K](selector(ctx.fieldDefaults)(a)) :: field[K](dT.empty)
+      field[K](selector(ctx.fieldDefaults)(a)) :: field[K](dT.defaultFor(a))
     }
   }
 
