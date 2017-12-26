@@ -51,11 +51,10 @@ class ScopedMigrationTest extends FreeSpec {
           //noinspection TypeAnnotation
           implicit val ctx = MigrationContext('age ->> 1 :: HNil)
           s.migrateTo[SupplierV2]
-      } should contain only (CustomerV2("cust1", 25), SupplierV2("supp1", 1))
+      } should contain only(CustomerV2("cust1", 25), SupplierV2("supp1", 1))
     }
 
-    "according to specific version - typesafe" in {
-
+    "according to specific version (atom) - typesafe" in {
       implicit val ctxV1 = ScopedMigrationContext[CustomerV1]('age ->> 25 :: HNil)
       implicit val ctxV2 = ScopedMigrationContext[CustomerV1Dup]('age ->> 51 :: HNil)
 
@@ -63,11 +62,27 @@ class ScopedMigrationTest extends FreeSpec {
       CustomerV1Dup("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 51)
     }
 
-//    "according to coproduct - typesafe" in {
-//      implicit val ctxV1 = ScopedMigrationContext[Customer]('age ->> 25 :: HNil)
-//
-//      CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
-//
-//    }
+    "according to specific version (list) - typesafe" in {
+      implicit val ctxV1 = ScopedMigrationContext[CustomerV1]('age ->> 25 :: HNil)
+      implicit val ctxV2 = ScopedMigrationContext[CustomerV1Dup]('age ->> 51 :: HNil)
+
+      val xs = List[Customer](
+        CustomerV1("name"),
+        CustomerV1Dup("name")
+      ).migrateTo[CustomerV2]
+
+      xs shouldBe List(
+        CustomerV2("name", 25),
+        CustomerV2("name", 51)
+      )
+
+    }
+
+    //    "according to coproduct - typesafe" in {
+    //      implicit val ctxV1 = ScopedMigrationContext[Customer]('age ->> 25 :: HNil)
+    //
+    //      CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
+    //
+    //    }
   }
 }
