@@ -82,7 +82,8 @@ class ScopedMigrationTest extends FreeSpec {
     //      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 0)
     //    }
     //
-    "scopes can be applied to heterogeneous lists" in {
+
+    "scopes can be applied to lists containing instances of a given coproduct" in {
       import context.scoped._
 
       sealed trait Scope
@@ -92,32 +93,31 @@ class ScopedMigrationTest extends FreeSpec {
       case class V3(name: String, age: Int) extends Scope
 
       implicit val v1Rules = MigrationContext[Scope, V1](
-        'name ->> "Leon Jones" :: 'age ->> 51 :: HNil
+        'name ->> "Leon Jones" :: 'age ->> 25 :: HNil
       )
 
       implicit val v1aRules = MigrationContext[Scope, V1a](
-        'name ->> "Bony" :: 'age ->> 25 :: HNil
+        'name ->> "Fred Basset" :: 'age ->> 51 :: HNil
       )
 
       implicit val v2Rules = MigrationContext[Scope, V2](
-        'age ->> 77 :: HNil
+        'age ->> 69 :: HNil
       )
 
       implicit val v3Rules = MigrationContext[Scope, V3]()
 
-
       val xs = List[Scope](
         V1(),
         V1a(),
-        V2("fish face"),
-        V3("bloody hell", 99)
+        V2("Nicky Hayden"),
+        V3("Casey Stoner", 27)
       )
 
       xs.migrateTo[V3] shouldBe List(
-        V3("Leon Jones", 51),
-        V3("Bony", 25),
-        V3("fish face", 77),
-        V3("bloody hell", 99)
+        V3("Leon Jones", 25),
+        V3("Fred Basset", 51),
+        V3("Nicky Hayden", 69),
+        V3("Casey Stoner", 27)
       )
     }
   }
