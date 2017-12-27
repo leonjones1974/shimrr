@@ -40,7 +40,8 @@ object ProductService {
       * For more detailed information you could try the
       *   Splain compiler plugin:
       *   https://github.com/tek/splain
-      *   Follow the instructions in the splain README, noting that the compiler plugin must go in build.sbt and NOT in plugins.sbt as you might expect
+      *   Follow the instructions in the splain README, noting that the compiler plugin must go in build.sbt
+      *   and NOT in plugins.sbt as you might expect
       *
       * Thinking about it you realise that, unlike field dropping, you aren't going to get field defaulting rules for free
       * The good news it that your project wont compile until you fix it!
