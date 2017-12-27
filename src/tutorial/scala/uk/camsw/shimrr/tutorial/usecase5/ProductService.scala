@@ -30,11 +30,12 @@ object ProductService {
         defaults = 'discountPercentage ->> discountService.defaultDiscountPercentage :: HNil
       )
 
-      // You run the test, expecting compilation failures but it passes
-      // Field defaulters can be of the form:
-      //    T (literal)
-      //    () => T (lazy)
-      //    (A) => T (mapped) - more about that later!
+      /** You run the test, expecting compilation failures but it passes
+        * Field defaulters can be of the form:
+        * T (literal)
+        * () => T (lazy)
+        * (A) => T (mapped) - more about that later!
+        */
       repository.findAll().migrateTo[BicycleV4]
     }
   }

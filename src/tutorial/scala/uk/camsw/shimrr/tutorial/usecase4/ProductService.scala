@@ -38,10 +38,10 @@ object ProductService {
       * TIP: Tracking down missing implicits can be difficult but as we've kept our change as small
       * as possible it should be pretty obvious we're missing rules for our new discountPercentage field.
       * For more detailed information you could try the
-      *   Splain compiler plugin:
-      *   https://github.com/tek/splain
-      *   Follow the instructions in the splain README, noting that the compiler plugin must go in build.sbt
-      *   and NOT in plugins.sbt as you might expect
+      * Splain compiler plugin:
+      * https://github.com/tek/splain
+      * Follow the instructions in the splain README, noting that the compiler plugin must go in build.sbt
+      * and NOT in plugins.sbt as you might expect
       *
       * Thinking about it you realise that, unlike field dropping, you aren't going to get field defaulting rules for free
       * The good news it that your project wont compile until you fix it!
@@ -50,22 +50,26 @@ object ProductService {
       import uk.camsw.shimrr.context.global._
       import uk.camsw.shimrr.syntax._
 
-      // Another new import, this time a shapeless one.  This import gives you access to the ->> symbol, which allows you to provide
-      // type-safe singleton keys to represent your field rules
+      /**
+        * Another new import, this time a shapeless one.
+        * This import gives you access to the ->> symbol, which allows you to provide
+        * type-safe singleton keys to represent your field rules
+        */
       import shapeless.syntax.singleton.mkSingletonOps
 
-
+      /** Because you need to specifiy a rule you need to create a migration context.
+        * In this case it will be a global one because you imported the global context
+        * For fun, have a look at the type of allToV4 and you'll see why we've used the noinspection annotation
+        */
       //noinspection TypeAnnotation
-      // Because you need to specifiy a rule you need to create a migration context.  In this case it will be a global one because
-      // you imported the global context
-      // For fun, have a look at the type of allToV4 and you'll see why we've used the noinspection annotation
       implicit val allToV4 = MigrationContext(
         defaults = 'discountPercentage ->> 10 :: HNil
       )
 
-      // You rebuild and everything is happy
-      // You run the test and everything is happy
-      // Because you are curious you change the field name in the rule and it breaks compilation again
+      /** You rebuild and everything is happy
+        * You run the test and everything is happy
+        * Because you are curious you change the field name in the rule and it breaks compilation again
+        */
       repository.findAll().migrateTo[BicycleV4]
 
     }
