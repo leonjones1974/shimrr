@@ -130,8 +130,10 @@ class ScopedMigrationTest extends FreeSpec {
 
       import uk.camsw.shimrr.context.scoped._
 
+      val deriveLength: Versioned => Int = _.name.length
+
       implicit val ctx = MigrationContext[Versioned](
-        'lengthOfName ->> 10 :: HNil
+        'lengthOfName ->> deriveLength :: HNil
       )
 
       val xs = List[Versioned](
@@ -143,6 +145,10 @@ class ScopedMigrationTest extends FreeSpec {
         V2("Leon Jones", 10),
         V2("Nicky Hayden", 12)
       )
+    }
+
+    "at the coproduct level with override" in {
+
     }
   }
 }
