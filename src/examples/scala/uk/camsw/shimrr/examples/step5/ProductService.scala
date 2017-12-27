@@ -1,9 +1,7 @@
 package uk.camsw.shimrr.examples.step5
 
 import shapeless.HNil
-import uk.camsw.shimrr.context.MigrationContext
 
-import shapeless.syntax.singleton.mkSingletonOps
 
 trait ProductService {
 
@@ -23,17 +21,21 @@ object ProductService {
       * You decide to just try replacing the literal with your function
       */
     override def allProducts(): Iterable[BicycleV4] = {
-      import uk.camsw.shimrr.syntax._
       import uk.camsw.shimrr.context.global._
+      import shapeless.syntax.singleton.mkSingletonOps
+      import uk.camsw.shimrr.syntax._
 
+      //noinspection TypeAnnotation
       implicit val allToV4 = MigrationContext(
         defaults = 'discountPercentage ->> discountService.defaultDiscountPercentage :: HNil
       )
-      // You run the test, expecting compilation failures
-      // but it passes
 
-      //repository.findAll().migrateTo[BicycleV4]
-      ???
+      // You run the test, expecting compilation failures but it passes
+      // Field defaulters can be of the form:
+      //    T (literal)
+      //    () => T (lazy)
+      //    (A) => T (mapped) - more about that later!
+      repository.findAll().migrateTo[BicycleV4]
     }
   }
 }

@@ -9,6 +9,7 @@ import org.scalatest.Matchers._
   *  - The V3 bicycle is simply being dropped
   */
 class ProductServiceTest extends FreeSpec {
+
   val repository = InMemoryRepository
   val service = ProductService(repository)
 

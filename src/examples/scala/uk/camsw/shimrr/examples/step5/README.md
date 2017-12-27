@@ -19,13 +19,10 @@ As someone in the promotions team
 - This time you don't need to introduce any new bicycle versions
 - But you do need to remove the hard-coded literal 10% discount and replace it with a service call
 - For the purposes of this tutorial you are not going to bother implementing the error handling that you 
-would normally prioritise in an architecture of this nature!   
+would normally prioritise in an architecture of this nature!
 
+## Summary
 
- 
+At the end of this scenario you will have
 
-
-
-    
-
-
+ - Created a global rule to default a missing field lazily, calling out to a service to obtain the value

@@ -33,9 +33,17 @@ When you speak to *business* (also the CTO) you discover that:
     - price (which you decide to model as a float because nobody told you about rounding errors during induction)
     
 ## You begin creating
+
 - The model
 - A service, providing access to all products
 - An in-memory store (which you decide to abstract at this stage as you know something *bigger* is coming)
+
+## Summary
+
+At the end of this scenario you will have
+ - Been introduced to the skeleton of the (somewhat tongue-in-cheek) solution we are trying to evolve
+ during this tutorial
+
 
  
 

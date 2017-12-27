@@ -21,6 +21,13 @@ As a potential customer
 - Create all migrations
 - Continue using shimrr as the documentation claims it can help and it worked last time 
 
+## Summary
+
+At the end of this scenario you will have
+
+ - Created a global rule to default a missing field to a given value
+ 
+
 
  
 

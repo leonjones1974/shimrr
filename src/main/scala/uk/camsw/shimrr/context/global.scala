@@ -1,9 +1,9 @@
 package uk.camsw.shimrr.context
 
 import shapeless.labelled.{FieldType, field}
-import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
+import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 import uk.camsw.shimrr._
 
 object global {

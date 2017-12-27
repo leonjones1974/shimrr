@@ -4,6 +4,7 @@ import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 
 class ProductServiceTest extends FreeSpec {
+
   val repository = InMemoryRepository
   val service = ProductService(repository, DiscountService(defaultDiscountPercentage = 5))
 

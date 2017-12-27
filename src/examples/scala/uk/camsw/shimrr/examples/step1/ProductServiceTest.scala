@@ -8,6 +8,7 @@ import org.scalatest.Matchers._
   * but write it anyway
   */
 class ProductServiceTest extends FreeSpec {
+
   val repository = InMemoryRepository
   val service = ProductService(repository)
 

@@ -32,6 +32,14 @@ As a potential customer
 - Create migrations V1 ~> V3 and V2 ~> V3
 - Try shimrr, having read through this tutorial 
 
+## Summary
+
+At the end of this scenario you will have
+ - Been introduced to the shimrr (type-safe) read-repair library
+ - Seen the global context
+ - Used the migrateTo[A] extension method 
+ - Demonstrated that shimrr dropped removed fields during the migration, for free
+
 
  
 

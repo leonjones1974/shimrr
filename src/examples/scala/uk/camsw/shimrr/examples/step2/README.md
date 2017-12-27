@@ -34,7 +34,12 @@ be misleading because you've been given a default
 
 You set about updating everything
 
- 
+## Summary
+
+At the end of this scenario you will have
+ - Realised the first requirement, using a runtime based matching solution
+ - Looked ahead to how that code might appear in the future and considered the potential problems associated with it 
+
 
 
 
