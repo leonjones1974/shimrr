@@ -35,4 +35,6 @@ I hope the API makes life easy enough, feedback around this would be gratefully 
 2. [Defaulting a new field](usecase2/README.md)
 3. [Removing the new field](usecase3/README.md)
 4. [Defaulting a new field using SHIMRR](usecase4/README.md)
-5. [Defaulting a field lazily](usecase5/README.md)      
+5. [Defaulting a field lazily](usecase5/README.md)    
+6. [Scoped field defaulting](usecase6/README.md)
+  

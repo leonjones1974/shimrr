@@ -1,4 +1,4 @@
-# Use case 6 - Contextual field defaulting
+# Use case 6 - Scoped field defaulting
 
 The warehouse is rapidly filling up with penny farthings because although it seemed like
 a quirky *eye-catching* idea initially it has quickly become apparent that penny farthings went 
