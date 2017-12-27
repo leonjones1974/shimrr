@@ -119,5 +119,30 @@ class ScopedMigrationTest extends FreeSpec {
         V3("Casey Stoner", 27)
       )
     }
+
+    "at the coproduct level" in {
+      sealed trait Versioned {
+        def name: String
+      }
+
+      case class V1(name: String) extends Versioned
+      case class V2(name: String, lengthOfName: Int) extends Versioned
+
+      import uk.camsw.shimrr.context.scoped._
+
+      implicit val ctx = MigrationContext[Versioned](
+        'lengthOfName ->> 10 :: HNil
+      )
+
+      val xs = List[Versioned](
+        V1("Leon Jones"),
+        V2("Nicky Hayden", 12)
+      )
+
+      xs.migrateTo[V2] shouldBe List(
+        V2("Leon Jones", 10),
+        V2("Nicky Hayden", 12)
+      )
+    }
   }
 }

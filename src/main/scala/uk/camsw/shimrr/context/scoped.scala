@@ -3,10 +3,10 @@ package uk.camsw.shimrr.context
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
-import shapeless.{:+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
+import shapeless.{:+:, ::, <:!<, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
 import uk.camsw.shimrr.Migration
 
-object scoped  {
+object scoped {
 
   trait Scope[A]
 
@@ -54,7 +54,6 @@ object scoped  {
 
 
   implicit def productMigration[
-  C,
   A, ARepr <: HList,
   B, BRepr <: HList,
   Common <: HList,
@@ -68,6 +67,32 @@ object scoped  {
                             inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
                             diff: hlist.Diff.Aux[BRepr, Common, Added],
                             defaulter: ScopedDefaulter[A, Added],
+                            prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
+                            align: hlist.Align[Unaligned, BRepr]
+                          ): Migration[A, B] =
+    Migration.instance {
+      a =>
+        genB.from(align(prepend(defaulter.defaultFor(a), inter(genA.to(a)))))
+
+    }
+
+  implicit def polyProductMigration[
+  S,
+  A, ARepr <: HList,
+  B, BRepr <: HList,
+  Common <: HList,
+  Added <: HList,
+  Unaligned <: HList,
+  FIELD_DEFAULTS <: HList](
+                            implicit
+                            scope: Scope[S],
+                            scopeEv: A <:< S,
+                            notEq: A =:!= S,
+                            genA: LabelledGeneric.Aux[A, ARepr],
+                            genB: LabelledGeneric.Aux[B, BRepr],
+                            inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
+                            diff: hlist.Diff.Aux[BRepr, Common, Added],
+                            defaulter: ScopedDefaulter[S, Added],
                             prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
                             align: hlist.Align[Unaligned, BRepr]
                           ): Migration[A, B] =
