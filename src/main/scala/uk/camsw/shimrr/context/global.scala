@@ -8,12 +8,12 @@ import uk.camsw.shimrr._
 
 object global {
 
-  private[shimrr] trait GlobalMigrationContext[FIELD_DEFAULTS <: HList] extends MigrationContext[FIELD_DEFAULTS]
+  private[shimrr] trait GlobalMigrationContext[FieldDefaults <: HList] extends MigrationContext[FieldDefaults]
 
   object MigrationContext {
 
-    def apply[FIELD_DEFAULTS <: HList](defaults: FIELD_DEFAULTS = HNil): GlobalMigrationContext[FIELD_DEFAULTS] = new GlobalMigrationContext[FIELD_DEFAULTS] {
-      override val fieldDefaults: FIELD_DEFAULTS = defaults
+    def apply[FieldDefaults <: HList](defaults: FieldDefaults = HNil): GlobalMigrationContext[FieldDefaults] = new GlobalMigrationContext[FieldDefaults] {
+      override val fieldDefaults: FieldDefaults = defaults
     }
   }
 
@@ -63,20 +63,20 @@ object global {
     }
 
 
-  implicit def literalFieldDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+  implicit def literalFieldDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
                                                                                            implicit
-                                                                                           ctx: GlobalMigrationContext[FIELD_DEFAULTS],
-                                                                                           selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+                                                                                           ctx: GlobalMigrationContext[FieldDefaults],
+                                                                                           selector: Selector.Aux[FieldDefaults, K, H],
                                                                                            dT: Defaulter[T]
                                                                                          ): Defaulter[FieldType[K, H] :: T] =
     Defaulter.instance {
       field[K](selector(ctx.fieldDefaults)) :: field[K](dT.default)
     }
 
-  implicit def lazyLiteralFieldDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+  implicit def lazyLiteralFieldDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
                                                                                           implicit
-                                                                                          ctx: GlobalMigrationContext[FIELD_DEFAULTS],
-                                                                                          selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
+                                                                                          ctx: GlobalMigrationContext[FieldDefaults],
+                                                                                          selector: Selector.Aux[FieldDefaults, K, () => H],
                                                                                           dT: Defaulter[T]
                                                                                         ): Defaulter[FieldType[K, H] :: T] = {
     Defaulter.instance {
