@@ -5,7 +5,6 @@ import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.syntax._
-import uk.camsw.shimrr.instances._
 import uk.camsw.shimrr.context.scoped._
 
 class ParameterizedLazyFieldTest extends FreeSpec {

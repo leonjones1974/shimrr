@@ -23,7 +23,6 @@ object ProductService {
       */
     override def allProducts(): Iterable[BicycleV4] = {
       import uk.camsw.shimrr.syntax._
-      import uk.camsw.shimrr.instances._
       import shapeless.syntax.singleton.mkSingletonOps
       import uk.camsw.shimrr.context.global._
 

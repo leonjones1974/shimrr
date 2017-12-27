@@ -35,7 +35,6 @@ object ProductService {
       // You import the syntax in order to get access to the migration extension methods
       import uk.camsw.shimrr.syntax._
       // And the shimrr type class instances
-      import uk.camsw.shimrr.instances._
       import uk.camsw.shimrr.context.global._
 
       // You add the single liner and all your tests pass!

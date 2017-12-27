@@ -3,7 +3,6 @@ package uk.camsw.shimrr
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 import uk.camsw.shimrr.syntax._
-import instances._
 import uk.camsw.shimrr.context.global._
 
 class FunctorTest extends FreeSpec {
