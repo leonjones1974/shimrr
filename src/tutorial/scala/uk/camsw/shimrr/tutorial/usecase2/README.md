@@ -2,9 +2,9 @@
 
 Your service is now in production using real product data stored in a no-sql backend
 
-The CTO has been monitoring *user journeys* (using a tool that someone from the golf club told him about)
-and has noticed lots of people dropping off.  Some of these potential customers have been emailed, asking
-about product *lead times*
+The CTO has been monitoring *user journeys* using a tool that someone from the golf club told him about
+and has noticed lots of people dropping off.  Some of these potential customers have been emailing, 
+requesting product *lead times*
 
 Wearing his *stakeholder hat* the CTO presents you with the following (urgent) use case 
 
@@ -17,13 +17,13 @@ As a potential customer
 
 ## Technical Constraints
 
-As a big data solution (you sell literally 100's of different bicycles) that is in production you
-are told in no uncertain terms that migrating the existing bicycles in the repository is not an option
-At a recent conference held in Shoreditch your CTO heard a clever person talking about *read-repair*
+As a big data solution (you sell literally 100's of different bicycles!) that is in production you
+are told in no uncertain terms that migrating the existing bicycles in the store is not an option.
+At a recent conference held in Shoreditch your CTO heard a clever person talking about *read-repair*.
 He/ She (take your pick) explains that in this model, old data is *repaired* at read time as required
 and thinks this approach should be applied here 
 
-The CTO advises you that existing products should be assumed to have a lead-time of 7 days because
+The CTO advises you that existing products can be assumed to have a lead-time of 7 days because
 sometimes that will be true
 
 ## You decide that you need to

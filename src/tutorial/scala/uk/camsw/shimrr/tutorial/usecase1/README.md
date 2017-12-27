@@ -42,7 +42,9 @@ When you speak to *business* (also the CTO) you discover that:
 
 At the end of this scenario you will have
  - Been introduced to the skeleton of the (somewhat tongue-in-cheek) solution we are trying to evolve
- during this tutorial
+ during this tutorial 
+ 
+[The code](./)
 
 [Next use case](../usecase2/README.md)
 

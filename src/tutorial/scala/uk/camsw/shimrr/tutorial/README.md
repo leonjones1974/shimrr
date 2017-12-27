@@ -31,7 +31,7 @@ I hope the API makes life easy enough, feedback around this would be gratefully 
  
 # The use cases
 
-1. [Creating the Product Catelogue component](usecase1/README.md)
+1. [Creating the Product Catalogue component](usecase1/README.md)
 2. [Defaulting a new field](usecase2/README.md)
 3. [Removing the new field](usecase3/README.md)
 4. [Defaulting a new field using SHIMRR](usecase4/README.md)
