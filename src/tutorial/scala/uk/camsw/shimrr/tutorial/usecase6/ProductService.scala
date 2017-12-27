@@ -46,7 +46,8 @@ object ProductService {
         * NOTE: The more observant may have may have wondered why the
         * global context exists when we can just scope by the trait.  In answer, that's
         * the joy of iterative development - it may be that by the time I'm writing use case 10
-        * I become convinced of its redundancy.  Until then, you have the choice
+        * I become convinced of its redundancy.  Until then, you have the choice.
+        * NOTE: If you use the global context though, you wont have access to Bicycle in the defaulters
         */
       repository.findAll().migrateTo[BicycleV4]
     }
