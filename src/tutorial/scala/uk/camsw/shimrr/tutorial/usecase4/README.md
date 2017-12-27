@@ -27,6 +27,8 @@ At the end of this scenario you will have
 
  - Created a global rule to default a missing field to a given value
  
+[The code](./)
+
 [Next use case](../usecase5/README.md)
 
  

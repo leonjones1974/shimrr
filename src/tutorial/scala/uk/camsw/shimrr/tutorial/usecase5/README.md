@@ -26,3 +26,7 @@ would normally prioritise in an architecture of this nature!
 At the end of this scenario you will have
 
  - Created a global rule to default a missing field lazily, calling out to a service to obtain the value
+ 
+[The code](./)
+
+To be continued...
