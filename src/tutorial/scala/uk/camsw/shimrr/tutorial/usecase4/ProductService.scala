@@ -35,15 +35,15 @@ object ProductService {
       * m: uk.camsw.shimrr.Migration[uk.camsw.shimrr.examples.step4.Bicycle,uk.camsw.shimrr.examples.step4.BicycleV4]
       *     repository.findAll().migrateTo[BicycleV4]
       *
-      * TIP: Tracking down missing implicits can be difficult although changes like the one being made are quite local to the change so it should be
-      * pretty obvious we're missing rules for our new discountPercentage field.  For more detailed information you could try the
-      * Splain compiler plugin:
-      * https://github.com/tek/splain
-      * Follow the instructions in the splain README, noting that the compiler plugin must go in build.sbt and NOT in plugins.sbt as you might expect
+      * TIP: Tracking down missing implicits can be difficult but as we've kept our change as small
+      * as possible it should be pretty obvious we're missing rules for our new discountPercentage field.
+      * For more detailed information you could try the
+      *   Splain compiler plugin:
+      *   https://github.com/tek/splain
+      *   Follow the instructions in the splain README, noting that the compiler plugin must go in build.sbt and NOT in plugins.sbt as you might expect
       *
       * Thinking about it you realise that, unlike field dropping, you aren't going to get field defaulting rules for free
       * The good news it that your project wont compile until you fix it!
-      *
       */
     override def allProducts(): Iterable[BicycleV4] = {
       import uk.camsw.shimrr.context.global._
