@@ -1,6 +1,6 @@
 # Use case 5 - Lazy field defaulting
 
-As the organization fleshes out it's offer solution the CTO makes it clear that he wants to be 
+As the organization fleshes out its "offers" solution the CTO makes it clear that he wants to be 
 able to change the global default discount percentage without redeploying your component
 
 The offers and discounts team have built a simple component that exposes the current default discount
