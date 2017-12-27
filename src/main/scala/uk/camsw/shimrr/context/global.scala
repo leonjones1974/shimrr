@@ -8,11 +8,14 @@ import uk.camsw.shimrr._
 
 object global {
 
-  private[shimrr] trait GlobalMigrationContext[FieldDefaults <: HList] extends MigrationContext[FieldDefaults]
+  trait MigrationContext[FieldDefaults <: HList] {
+    val fieldDefaults: FieldDefaults
+  }
+
 
   object MigrationContext {
 
-    def apply[FieldDefaults <: HList](defaults: FieldDefaults = HNil): GlobalMigrationContext[FieldDefaults] = new GlobalMigrationContext[FieldDefaults] {
+    def apply[FieldDefaults <: HList](defaults: FieldDefaults = HNil): MigrationContext[FieldDefaults] = new MigrationContext[FieldDefaults] {
       override val fieldDefaults: FieldDefaults = defaults
     }
   }
@@ -65,7 +68,7 @@ object global {
 
   implicit def literalDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
                                                                                      implicit
-                                                                                     ctx: GlobalMigrationContext[FieldDefaults],
+                                                                                     ctx: MigrationContext[FieldDefaults],
                                                                                      selector: Selector.Aux[FieldDefaults, K, H],
                                                                                      dT: Defaulter[T]
                                                                                    ): Defaulter[FieldType[K, H] :: T] =
@@ -75,7 +78,7 @@ object global {
 
   implicit def lazyDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
                                                                                   implicit
-                                                                                  ctx: GlobalMigrationContext[FieldDefaults],
+                                                                                  ctx: MigrationContext[FieldDefaults],
                                                                                   selector: Selector.Aux[FieldDefaults, K, () => H],
                                                                                   dT: Defaulter[T]
                                                                                 ): Defaulter[FieldType[K, H] :: T] = {

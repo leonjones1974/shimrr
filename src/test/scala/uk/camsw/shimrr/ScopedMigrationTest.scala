@@ -1,9 +1,12 @@
 package uk.camsw.shimrr
 
+import java.io.File
+
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
-import shapeless.HNil
+import shapeless.{HList, HNil}
 import shapeless.syntax.singleton.mkSingletonOps
+import uk.camsw.shimrr.context.myMacro
 import uk.camsw.shimrr.syntax._
 
 //todo: See how much we really need this different set of classes
@@ -144,5 +147,28 @@ class ScopedMigrationTest extends FreeSpec {
         V2("Nicky Hayden", 12)
       )
     }
+
+    "blah " in {
+      import uk.camsw.shimrr.context.scoped._
+
+//      implicit val ctxHard = MigrationContext[MyFish]()
+//      println(s"${ctxHard}")
+
+      @myMacro val list: List[File] = List(new File("/tmp"))
+      println(s"${ctx}")
+
+
+
+      def useIt[A, F <: HList](a: A)(implicit ev: MigrationContext[A, F]): Unit = {
+        println(s"got ev of: ${ev}")
+      }
+
+
+      useIt(new MyFish{})
+      useIt(new MyOtherFish{})
+    }
   }
 }
+
+sealed trait MyFish
+sealed trait MyOtherFish

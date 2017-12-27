@@ -1,7 +1,6 @@
 package uk.camsw.shimrr.tutorial.usecase4
 
 import shapeless.HNil
-import uk.camsw.shimrr.context.MigrationContext
 
 trait ProductService {
 

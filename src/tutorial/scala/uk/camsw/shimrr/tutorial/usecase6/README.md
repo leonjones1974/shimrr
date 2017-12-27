@@ -28,9 +28,9 @@ As someone in the promotions team
 
 At the end of this scenario you will have
 
- - Been introduced to *scoped* contexts
+ - Been introduced to *scoped* contexts (at the abstract, coproduct level)
  - Defined rules that use data in the current version while defaulting new fields
  
 [The code](./)
 
-To be continued...
+[Next use case](../usecase7/README.md)
