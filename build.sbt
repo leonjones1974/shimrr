@@ -16,7 +16,7 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
 logBuffered in Test := false
 //scalacOptions += "-Xlog-implicits"
-scalacOptions += "-P:splain:bounds:true"
+//scalacOptions += "-P:splain:bounds:true"
 
 unmanagedSourceDirectories in Test += baseDirectory.value / "src/tutorial/scala"
 
