@@ -11,7 +11,7 @@ stories under the (somewhat grandiosely named) *Marketing Campaigns* epic will w
 
 As a potential customer 
 - I want to see a 10% discount for all products we offer 
-- as it's nearly <festival> and we think it will boost sales 
+- as it's nearly the ??? festival and we think it will boost sales 
 - thus increasing turnover for the company
 
 
