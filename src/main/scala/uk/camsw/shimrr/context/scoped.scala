@@ -8,14 +8,12 @@ import uk.camsw.shimrr.{Migration, ScopedDefaulter, ScopedMigrationContext}
 
 object scoped {
 
-  implicit def cNilMigration[T <: CNil, B, BRepr](implicit
-                                                  genB: LabelledGeneric.Aux[B, BRepr]
-                                                 ): Migration[T, B] =
+  implicit def cNilMigration[T <: CNil, B]: Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a"))
 
 
-  implicit def scopedProductMigration[
+  implicit def productMigration[
   A, ARepr <: HList,
   B, BRepr <: HList,
   Common <: HList,
@@ -35,17 +33,17 @@ object scoped {
         genB.from(align(prepend(defaulter.defaultFor(a), inter(genA.to(a)))))
     }
 
-    implicit def scopedLiteralRecordDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
-                                                                                                     implicit
-                                                                                                     ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
-                                                                                                     selector: Selector.Aux[FIELD_DEFAULTS, K, H],
-                                                                                                     dT: ScopedDefaulter[A, T]
-                                                                                                   ): ScopedDefaulter[A, FieldType[K, H] :: T] =
+  implicit def literalFieldDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+                                                                                              implicit
+                                                                                              ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
+                                                                                              selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+                                                                                              dT: ScopedDefaulter[A, T]
+                                                                                            ): ScopedDefaulter[A, FieldType[K, H] :: T] =
     ScopedDefaulter.instance[A] { a =>
       field[K](selector(ctx.fieldDefaults)) :: field[K](dT.defaultFor(a))
     }
 
-  implicit def scopedLazyRecordDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+  implicit def lazyLiteralFieldDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
                                                                                                   implicit
                                                                                                   ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
                                                                                                   selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
@@ -55,7 +53,7 @@ object scoped {
       field[K](selector(ctx.fieldDefaults)()) :: field[K](dT.defaultFor(a))
     }
 
-  implicit def parameterizedLazyRecordDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+  implicit def parameterizedLazyFieldDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
                                                                                                          implicit
                                                                                                          ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
                                                                                                          selector: Selector.Aux[FIELD_DEFAULTS, K, (A) => H],
@@ -67,10 +65,6 @@ object scoped {
   }
 
 
-  //todo: Do i need this?
-  implicit def scopedHNilDefaulter[A, FIELD_DEFAULTS <: HList](
-                                                                implicit
-                                                                ctx: ScopedMigrationContext[A, FIELD_DEFAULTS],
-                                                              ): ScopedDefaulter[A, HNil] =
+  implicit def hNilDefaulter[A, FIELD_DEFAULTS <: HList]: ScopedDefaulter[A, HNil] =
     ScopedDefaulter.instance(_ => HNil)
 }

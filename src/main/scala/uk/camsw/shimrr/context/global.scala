@@ -64,7 +64,7 @@ object global {
       field[K](selector(ctx.fieldDefaults)) :: field[K](dT.default)
     }
 
-  implicit def lazyLiteralDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+  implicit def lazyLiteralFieldDefaulter[FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
                                                                                           implicit
                                                                                           ctx: GlobalMigrationContext[FIELD_DEFAULTS],
                                                                                           selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
