@@ -85,11 +85,11 @@ class ScopedMigrationTest extends FreeSpec {
     "scopes can be applied to lists containing instances of a given coproduct" in {
       import context.scoped._
 
-      sealed trait Scope
-      case class V1() extends Scope
-      case class V1a() extends Scope
-      case class V2(name: String) extends Scope
-      case class V3(name: String, age: Int) extends Scope
+      sealed trait Versioned
+      case class V1() extends Versioned
+      case class V1a() extends Versioned
+      case class V2(name: String) extends Versioned
+      case class V3(name: String, age: Int) extends Versioned
 
       implicit val v1Rules = MigrationContext[V1](
         'name ->> "Leon Jones" :: 'age ->> 25 :: HNil
@@ -105,7 +105,7 @@ class ScopedMigrationTest extends FreeSpec {
 
       implicit val v3Rules = MigrationContext[V3]()
 
-      val xs = List[Scope](
+      val xs = List[Versioned](
         V1(),
         V1a(),
         V2("Nicky Hayden"),

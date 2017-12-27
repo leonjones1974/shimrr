@@ -18,7 +18,7 @@ logBuffered in Test := false
 //scalacOptions += "-Xlog-implicits"
 scalacOptions += "-P:splain:bounds:true"
 
-unmanagedSourceDirectories in Test += baseDirectory.value / "src/examples/scala"
+unmanagedSourceDirectories in Test += baseDirectory.value / "src/tutorial/scala"
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
   "com.chuusai" %% "shapeless" % shapelessVersion
