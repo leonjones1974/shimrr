@@ -34,7 +34,7 @@ object ProductService {
       val discount = (b: Bicycle) => discountService.discountFor(b.make, b.model)
 
       /*
-        Now lets create our migration context, because we're in the scoped context we need to provide
+        Now lets create our migration context. Because we're in the scoped context we need to provide
         the type by which to scope in addition to defining our normal rules
         */
       implicit val ctx = MigrationContext[Bicycle](
