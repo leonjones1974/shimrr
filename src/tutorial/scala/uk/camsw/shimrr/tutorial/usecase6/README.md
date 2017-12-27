@@ -33,4 +33,4 @@ At the end of this scenario you will have
  
 [The code](./)
 
-[Next use case](../usecase6/README.md)
+To be continued...

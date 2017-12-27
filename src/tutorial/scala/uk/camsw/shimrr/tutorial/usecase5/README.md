@@ -29,4 +29,4 @@ At the end of this scenario you will have
  
 [The code](./)
 
-To be continued...
+[Next use case](../usecase6/README.md)
