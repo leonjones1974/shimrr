@@ -5,8 +5,6 @@ import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.syntax._
-import cats.instances.all._
-import uk.camsw.shimrr.context.MigrationContext
 
 //todo: See how much we really need this different set of classes
 class ScopedMigrationTest extends FreeSpec {
@@ -145,10 +143,6 @@ class ScopedMigrationTest extends FreeSpec {
         V2("Leon Jones", 10),
         V2("Nicky Hayden", 12)
       )
-    }
-
-    "at the coproduct level with override" in {
-
     }
   }
 }

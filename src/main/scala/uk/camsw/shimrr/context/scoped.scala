@@ -3,7 +3,7 @@ package uk.camsw.shimrr.context
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
-import shapeless.{:+:, ::, <:!<, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric}
+import shapeless.{:+:, ::, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy}
 import uk.camsw.shimrr.Migration
 
 object scoped {
@@ -33,21 +33,23 @@ object scoped {
       throw new RuntimeException(s"Will not happen, but did for $a"))
 
 
-  implicit def coproductMigration[A, B, ARepr <: Coproduct](implicit
-                                                            genA: Generic.Aux[A, ARepr],
-                                                            m: Migration[ARepr, B]): Migration[A, B] =
+  implicit def coproductMigration[A, B, ARepr <: Coproduct](
+                                                             implicit
+                                                             genA: Generic.Aux[A, ARepr],
+                                                             m: Migration[ARepr, B]): Migration[A, B] =
     Migration.instance(a =>
       m.migrate(genA.to(a))
     )
 
 
-  implicit def coproductReprMigration[H, T <: Coproduct, B, BRepr <: HList, A, FIELD_DEFAULTS <: HList](implicit
-                                                                                                        mH: Migration[H, B],
-                                                                                                        mT: Migration[T, B]
+  implicit def coproductReprMigration[H, T <: Coproduct, B, BRepr <: HList, A, FIELD_DEFAULTS <: HList](
+                                                                                                         implicit
+                                                                                                         mH: Lazy[Migration[H, B]],
+                                                                                                         mT: Migration[T, B]
                                                                                                        ): Migration[H :+: T, B] =
     Migration.instance {
       case Inl(h) =>
-        mH.migrate(h)
+        mH.value.migrate(h)
       case Inr(t) =>
         mT.migrate(t)
     }
@@ -102,41 +104,41 @@ object scoped {
 
     }
 
-  implicit def literalFieldDefaulter[C, A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
-                                                                                                 implicit
-                                                                                                 scope: Scope[A],
-                                                                                                 ctx: MigrationContext[A, FIELD_DEFAULTS],
-                                                                                                 selector: Selector.Aux[FIELD_DEFAULTS, K, H],
-                                                                                                 dT: ScopedDefaulter[A, T]
-                                                                                               ): ScopedDefaulter[A, FieldType[K, H] :: T] =
-    ScopedDefaulter.instance[C, A] { a =>
+  implicit def literalFieldDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+                                                                                              implicit
+                                                                                              scope: Scope[A],
+                                                                                              ctx: MigrationContext[A, FIELD_DEFAULTS],
+                                                                                              selector: Selector.Aux[FIELD_DEFAULTS, K, H],
+                                                                                              dT: ScopedDefaulter[A, T]
+                                                                                            ): ScopedDefaulter[A, FieldType[K, H] :: T] =
+    ScopedDefaulter.instance[A] { a =>
       field[K](selector(ctx.fieldDefaults)) :: field[K](dT.defaultFor(a))
     }
 
-  implicit def lazyLiteralFieldDefaulter[C, A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
-                                                                                                     implicit
-                                                                                                     scope: Scope[A],
-                                                                                                     ctx: MigrationContext[A, FIELD_DEFAULTS],
-                                                                                                     selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
-                                                                                                     dT: ScopedDefaulter[A, T]
-                                                                                                   ): ScopedDefaulter[A, FieldType[K, H] :: T] =
-    ScopedDefaulter.instance[C, A] { a =>
+  implicit def lazyLiteralFieldDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+                                                                                                  implicit
+                                                                                                  scope: Scope[A],
+                                                                                                  ctx: MigrationContext[A, FIELD_DEFAULTS],
+                                                                                                  selector: Selector.Aux[FIELD_DEFAULTS, K, () => H],
+                                                                                                  dT: ScopedDefaulter[A, T]
+                                                                                                ): ScopedDefaulter[A, FieldType[K, H] :: T] =
+    ScopedDefaulter.instance[A] { a =>
       field[K](selector(ctx.fieldDefaults)()) :: field[K](dT.defaultFor(a))
     }
 
-  implicit def parameterizedLazyFieldDefaulter[C, A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
-                                                                                                           implicit
-                                                                                                           scope: Scope[A],
-                                                                                                           ctx: MigrationContext[A, FIELD_DEFAULTS],
-                                                                                                           selector: Selector.Aux[FIELD_DEFAULTS, K, (A) => H],
-                                                                                                           dT: ScopedDefaulter[A, T]
-                                                                                                         ): ScopedDefaulter[A, FieldType[K, H] :: T] = {
-    ScopedDefaulter.instance[C, A] { a =>
+  implicit def parameterizedLazyFieldDefaulter[A, FIELD_DEFAULTS <: HList, K <: Symbol, H, T <: HList](
+                                                                                                        implicit
+                                                                                                        scope: Scope[A],
+                                                                                                        ctx: MigrationContext[A, FIELD_DEFAULTS],
+                                                                                                        selector: Selector.Aux[FIELD_DEFAULTS, K, (A) => H],
+                                                                                                        dT: ScopedDefaulter[A, T]
+                                                                                                      ): ScopedDefaulter[A, FieldType[K, H] :: T] = {
+    ScopedDefaulter.instance[A] { a =>
       field[K](selector(ctx.fieldDefaults)(a)) :: field[K](dT.defaultFor(a))
     }
   }
 
 
-  implicit def hNilDefaulter[C, A, FIELD_DEFAULTS <: HList]: ScopedDefaulter[A, HNil] =
+  implicit def hNilDefaulter[A, FIELD_DEFAULTS <: HList]: ScopedDefaulter[A, HNil] =
     ScopedDefaulter.instance(_ => HNil)
 }

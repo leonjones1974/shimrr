@@ -16,10 +16,10 @@ trait ScopedDefaulter[A, F] {
 
 object ScopedDefaulter {
 
-  class Builder[C, A] {
+  class Builder[A] {
     def apply[F](f: A => F): ScopedDefaulter[A, F] = (a: A) => f(a)
   }
 
-  def instance[C, A] = new Builder[C, A]
+  def instance[A] = new Builder[A]
 }
 
