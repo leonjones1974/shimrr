@@ -10,16 +10,16 @@ object Defaulter {
   }
 }
 
-trait ScopedDefaulter[A, F] {
+trait ScopedDefaulter[C, A, F] {
   def defaultFor(a: A): F
 }
 
 object ScopedDefaulter {
 
-  class Builder[A] {
-    def apply[F](f: A => F): ScopedDefaulter[A, F] = (a: A) => f(a)
+  class Builder[C, A] {
+    def apply[F](f: A => F): ScopedDefaulter[C, A, F] = (a: A) => f(a)
   }
 
-  def instance[A] = new Builder[A]
+  def instance[C, A] = new Builder[C, A]
 }
 

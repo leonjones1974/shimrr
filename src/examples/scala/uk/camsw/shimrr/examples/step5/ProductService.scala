@@ -32,7 +32,8 @@ object ProductService {
       // You run the test, expecting compilation failures
       // but it passes
 
-      repository.findAll().migrateTo[BicycleV4]
+      //repository.findAll().migrateTo[BicycleV4]
+      ???
     }
   }
 }

@@ -31,21 +31,21 @@ class LazyFieldTest extends FreeSpec {
     }
   }
 
-  "using a scoped context" - {
-    import uk.camsw.shimrr.context.scoped._
-    "an arity0 function can be used to default multiple missing fields" - {
-      val counter = new AtomicInteger(4)
-
-      def nextCount: () => Int = () => counter.incrementAndGet()
-
-      def str2Name: () => String = () => "str2"
-
-      implicit val ctx = MigrationContext[Str1](
-        'stringField2 ->> str2Name ::
-          'intField1 ->> nextCount :: HNil
-      )
-
-      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
-    }
-  }
+//  "using a scoped context" - {
+//    import uk.camsw.shimrr.context.scoped._
+//    "an arity0 function can be used to default multiple missing fields" - {
+//      val counter = new AtomicInteger(4)
+//
+//      def nextCount: () => Int = () => counter.incrementAndGet()
+//
+//      def str2Name: () => String = () => "str2"
+//
+//      implicit val ctx = MigrationContext[Str1](
+//        'stringField2 ->> str2Name ::
+//          'intField1 ->> nextCount :: HNil
+//      )
+//
+//      Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
+//    }
+//  }
 }

@@ -65,7 +65,8 @@ object ProductService {
       // You run the test and everything is happy
       // Because you are curious you change the field name in the rule and it breaks compilation again
 
-      repository.findAll().migrateTo[BicycleV4]
+      //repository.findAll().migrateTo[BicycleV4]
+      ???
     }
   }
 }

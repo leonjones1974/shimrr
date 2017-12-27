@@ -15,6 +15,8 @@ val alleycatsVersion = "1.0.0-RC2"
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
 logBuffered in Test := false
+//scalacOptions += "-Xlog-implicits"
+scalacOptions += "-P:splain:bounds:true"
 
 unmanagedSourceDirectories in Test += baseDirectory.value / "src/examples/scala"
 

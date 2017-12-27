@@ -18,6 +18,7 @@ trait MigrationOps {
 
   implicit class MigrationIterableOps[A](ia: Iterable[A]) {
     def migrateTo[B](implicit m: Migration[A, B]): Iterable[B] = ia map m.migrate
+
   }
 
 }

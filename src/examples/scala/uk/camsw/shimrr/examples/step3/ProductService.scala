@@ -38,7 +38,9 @@ object ProductService {
       import uk.camsw.shimrr.context.global._
 
       // You add the single liner and all your tests pass!
-      repository.findAll().migrateTo[BicycleV3]
+//      repository.findAll().migrateTo[BicycleV3]
+      ???
     }
+
   }
 }
