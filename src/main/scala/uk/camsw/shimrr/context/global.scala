@@ -36,7 +36,7 @@ object global {
         mT.migrate(t)
     }
 
-  implicit def cNilMigration[T <: CNil, B]: Migration[T, B] =
+  implicit def fromCNil[T <: CNil, B]: Migration[T, B] =
     Migration.instance(a =>
       throw new RuntimeException(s"Will not happen, but did for $a")
     )
@@ -63,22 +63,22 @@ object global {
     }
 
 
-  implicit def literalFieldDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
-                                                                                          implicit
-                                                                                          ctx: GlobalMigrationContext[FieldDefaults],
-                                                                                          selector: Selector.Aux[FieldDefaults, K, H],
-                                                                                          dT: Defaulter[T]
-                                                                                        ): Defaulter[FieldType[K, H] :: T] =
+  implicit def literalDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
+                                                                                     implicit
+                                                                                     ctx: GlobalMigrationContext[FieldDefaults],
+                                                                                     selector: Selector.Aux[FieldDefaults, K, H],
+                                                                                     dT: Defaulter[T]
+                                                                                   ): Defaulter[FieldType[K, H] :: T] =
     Defaulter.instance {
       field[K](selector(ctx.fieldDefaults)) :: field[K](dT.default)
     }
 
-  implicit def lazyLiteralFieldDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
-                                                                                              implicit
-                                                                                              ctx: GlobalMigrationContext[FieldDefaults],
-                                                                                              selector: Selector.Aux[FieldDefaults, K, () => H],
-                                                                                              dT: Defaulter[T]
-                                                                                            ): Defaulter[FieldType[K, H] :: T] = {
+  implicit def lazyDefaulter[FieldDefaults <: HList, K <: Symbol, H, T <: HList](
+                                                                                  implicit
+                                                                                  ctx: GlobalMigrationContext[FieldDefaults],
+                                                                                  selector: Selector.Aux[FieldDefaults, K, () => H],
+                                                                                  dT: Defaulter[T]
+                                                                                ): Defaulter[FieldType[K, H] :: T] = {
     Defaulter.instance {
       field[K](selector(ctx.fieldDefaults)()) :: field[K](dT.default)
     }
