@@ -4,9 +4,23 @@ import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
 import shapeless.{::, CNil, HList, HNil, LabelledGeneric}
-import uk.camsw.shimrr.{Migration, ScopedDefaulter, ScopedMigrationContext}
+import uk.camsw.shimrr.Migration
 
 object scoped {
+
+  private[shimrr] trait ScopedMigrationContext[A , FIELD_DEFAULTS <: HList] extends MigrationContext[FIELD_DEFAULTS]
+
+  object MigrationContext {
+
+    class ScopedBuilder[A ] {
+      def apply[FIELD_DEFAULTS <: HList](defaults: FIELD_DEFAULTS): ScopedMigrationContext[A, FIELD_DEFAULTS] = new ScopedMigrationContext[A, FIELD_DEFAULTS] {
+        override val fieldDefaults: FIELD_DEFAULTS = defaults
+      }
+    }
+
+    def apply[A] = new ScopedBuilder[A]
+  }
+
 
   implicit def cNilMigration[T <: CNil, B]: Migration[T, B] =
     Migration.instance(a =>

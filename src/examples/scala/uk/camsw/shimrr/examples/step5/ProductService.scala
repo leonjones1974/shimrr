@@ -1,8 +1,9 @@
 package uk.camsw.shimrr.examples.step5
 
 import shapeless.HNil
-import uk.camsw.shimrr.MigrationContext
+import uk.camsw.shimrr.context.MigrationContext
 
+import shapeless.syntax.singleton.mkSingletonOps
 
 trait ProductService {
 
@@ -23,10 +24,9 @@ object ProductService {
       */
     override def allProducts(): Iterable[BicycleV4] = {
       import uk.camsw.shimrr.syntax._
-      import shapeless.syntax.singleton.mkSingletonOps
       import uk.camsw.shimrr.context.global._
 
-      implicit val allToV4 = MigrationContext.global(
+      implicit val allToV4 = MigrationContext(
         defaults = 'discountPercentage ->> discountService.defaultDiscountPercentage :: HNil
       )
       // You run the test, expecting compilation failures

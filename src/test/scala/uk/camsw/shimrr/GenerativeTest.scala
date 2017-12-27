@@ -3,12 +3,13 @@ package uk.camsw.shimrr
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.test.MigrationFreeSpec
-import uk.camsw.shimrr.context.global._
+
 class GenerativeTest extends MigrationFreeSpec {
 
   "Given a coproduct with globally defined migration rules" - {
+    import uk.camsw.shimrr.context.global._
 
-    implicit val ctx = MigrationContext.global(
+    implicit val ctx = MigrationContext(
       defaults =
         'stringField1 ->> "STR1" ::
         'stringField2 ->> "STR2" ::

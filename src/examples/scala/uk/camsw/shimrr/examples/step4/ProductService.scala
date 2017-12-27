@@ -1,7 +1,7 @@
 package uk.camsw.shimrr.examples.step4
 
 import shapeless.HNil
-import uk.camsw.shimrr.MigrationContext
+import uk.camsw.shimrr.context.MigrationContext
 
 trait ProductService {
 
@@ -48,15 +48,16 @@ object ProductService {
     override def allProducts(): Iterable[BicycleV4] = {
       // You import the syntax in order to get access to the migration extension methods
       import uk.camsw.shimrr.syntax._
-      // And the shimrr type class instances
-      import uk.camsw.shimrr.context.global._
 
       // Here a bit of shapeless leaks out, we need to import the singleton type ops which gives us the ability to create tagged values
       import shapeless.syntax.singleton.mkSingletonOps
 
+      // Pull in everything from global as it also includes all the required implicits
+      import uk.camsw.shimrr.context.global._
+
       // You create an implicit migration context, providing the mapping for the new field
       // Note the HNil, a shapeless cons rather than a scala one
-      implicit val allToV4 = MigrationContext.global(
+      implicit val allToV4 = MigrationContext(
         defaults = 'discountPercentage ->> 10 :: HNil
       )
 

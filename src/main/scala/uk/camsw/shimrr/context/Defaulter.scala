@@ -1,4 +1,4 @@
-package uk.camsw.shimrr
+package uk.camsw.shimrr.context
 
 trait Defaulter[F] {
   def default: F

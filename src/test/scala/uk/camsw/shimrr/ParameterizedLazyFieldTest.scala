@@ -4,8 +4,8 @@ import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
-import uk.camsw.shimrr.syntax._
 import uk.camsw.shimrr.context.scoped._
+import uk.camsw.shimrr.syntax._
 
 class ParameterizedLazyFieldTest extends FreeSpec {
 
@@ -13,7 +13,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
     "defaulters can access the previous version" in {
 
       val nextCount: NoFields => Int = _ => 0
-      implicit val ctx = MigrationContext.scoped[NoFields](
+      implicit val ctx = MigrationContext[NoFields](
         'intField1 ->> nextCount :: HNil
       )
 
@@ -26,7 +26,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       val str2: NoFields => String = _ => "str2"
 
 
-      implicit val ctx = MigrationContext.scoped[NoFields](
+      implicit val ctx = MigrationContext[NoFields](
         'stringField1 ->> str1 ::
           'stringField2 ->> str2 ::
           'intField1 ->> nextCount :: HNil
@@ -39,7 +39,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       val arity0 = () => "str2"
       val arity1: Str1 => Int = _ => 5
 
-      implicit val ctx = MigrationContext.scoped[Str1](
+      implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> arity0 ::
           'intField1 ->> arity1 :: HNil
       )
@@ -50,7 +50,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
     "arity0 and literal can be mixed and matched" in {
       val arity0 = () => "str2"
 
-      implicit val ctx = MigrationContext.scoped[Str1](
+      implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> arity0 ::
           'intField1 ->> 5 :: HNil
       )
@@ -61,7 +61,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
     "arity1 and literal can be mixed and matched" in {
       val arity1 = (_: Str1) => "str2"
 
-      implicit val ctx = MigrationContext.scoped[Str1](
+      implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> arity1 ::
           'intField1 ->> 5 :: HNil
       )
@@ -73,7 +73,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       val arity0 = () => "str1"
       val arity1 = (_: NoFields) => "str2"
 
-      implicit val ctx = MigrationContext.scoped[NoFields](
+      implicit val ctx = MigrationContext[NoFields](
         'stringField1 ->> arity0 ::
           'stringField2 ->> arity1 ::
           'intField1 ->> 5 :: HNil

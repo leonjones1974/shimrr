@@ -8,6 +8,15 @@ import uk.camsw.shimrr._
 
 object global {
 
+  private[shimrr] trait GlobalMigrationContext[FIELD_DEFAULTS <: HList] extends MigrationContext[FIELD_DEFAULTS]
+
+  object MigrationContext {
+
+    def apply[FIELD_DEFAULTS <: HList](defaults: FIELD_DEFAULTS = HNil): GlobalMigrationContext[FIELD_DEFAULTS] = new GlobalMigrationContext[FIELD_DEFAULTS] {
+      override val fieldDefaults: FIELD_DEFAULTS = defaults
+    }
+  }
+
   implicit def coproductMigration[A, B, ARepr <: Coproduct](implicit
                                                             genA: Generic.Aux[A, ARepr],
                                                             m: Migration[ARepr, B]): Migration[A, B] =

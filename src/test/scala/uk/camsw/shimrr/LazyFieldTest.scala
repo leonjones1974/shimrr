@@ -17,7 +17,7 @@ class LazyFieldTest extends FreeSpec {
 
     def nextCount: () => Int = () => counter.incrementAndGet()
 
-    implicit val ctx = MigrationContext.global(
+    implicit val ctx = MigrationContext(
       'intField1 ->> nextCount :: HNil
     )
 
@@ -40,7 +40,7 @@ class LazyFieldTest extends FreeSpec {
 
       def str2Name: () => String = () => "str2"
 
-      implicit val ctx = MigrationContext.scoped[Str1](
+      implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> str2Name ::
           'intField1 ->> nextCount :: HNil
       )

@@ -5,14 +5,12 @@ import cats.instances.string._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import shapeless.HNil
-import uk.camsw.shimrr.syntax._
-import cats.instances.list._
-import shapeless.test.illTyped
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.context.global._
+import uk.camsw.shimrr.syntax._
 class MigrationTest extends WordSpec {
 
-  implicit val ctx = MigrationContext.global('stringField1 ->> "STR1" ::
+  implicit val ctx = MigrationContext('stringField1 ->> "STR1" ::
     'stringField2 ->> "STR2" ::
     'intField1 ->> -99 ::
     HNil)

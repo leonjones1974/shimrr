@@ -34,7 +34,7 @@ object ProductService {
     override def allProducts(): Iterable[BicycleV3] = {
       // You import the syntax in order to get access to the migration extension methods
       import uk.camsw.shimrr.syntax._
-      // And the shimrr type class instances
+      // And the shimrr type class instances required for a global migration
       import uk.camsw.shimrr.context.global._
 
       // You add the single liner and all your tests pass!

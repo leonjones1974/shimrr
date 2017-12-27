@@ -6,6 +6,7 @@ import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.syntax._
 import cats.instances.all._
+import uk.camsw.shimrr.context.MigrationContext
 
 //todo: See how much we really need this different set of classes
 class ScopedMigrationTest extends FreeSpec {
@@ -34,13 +35,13 @@ class ScopedMigrationTest extends FreeSpec {
       import uk.camsw.shimrr.context.global._
       {
 
-        implicit val ctx = MigrationContext.global(
+        implicit val ctx = MigrationContext(
           defaults = 'age ->> 25 :: HNil
         )
         CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
       }
       {
-        implicit val ctx = MigrationContext.global(
+        implicit val ctx = MigrationContext(
           defaults = 'age ->> 51 :: HNil
         )
         CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 51)
@@ -54,18 +55,18 @@ class ScopedMigrationTest extends FreeSpec {
         SupplierV1("supp1")
       ).collect {
         case c: Customer =>
-          implicit val ctx = MigrationContext.global('age ->> 25 :: HNil)
+          implicit val ctx = MigrationContext('age ->> 25 :: HNil)
           c.migrateTo[CustomerV2]
         case s: Supplier =>
-          implicit val ctx = MigrationContext.global('age ->> 1 :: HNil)
+          implicit val ctx = MigrationContext('age ->> 1 :: HNil)
           s.migrateTo[SupplierV2]
       } should contain only(CustomerV2("cust1", 25), SupplierV2("supp1", 1))
     }
 
     "for individual migrations (atom)" in {
       import uk.camsw.shimrr.context.scoped._
-      implicit val V1toV2 = MigrationContext.scoped[CustomerV1]('age ->> 25 :: HNil)
-      implicit val V1DupToV2 = MigrationContext.scoped[CustomerV1Dup]('age ->> 51 :: HNil)
+      implicit val V1toV2 = MigrationContext[CustomerV1]('age ->> 25 :: HNil)
+      implicit val V1DupToV2 = MigrationContext[CustomerV1Dup]('age ->> 51 :: HNil)
 
       CustomerV1("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 25)
       CustomerV1Dup("name").migrateTo[CustomerV2] shouldBe CustomerV2("name", 51)
@@ -73,7 +74,7 @@ class ScopedMigrationTest extends FreeSpec {
 
     "for individual migrations with more than one field missing" in {
       import uk.camsw.shimrr.context.scoped._
-      implicit val str1 = MigrationContext.scoped[Str1](
+      implicit val str1 = MigrationContext[Str1](
         'stringField2 ->> "str2" ::
           'intField1 ->> 0 :: HNil
       )
@@ -83,8 +84,8 @@ class ScopedMigrationTest extends FreeSpec {
 
     "for individual migrations (list)" in {
       import uk.camsw.shimrr.context.scoped._
-      implicit val V1toV2 = MigrationContext.scoped[CustomerV1]('age ->> 25 :: 'shoeSize ->> 7.5d :: HNil)
-      implicit val V1DupToV2 = MigrationContext.scoped[CustomerV1Dup]('age ->> 51 :: 'shoeSize ->> 4.5d :: HNil)
+      implicit val V1toV2 = MigrationContext[CustomerV1]('age ->> 25 :: 'shoeSize ->> 7.5d :: HNil)
+      implicit val V1DupToV2 = MigrationContext[CustomerV1Dup]('age ->> 51 :: 'shoeSize ->> 4.5d :: HNil)
 
       //TODO: Put me back in
       //      val xs = List[Customer](
