@@ -7,13 +7,13 @@ Clearly the scenarios contained herein are somewhat tongue-in-cheek, but creatin
 about potential use cases for the library and the overall shape of the API
 
 Somewhere along that path I realised that creating these scenarios in 'tutorial form' might solve two problems in one go.  
-So, due to my laziness a tutorial for SHIMRR has become available sooner than perhaps it would have otherwise
+So, due to my laziness, a tutorial for SHIMRR has become available sooner than perhaps it would have otherwise
 
 ## The structure
 
 Each of the use-cases under this directory is self contained, can be built and contains passing tests
 
-The tutorial takes you through an evolution of simple component where offline data-migration is not acceptable
+The tutorial takes you through an evolution of a simple component where offline data-migration is not acceptable
 and a read-repair style approach has been adopted
 
 It's recommended you read the README.md in each directory to get an idea of the use case being demonstrated.
@@ -25,7 +25,7 @@ It's *strongly* recommended that you play around with these scenarios, changing 
 
 Getting the library to this point has been hard - tracking down missing implicits is hard.  I hope that using it
 proves easier.  More than usual I'd recommend making small changes.  It's really easy to guess what you've missed
-when you are only defaulting one new field, much harder if you are trying to twenty at the same time!
+when you are only defaulting one new field, much harder if you are trying to do twenty at the same time!
 
 I hope the API makes life easy enough, feedback around this would be gratefully received as issues on *github*
  

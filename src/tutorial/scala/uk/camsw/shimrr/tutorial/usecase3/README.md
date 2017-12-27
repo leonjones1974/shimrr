@@ -40,7 +40,7 @@ At the end of this scenario you will have
  - Used the migrateTo[A] extension method 
  - Demonstrated that shimrr dropped removed fields during the migration, for free
 
-
+[Next use case](../usecase4/README.md)
  
 
 
