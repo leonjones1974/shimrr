@@ -10,7 +10,7 @@ import cats.instances.list._
 import shapeless.test.illTyped
 import shapeless.syntax.singleton.mkSingletonOps
 import instances._
-
+import uk.camsw.shimrr.context.global._
 class MigrationTest extends WordSpec {
 
   implicit val ctx = MigrationContext.global('stringField1 ->> "STR1" ::

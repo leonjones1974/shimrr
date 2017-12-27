@@ -32,7 +32,9 @@ class ScopedMigrationTest extends FreeSpec {
   "Migration rules can be scoped" - {
 
     "manually, using blocks and global migration context" in {
+      import uk.camsw.shimrr.context.global._
       {
+
         implicit val ctx = MigrationContext.global(
           defaults = 'age ->> 25 :: HNil
         )
@@ -46,11 +48,8 @@ class ScopedMigrationTest extends FreeSpec {
       }
     }
 
-    // TODO: could do with implementing this at some stage
-    "for heterogeneous list" ignore {
-    }
-
     "for heterogeneous list - non-typesafe" in {
+      import uk.camsw.shimrr.context.global._
       List[Entity](
         CustomerV1("cust1"),
         SupplierV1("supp1")
@@ -65,6 +64,7 @@ class ScopedMigrationTest extends FreeSpec {
     }
 
     "for individual migrations (atom)" in {
+      import uk.camsw.shimrr.context.scoped._
       implicit val V1toV2 = MigrationContext.scoped[CustomerV1]('age ->> 25 :: HNil)
       implicit val V1DupToV2 = MigrationContext.scoped[CustomerV1Dup]('age ->> 51 :: HNil)
 
@@ -73,6 +73,7 @@ class ScopedMigrationTest extends FreeSpec {
     }
 
     "for individual migrations with more than one field missing" in {
+      import uk.camsw.shimrr.context.scoped._
       implicit val str1 = MigrationContext.scoped[Str1](
         'stringField2 ->> "str2" ::
           'intField1 ->> 0 :: HNil
@@ -82,20 +83,27 @@ class ScopedMigrationTest extends FreeSpec {
     }
 
     "for individual migrations (list)" in {
-      implicit val V1toV2 = MigrationContext.scoped[CustomerV1]('age ->> 25 :: HNil)
-      implicit val V1DupToV2 = MigrationContext.scoped[CustomerV1Dup]('age ->> 51 :: HNil)
+      import uk.camsw.shimrr.context.scoped._
+      implicit val V1toV2 = MigrationContext.scoped[CustomerV1]('age ->> 25 :: 'shoeSize ->> 7.5d :: HNil)
+      implicit val V1DupToV2 = MigrationContext.scoped[CustomerV1Dup]('age ->> 51 :: 'shoeSize ->> 4.5d :: HNil)
 
-      val xs = List[Customer](
-        CustomerV1("name"),
-        CustomerV1Dup("name")
-      ).migrateTo[CustomerV2]
-
-      xs shouldBe List(
-        CustomerV2("name", 25),
-        CustomerV2("name", 51)
-      )
+      //TODO: Put me back in
+      //      val xs = List[Customer](
+      //        CustomerV1("name"),
+      //        CustomerV1Dup("name")
+      //      ).migrateTo[CustomerV3]
+      //
+      //
+      //      xs shouldBe List(
+      //        CustomerV3("name", 25, 7.5d),
+      //        CustomerV3("name", 51, 7.5d)
+      //      )
+      fail("fix me, or move the one from parameterised lazy fields - this doesn't work when you have more than one field!")
     }
 
+    // TODO: could do with implementing this at some stage
+    "for heterogeneous list" ignore {
+    }
 
   }
 }

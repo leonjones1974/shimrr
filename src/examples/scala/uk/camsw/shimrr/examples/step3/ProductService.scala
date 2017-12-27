@@ -3,7 +3,7 @@ package uk.camsw.shimrr.examples.step3
 trait ProductService {
 
   /**
-    * Again, you update the service to return V3
+    * Again, you update the service to return the latest version
     */
   def allProducts(): Iterable[BicycleV3]
 
@@ -36,6 +36,7 @@ object ProductService {
       import uk.camsw.shimrr.syntax._
       // And the shimrr type class instances
       import uk.camsw.shimrr.instances._
+      import uk.camsw.shimrr.context.global._
 
       // You add the single liner and all your tests pass!
       repository.findAll().migrateTo[BicycleV3]

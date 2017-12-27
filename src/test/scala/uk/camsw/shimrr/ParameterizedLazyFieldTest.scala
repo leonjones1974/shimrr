@@ -6,11 +6,13 @@ import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.syntax._
 import uk.camsw.shimrr.instances._
+import uk.camsw.shimrr.context.scoped._
 
 class ParameterizedLazyFieldTest extends FreeSpec {
 
   "when adding fields using a scoped context" - {
     "defaulters can access the previous version" in {
+
       val nextCount: NoFields => Int = _ => 0
       implicit val ctx = MigrationContext.scoped[NoFields](
         'intField1 ->> nextCount :: HNil
@@ -23,6 +25,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       val nextCount: NoFields => Int = _ => 5
       val str1: NoFields => String = _ => "str1"
       val str2: NoFields => String = _ => "str2"
+
 
       implicit val ctx = MigrationContext.scoped[NoFields](
         'stringField1 ->> str1 ::

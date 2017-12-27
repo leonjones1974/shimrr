@@ -25,6 +25,7 @@ object ProductService {
       import uk.camsw.shimrr.syntax._
       import uk.camsw.shimrr.instances._
       import shapeless.syntax.singleton.mkSingletonOps
+      import uk.camsw.shimrr.context.global._
 
       implicit val allToV4 = MigrationContext.global(
         defaults = 'discountPercentage ->> discountService.defaultDiscountPercentage :: HNil

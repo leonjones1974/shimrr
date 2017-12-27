@@ -12,6 +12,8 @@ import uk.camsw.shimrr.syntax._
 class LazyFieldTest extends FreeSpec {
 
   "using a global context" - {
+    import uk.camsw.shimrr.context.global._
+
     val counter = new AtomicInteger(0)
 
     def nextCount: () => Int = () => counter.incrementAndGet()
@@ -21,6 +23,7 @@ class LazyFieldTest extends FreeSpec {
     )
 
     "an arity0 function can be used to default a field" in {
+
       val v1 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
       val v2 = Str1Str2("str1", "str2").migrateTo[Str1Str2Int1]
 
@@ -30,7 +33,7 @@ class LazyFieldTest extends FreeSpec {
   }
 
   "using a scoped context" - {
-
+    import uk.camsw.shimrr.context.scoped._
     "an arity0 function can be used to default multiple missing fields" - {
       val counter = new AtomicInteger(4)
 
