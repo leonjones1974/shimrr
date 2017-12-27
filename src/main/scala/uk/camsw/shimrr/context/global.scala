@@ -7,12 +7,14 @@ import shapeless.ops.record.Selector
 import uk.camsw.shimrr._
 
 object global {
-  implicit def cNilMigration[T <: CNil, B, BRepr](implicit
-                                                  genB: LabelledGeneric.Aux[B, BRepr]
-                                                 ): Migration[T, B] =
+
+  implicit def coproductMigration[A, B, ARepr <: Coproduct](implicit
+                                                            genA: Generic.Aux[A, ARepr],
+                                                            m: Migration[ARepr, B]): Migration[A, B] =
     Migration.instance(a =>
-      throw new RuntimeException(s"Will not happen, but did for $a")
+      m.migrate(genA.to(a))
     )
+
 
   implicit def coproductReprMigration[H, T <: Coproduct, B, BRepr <: HList](implicit
                                                                             mH: Migration[H, B],
@@ -25,12 +27,9 @@ object global {
         mT.migrate(t)
     }
 
-  implicit def coproductMigration[A, B, ARepr <: Coproduct, BRepr <: HList](implicit
-                                                                            genA: Generic.Aux[A, ARepr],
-                                                                            genB: LabelledGeneric.Aux[B, BRepr],
-                                                                            m: Migration[ARepr, B]): Migration[A, B] =
+  implicit def cNilMigration[T <: CNil, B, BRepr]: Migration[T, B] =
     Migration.instance(a =>
-      m.migrate(genA.to(a))
+      throw new RuntimeException(s"Will not happen, but did for $a")
     )
 
 
