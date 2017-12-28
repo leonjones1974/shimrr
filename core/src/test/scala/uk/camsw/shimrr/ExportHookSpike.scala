@@ -8,17 +8,17 @@ trait Rules[T] {
   def echo(t: T): T = t
 }
 
-@migration
-object Str1Rules {
-  type FROM = Str1
-}
-
-@migration
-object Int1Rules {
-  type FROM = Int1
-}
-
 class ExportHookSpike extends FreeSpec {
+
+  @migration
+  object Str1Rules {
+    type FROM = Str1
+  }
+
+  @migration
+  object Int1Rules {
+    type FROM = Int1
+  }
 
   "rules will have correct type" in {
     val x: Str1Rules.FROM = Str1("str1")
