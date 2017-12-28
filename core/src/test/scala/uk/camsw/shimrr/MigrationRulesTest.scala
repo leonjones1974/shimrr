@@ -19,9 +19,11 @@ class MigrationRulesTest extends FreeSpec {
 
 ////          @migration
           @sayHello
-          trait TestMacroExpansion[Str1] {
-//              println("Hello Scala.meta macros!")
+          trait TestMacroExpansion[String] extends Rules[String] {
+
           }
+
+
 
 //          val amp = 10
 //
@@ -35,9 +37,6 @@ class MigrationRulesTest extends FreeSpec {
 //          println(s"the fish did: $z")
 
 
-          val strRules = new MigrationRules[Str1](HNil)
-
-          println("scope: " + new MigrationRules[Str1](HNil).scope)
 
 
 //          Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 12)

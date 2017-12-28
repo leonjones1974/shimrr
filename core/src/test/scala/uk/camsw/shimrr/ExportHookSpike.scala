@@ -9,6 +9,7 @@ import uk.camsw.shimrr.macros.sayHello
 
 trait Rules[T] {
   // Type class defns ...
+  def saySomething() = println("hello from the summoned rules BOGEY BUM")
 }
 
 trait Fish
@@ -36,7 +37,14 @@ class ExportHookSpike extends FreeSpec {
 
   "we should be able to inject orphan instances" in {
     @sayHello
-    trait DerivedRules[T] extends Rules[T]
+    trait DerivedRules[String] extends Rules[String] {
+      val rules = implicitly[Rules[String]]
+      println(rules.saySomething())
+    }
+
+
+
+
 
     println(s"I am getting: ${DerivedRules.getMe}")
     println(s"with defined val: ${DerivedRules.DerivedRules}")
@@ -44,7 +52,7 @@ class ExportHookSpike extends FreeSpec {
     //      illTyped{"implicitly[DerivedEncoder[HNil]]"}
 //    import DerivedRules.exports._
 
-//    val encoder = implicitly[Rules[HNil]]
+
 
 
 

@@ -27,7 +27,7 @@ class sayHello extends scala.annotation.StaticAnnotation {
 
 
   inline def apply(defn: Any): Any = meta {
-    val q"trait $name[..$tparams] extends ..$bases { ..$body }" = defn
+    val q"trait $name[$tparam] extends $base { ..$body }" = defn
     println("I AM HEre")
 
     //       class Fish[$tpe] {
@@ -41,16 +41,16 @@ class sayHello extends scala.annotation.StaticAnnotation {
 //    val xx = q"_root_.uk.camsw.shimrr.macros.ReflectionMacros.checkType[$t]()"
     //        implicit def strRules: DerivedRules[String] = new DerivedRules[String] {}
     val varName = Pat.Var.Term(Term.Name(name.value))
+    val ctxName = Term.Name("ctx")
     q"""
       println("tired")
       val amp = 10
 
-//      @exports
       object ${Term.Name(name.value)} {
         def getMe = "Hello me for " + this.getClass.getName
-
         val $varName: String = "Hello"
-
+       implicit def $ctxName: uk.camsw.shimrr.Rules[String] = new uk.camsw.shimrr.Rules[String]{}
+        ..$body
       }
 
 
