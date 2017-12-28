@@ -1,62 +1,39 @@
 package uk.camsw.shimrr
 
-import export.imports
 import org.scalatest.FreeSpec
-import export._
-import shapeless.HNil
-import shapeless.test.illTyped
-import uk.camsw.shimrr.macros.sayHello
+import uk.camsw.shimrr.macros.migration
+import org.scalatest.Matchers._
 
 trait Rules[T] {
-  // Type class defns ...
-  def saySomething() = println("hello from the summoned rules BOGEY BUM")
+  def echo(t: T) = t
 }
 
-trait Fish
-
-object Rules extends EncoderLowPriority {
-  // Instances which should be higher priority than derived
-  // or subclass instances should be defined here ...
+@migration
+object Str1Rules {
+  type FROM = Str1
 }
 
-// Derived, subclass and other instances of Encoder are automatically included here ...
-@imports[Rules]
-trait EncoderLowPriority {
-  // Instances which should be lower priority than imported
-  // instances should be defined here ...
+@migration
+object Int1Rules {
+  type FROM = Int1
 }
-
-
-//@exports
-//object DerivedRules {
-//  implicit def hnil: DerivedRules[HNil] = new DerivedRules[HNil] {}
-//}
-
 
 class ExportHookSpike extends FreeSpec {
 
-  "we should be able to inject orphan instances" in {
-    @sayHello
-    trait DerivedRules[String] extends Rules[String] {
-      val rules = implicitly[Rules[String]]
-      println(rules.saySomething())
-    }
+  "rules will have correct type" in {
+    val x: Str1Rules.FROM = Str1("str1")
+  }
 
+  "contexts can be imported from the rules" in {
+    import Str1Rules.exports._
+    implicitly[Rules[Str1]].echo(Str1("boo")) shouldBe Str1("boo")
+  }
 
-
-
-
-    println(s"I am getting: ${DerivedRules.getMe}")
-    println(s"with defined val: ${DerivedRules.DerivedRules}")
-
-    //      illTyped{"implicitly[DerivedEncoder[HNil]]"}
-//    import DerivedRules.exports._
-
-
-
-
-
-
+  "contexts from multi rules do not conflict" in {
+    import Int1Rules.exports._
+    import Str1Rules.exports._
+    implicitly[Rules[Int1]].echo(Int1(25)) shouldBe Int1(25)
+    implicitly[Rules[Str1]].echo(Str1("boo")) shouldBe Str1("boo")
   }
 
 }

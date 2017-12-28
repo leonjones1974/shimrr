@@ -10,16 +10,17 @@ object MacroUtil {
 
 
 object ReflectionMacros {
-  def checkType[A: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[Any] = {
+  def checkType[A: c.WeakTypeTag](c: whitebox.Context)(): c.Tree = {
     import c.universe._
 
-
+    val outT = c.weakTypeOf[A]
 
     c.Expr(
       q"""
          println("hello from sub")
          val imp = 10
+         type OUT = $outT
        """
-    )
+    ).tree
   }
 }
