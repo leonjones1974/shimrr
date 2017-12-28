@@ -5,7 +5,7 @@ import uk.camsw.shimrr.macros.migration
 import org.scalatest.Matchers._
 
 trait Rules[T] {
-  def echo(t: T) = t
+  def echo(t: T): T = t
 }
 
 @migration
