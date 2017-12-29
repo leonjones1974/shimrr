@@ -47,7 +47,8 @@ val scalameta: Seq[ModuleID] = Seq(
 
 //todo: make this the scala version
 val reflectionDependencies: Seq[ModuleID] = Seq(
-  "org.scala-lang" % "scala-reflect" % "2.12.4"
+  "org.scala-lang" % "scala-reflect" % "2.12.4",
+  "org.scala-lang" % "scala-compiler" % "2.12.4"
 )
 
 val shapelessDependencies: Seq[ModuleID] = Seq(
