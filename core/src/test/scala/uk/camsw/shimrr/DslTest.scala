@@ -2,7 +2,7 @@ package uk.camsw.shimrr
 
 import org.scalatest.FreeSpec
 import shapeless.HNil
-import uk.camsw.shimrr.macros.Macro
+import uk.camsw.shimrr.macros.{Macro, migration, migrationF}
 
 import scala.language.higherKinds
 
@@ -29,14 +29,16 @@ class DslTest extends FreeSpec {
 //        class Rules[Str1Str2] {
 //          ('intField1, 51)
 //        }
-        Macro.dsl[Str1Str2]{
-          ('intField1, 12)
-        }
+//        Macro.dsl[Str1Str2]{
+//          //todo: Make this work with ->
+//          ('intField1, 12)
+//        }
 
 //        println(s"z: ${z}")
 //        println(TheRules())
 
-        object Str1Str2Rules extends Dsl[Str1Str2] {
+        @migrationF
+        val rules = new Dsl[Str1Str2] {
 
 
           // generate a case class from the tuple using old-school macros
@@ -49,7 +51,7 @@ class DslTest extends FreeSpec {
 
 
 
-          'intField1 -> 51
+          ('intField1, 51)
 //          'stringField1 -> uk.camsw.shimrr.Funcs.myLazy
 //          'stringField2 -> ((p: Str1Str2) => p.stringField1 + p.stringField2)
 
@@ -66,14 +68,16 @@ class DslTest extends FreeSpec {
 
           //          case class FieldDefaults(intField1: Int = 51)
 
-          override val fieldDefaults = HNil //f(FieldDefaults())
+//          override val fieldDefaults = HNil //f(FieldDefaults())
         }
 
 
         //todo: Be nice to import these automatically!
         //        import Str1Rules.exports._
         import syntax._
-//        import Str1Str2Rules.exports._
+        import rules._
+
+        println(s"My class: ${x}")
 //        println(s"zz is :$zz")
 
 

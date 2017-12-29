@@ -5,14 +5,13 @@ import scala.meta._
 import scala.meta.dialects.Scala212
 
 
-
 class migration extends scala.annotation.StaticAnnotation {
 
 
   inline def apply(defn: Any): Any = meta {
 
 
-    val x=
+    val x =
       """
          case class MyClass(stringField1: String = "str1")
 
@@ -34,21 +33,21 @@ class migration extends scala.annotation.StaticAnnotation {
 
     defn match {
       case q"object $name extends ..$supers { ..$stats }" =>
-//        if (stats.isEmpty) throw new RuntimeException(
-//          s"""First line of migration rules must specify a 'From' type of the form
-//             |   type FROM = FooV1
-//             | No such definition found in ${defn.toString()}
-//             |   """.stripMargin)
-//
-//        val from = stats.head
-//        println(s"From is: ${from}")
+        //        if (stats.isEmpty) throw new RuntimeException(
+        //          s"""First line of migration rules must specify a 'From' type of the form
+        //             |   type FROM = FooV1
+        //             | No such definition found in ${defn.toString()}
+        //             |   """.stripMargin)
+        //
+        //        val from = stats.head
+        //        println(s"From is: ${from}")
         val body = stats
 
 
         val fieldDefaults = stats.collect {
-//          case x@q"(..$exprs)" =>
-//            println(s"I think i got a tuple of :$exprs")
-//            x
+          //          case x@q"(..$exprs)" =>
+          //            println(s"I think i got a tuple of :$exprs")
+          //            x
           case x@q"$l $op[..$tpes] $r" =>
             println("WOOT I got an infix - did i?")
             println(s"l: ${l}")
@@ -65,17 +64,17 @@ class migration extends scala.annotation.StaticAnnotation {
             println(s"value is: ${r.tokens}")
             println(s"token size: ${r.tokens.length}")
             val paramValue = r.tokens.toList.mkString("")
-//            val paramType = Helper.findType(paramValue)
+            //            val paramType = Helper.findType(paramValue)
             println(s"param value is: ${paramValue}")
-//            println(s"param type is: ${paramType}")
+            //            println(s"param type is: ${paramType}")
             b.addField(x)
             s"""
                addField($x)
 
                """.parse[Stat].get
-//          case x =>
-//            println(s"** Unrecognised **: ${x}")
-//            x
+          //          case x =>
+          //            println(s"** Unrecognised **: ${x}")
+          //            x
 
         }
 
@@ -87,12 +86,20 @@ class migration extends scala.annotation.StaticAnnotation {
         val zz = q"""("leon" -> "jones")"""
         println(s"The field default are: ${fieldDefaults}")
         println(s"Generating rules context: ${ctxName}")
+        val cc = q"""
+           _root_.uk.camsw.shimrr.macros.Macro.dsl[FROM]{
+             ..$body
+           }
+         """
+
+        println(s"cc is: ${cc}")
+
         q"""
          object $objName extends ..$supers {
            ..$body;
            object exports {
-             ..${x.stats};
-             val zz = MyClass("str2")
+             $cc
+             val zz = "fish"
 
              implicit def $ctxName = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[FROM](fieldDefaults)
            }

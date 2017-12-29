@@ -1,8 +1,11 @@
 package uk.camsw.shimrr.macros
 
 
+import scala.annotation.{StaticAnnotation, compileTimeOnly}
 import scala.language.experimental.macros
-import scala.reflect.macros.blackbox
+import scala.reflect.macros.{blackbox, whitebox}
+import macrocompat.bundle
+
 trait FromTuple[Z, T] {
   def fromTuple(t: T): Z
 }
@@ -11,7 +14,94 @@ object Macro {
   def dsl[A](b: => Unit): Any = macro MacroImpl.dsl[A]
 }
 
+@compileTimeOnly("enable macro paradise to expand macro annotations")
+class migrationF[A] extends StaticAnnotation {
+  def macroTransform(annottees: Any*): Any = macro MacroBundle.dslF
+}
+
+@bundle
+class MacroBundle(val c: whitebox.Context) {
+  import c.universe._
+  def dslF(annottees: Tree*): Tree = {
+    import c.universe._
+
+
+    println(showRaw(annottees))
+    annottees match {
+
+      case x@List(q"""val $termName = $ass""") =>
+        x.collect{
+          case q"""val $tName = $expr""" =>
+            println("woot if I find this I think i have all the pieces")
+            println(s"expr: ${expr}")
+            expr match {
+              case 	q"new { ..$stat } with ..$inits { $self => ..$stats }" =>
+                println("found an anon one have i?")
+                println(s"${stat}")
+                println(s"init: ${inits}")
+                inits.head match {
+                  case tq"$dsl[$typ]" =>
+                    println("WOOOOOOOT I have found the dsl type")
+                    println(s"Which is: ${dsl}")
+                    println(s"Therefore I can infer my from type to be: ${typ}")
+                    q"()"
+                  case zz =>
+                    println(s"Unmatched inits: ${zz}")
+                }
+                q"()"
+              case q"$mods class anon extends ..$supers { ..$stats }" =>
+                println("WOoort, I have found: " )
+                q"()"
+              case q"new $init" =>
+                println(s"Woot, got an init: ${init}")
+                q"()"
+              case e =>
+                println(s"Unrecognised exp:${e}")
+                q"()"
+            }
+            q"()"
+          case z =>
+
+            println(s"Unable to locate what i want to locate ${z}")
+            q"()"
+        }
+
+        println(s"X: ${x}")
+        println("FOUND THE RULES VAL")
+        println(s"term name is: ${termName}")
+        q"""
+           object $termName {
+             val x = "fish"
+           }
+        """
+
+      case x@List(q"$mods class $termName[$rType] extends ..$parents { $self => ..$body }") =>
+
+        println(showRaw(c.macroApplication))
+        val cc = q"""
+           object Str1Str2Rules {
+             object exports {
+               val x = "fish"
+             }
+           }
+         """
+        println(s"I would create: ${cc}")
+        cc
+      case x =>
+        println(s"Unrecognised: ${x}")
+        c.abort(c.enclosingPosition,
+          s"""@migration can only be applied to definition
+            |   class SomeClass[FROM_TYPE] { .. }
+            |But was: [${x}]
+          """.stripMargin)
+        q"()"
+//        val Exports(List(), PriorityArg(priority)) = c.prefix.tree
+    }
+  }
+}
+
 object MacroImpl {
+
   def dsl[A: c.WeakTypeTag](c: blackbox.Context)(b: c.Expr[Any]): c.Expr[Any] = {
     import c.universe._
 
