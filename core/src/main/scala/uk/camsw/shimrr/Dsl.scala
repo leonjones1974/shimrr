@@ -1,19 +1,14 @@
 package uk.camsw.shimrr
 
 import shapeless.{HList, HNil}
-import shapeless.syntax.singleton.mkSingletonOps
 
-trait Dsl {
-  type FROM
+trait MacroDsl {
 
-  private[this] var fieldDefaults: HList = HNil
+  def fieldDefaults: HList = HNil
 
-  implicit class FieldRules[K <: Symbol](k: K) {
-    def ~>[V](to: V): Unit = {
-      fieldDefaults = (k ->> to) :: fieldDefaults
-      println(s"fd: ${fieldDefaults}")
-    }
-  }
+}
 
+trait Dsl[A] extends MacroDsl {
+  type FROM = A
 
 }
