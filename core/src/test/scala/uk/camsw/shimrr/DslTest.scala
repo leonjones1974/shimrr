@@ -1,8 +1,9 @@
 package uk.camsw.shimrr
 
 import org.scalatest.FreeSpec
-import shapeless.HNil
+import shapeless.{HNil, LabelledGeneric}
 import uk.camsw.shimrr.macros.{Macro, migration, migrationF}
+import org.scalatest.Matchers._
 
 import scala.language.higherKinds
 
@@ -75,10 +76,28 @@ class DslTest extends FreeSpec {
         //todo: Be nice to import these automatically!
         //        import Str1Rules.exports._
         import syntax._
-        import rules._
+        import rules.exports._
 
+//        println(s"class is: ${MyClass()}")
+//
+//        val rule = MyClass()
+//        val gen = LabelledGeneric[MyClass]
+//        val r = gen to rule
+//        println(s"r: ${r}")
+//        import context.scoped._
+//        implicit val ctx = MigrationContext[Str1Str2](r)
+
+//        println(s"fish: ${x}")
+
+//
+//        import Str1Str2Rules._
+//        import StrStr2Rules.exports._
+//        println(s"fish is: ${rules.exports.fish}")
         println(s"My class: ${x}")
 //        println(s"zz is :$zz")
+        import context.scoped._
+
+        Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 51)
 
 
 //        println(s"the param back out: ${MyNewClass()}")

@@ -100,6 +100,7 @@ class migration extends scala.annotation.StaticAnnotation {
            object exports {
              $cc
              val zz = "fish"
+             import uk.camsw.shimrr.context.scoped._
 
              implicit def $ctxName = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[FROM](fieldDefaults)
            }

@@ -21,21 +21,22 @@ class migrationF[A] extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
+
   import c.universe._
+
   def dslF(annottees: Tree*): Tree = {
     import c.universe._
 
 
     println(showRaw(annottees))
     annottees match {
-
       case x@List(q"""val $termName = $ass""") =>
-        x.collect{
+        val out = x.head match {
           case q"""val $tName = $expr""" =>
             println("woot if I find this I think i have all the pieces")
             println(s"expr: ${expr}")
             expr match {
-              case 	q"new { ..$stat } with ..$inits { $self => ..$stats }" =>
+              case q"new { ..$stat } with ..$inits { $self => ..$stats }" =>
                 println("found an anon one have i?")
                 println(s"${stat}")
                 println(s"init: ${inits}")
@@ -43,14 +44,66 @@ class MacroBundle(val c: whitebox.Context) {
                   case tq"$dsl[$typ]" =>
                     println("WOOOOOOOT I have found the dsl type")
                     println(s"Which is: ${dsl}")
+                    val str = termName.toString()
+                    val rules = TermName(str)
                     println(s"Therefore I can infer my from type to be: ${typ}")
-                    q"()"
+
+                    println(s"stats are: ${stats}")
+
+                    stats match {
+
+                      case x: List[_] =>
+                        println(s"I got a list: ${x}")
+                        x.headOption.map(y => {
+                          println(s"Got a y: ${y}")
+                          y match {
+                            case Apply(t, List(sym, v)) =>
+                              println(s"found an apply: yy: ${sym} -> $v")
+                              val tsym = c.typecheck(sym)
+                              println(s"type of sym is: ${tsym.tpe}")
+                              val tv = c.typecheck(v)
+                              println(s"type of val: ${tv.tpe.widen}")
+
+                              val termName = sym.toString()
+                              println(s"termName: ${termName}")
+
+                              val f1 = q"""val intField1: ${tv.tpe.widen} = $tv"""
+                              val cc = q"""case class MyClass($f1)"""
+                              //
+
+ //                             println("rules representation: " + repr)
+    //
+
+                              q"""
+                                  object $rules {
+                                    $cc
+                                    val gen = _root_.shapeless.LabelledGeneric[MyClass]
+                                    val repr = gen.to(MyClass())
+
+                                    object exports {
+                                      implicit val ctx = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[$typ](repr)
+                                      println("ctx: " + ctx)
+                                      val x = "fish"
+                                  }
+                                }
+                              """
+                            case _ =>
+                              println("Unrecognised")
+                              q"()"
+                          }
+                        }).get
+                      case x =>
+                        println(s"found in block: $x")
+                        q"()"
+                    }
+
+
                   case zz =>
                     println(s"Unmatched inits: ${zz}")
+                    q"()"
                 }
-                q"()"
               case q"$mods class anon extends ..$supers { ..$stats }" =>
-                println("WOoort, I have found: " )
+                println("WOoort, I have found: ")
                 q"()"
               case q"new $init" =>
                 println(s"Woot, got an init: ${init}")
@@ -59,45 +112,25 @@ class MacroBundle(val c: whitebox.Context) {
                 println(s"Unrecognised exp:${e}")
                 q"()"
             }
-            q"()"
           case z =>
 
             println(s"Unable to locate what i want to locate ${z}")
             q"()"
         }
-
-        println(s"X: ${x}")
-        println("FOUND THE RULES VAL")
-        println(s"term name is: ${termName}")
-        q"""
-           object $termName {
-             val x = "fish"
-           }
-        """
-
-      case x@List(q"$mods class $termName[$rType] extends ..$parents { $self => ..$body }") =>
-
-        println(showRaw(c.macroApplication))
-        val cc = q"""
-           object Str1Str2Rules {
-             object exports {
-               val x = "fish"
-             }
-           }
-         """
-        println(s"I would create: ${cc}")
-        cc
+        println(s"About to output stuff: ${out}")
+        c.Expr(out).tree
       case x =>
         println(s"Unrecognised: ${x}")
         c.abort(c.enclosingPosition,
           s"""@migration can only be applied to definition
-            |   class SomeClass[FROM_TYPE] { .. }
-            |But was: [${x}]
+             |   class SomeClass[FROM_TYPE] { .. }
+             |But was: [${x}]
           """.stripMargin)
         q"()"
-//        val Exports(List(), PriorityArg(priority)) = c.prefix.tree
+      //        val Exports(List(), PriorityArg(priority)) = c.prefix.tree
     }
   }
+
 }
 
 object MacroImpl {
