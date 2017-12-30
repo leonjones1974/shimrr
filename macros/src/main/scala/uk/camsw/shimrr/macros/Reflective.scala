@@ -15,7 +15,7 @@ object Macro {
 }
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class migrationF[A] extends StaticAnnotation {
+class migration[FROM] extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro MacroBundle.dslF
 }
 
@@ -30,21 +30,21 @@ class MacroBundle(val c: whitebox.Context) {
 
 //    println(showRaw(annottees))
     annottees match {
-      case x@List(q"""val $termName = $ass""") =>
+      case x@List(q"""val $rulesValName = $anonDslImpl""") =>
         val out = x.head match {
           case q"""val $tName = $expr""" =>
 //            println("woot if I find this I think i have all the pieces")
 //            println(s"expr: ${expr}")
             expr match {
-              case q"new { ..$stat } with ..$inits { $self => ..$stats }" =>
+              case q"new { ..$stat } with $init { $self => ..$stats }" =>
                 println("found an anon one have i?")
                 println(s"${stat}")
-                println(s"init: ${inits}")
-                inits.head match {
+                println(s"init: ${init}")
+                init match {
                   case tq"$dsl[$typ]" =>
                     println("WOOOOOOOT I have found the dsl type")
                     println(s"Which is: ${dsl}")
-                    val str = termName.toString()
+                    val str = rulesValName.toString()
                     val rules = TermName(str)
                     println(s"Therefore I can infer my from type to be: ${typ}")
 
@@ -84,7 +84,7 @@ class MacroBundle(val c: whitebox.Context) {
                               println(s"the field name is: ${fieldName}")
                               println(s"the field name is: ${fieldName.getClass}")
 
-                              val s= TypeName(termName.toString())
+                              val s= TypeName(rulesValName.toString())
                               println(s"s: ${s}")
 
                               val fn = TermName(fieldName)
