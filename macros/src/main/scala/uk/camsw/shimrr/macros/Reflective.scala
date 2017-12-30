@@ -64,8 +64,6 @@ class MacroBundle(val c: whitebox.Context) {
                               val tv = c.typecheck(v)
                               println(s"type of val: ${tv.tpe.widen}")
 
-                              val termName = sym.toString()
-                              println(s"termName: ${termName}")
                               val tt = c.typecheck(sym)
                               println(s"tt: ${tt}")
 
@@ -85,28 +83,30 @@ class MacroBundle(val c: whitebox.Context) {
 
                               println(s"the field name is: ${fieldName}")
                               println(s"the field name is: ${fieldName.getClass}")
+
+                              val s= TypeName(termName.toString())
+                              println(s"s: ${s}")
+
                               val fn = TermName(fieldName)
                               val f1 = q"""val $fn: ${tv.tpe.widen} = $tv"""
-                              val cc = q"""case class MyClass($f1)"""
+                              val cc = q"""case class RuleDefinition($f1)"""
                               //
 
  //                             println("rules representation: " + repr)
 //                              val q"fieldName: Symbol" = sym
     //
-
                               q"""
                                   object $rules {
                                     $cc
-                                    val gen = _root_.shapeless.LabelledGeneric[MyClass]
-                                    val repr = gen.to(MyClass())
+                                    val gen = _root_.shapeless.LabelledGeneric[RuleDefinition]
+                                    val repr = gen.to(RuleDefinition())
 
-                                    override def toString() = MyClass.unapply(MyClass()).get.toString
+                                    override def toString() = RuleDefinition().toString
+                                    val definition = RuleDefinition()
 
                                     object exports {
-                                      val definition = MyClass()
+
                                       implicit val ctx = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[$typ](repr)
-                                      println("ctx: " + ctx)
-                                      val x = "fish"
                                   }
                                 }
                               """
