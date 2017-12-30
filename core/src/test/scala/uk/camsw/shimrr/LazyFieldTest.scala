@@ -1,12 +1,11 @@
 package uk.camsw.shimrr
-
 import java.util.concurrent.atomic.AtomicInteger
 
 import org.scalatest.FreeSpec
+import syntax._
 import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
-import uk.camsw.shimrr.syntax._
 
 class LazyFieldTest extends FreeSpec {
 

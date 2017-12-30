@@ -1,8 +1,10 @@
 package uk.camsw.shimrr
 
+import cats.instances.string._
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 import shapeless.HNil
+import cats.instances.int._
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.context.scoped._
 import uk.camsw.shimrr.syntax._
@@ -24,7 +26,6 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       val nextCount: NoFields => Int = _ => 5
       val str1: NoFields => String = _ => "str1"
       val str2: NoFields => String = _ => "str2"
-
 
       implicit val ctx = MigrationContext[NoFields](
         'stringField1 ->> str1 ::

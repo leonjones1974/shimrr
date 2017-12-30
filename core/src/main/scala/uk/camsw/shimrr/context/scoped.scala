@@ -12,6 +12,8 @@ object scoped {
 
   private[shimrr] trait MigrationContext[S, FieldDefaults <: HList] extends Scope[S] {
     val fieldDefaults: FieldDefaults
+
+    override def toString: String = s"MigrationContext($fieldDefaults)"
   }
 
   object MigrationContext {
@@ -22,7 +24,9 @@ object scoped {
       }
     }
 
-    def apply[S] = new ScopedBuilder[S]
+    def apply[S] = {
+      new ScopedBuilder[S]
+    }
   }
 
 

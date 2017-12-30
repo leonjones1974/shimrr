@@ -1,10 +1,10 @@
 package uk.camsw.shimrr
-
 import org.scalatest.FreeSpec
-import shapeless.HNil
 import syntax._
 import org.scalatest.Matchers._
+import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
+
 
 class MapFieldTypeTest extends FreeSpec {
 

@@ -32,29 +32,29 @@ to find the latest enhancements
 ## At a glance...
 ```scala
 
-    "scopes can be applied to lists containing instances of a given coproduct" in {
-      import context.scoped._
-
-      sealed trait Versioned
-      case class V1() extends Versioned      
-      case class V2(name: String) extends Versioned      
-
-      implicit val v1Rules = MigrationContext[V1](
-        'name ->> "Leon Jones" :: HNil
-      )
-
-      implicit val v2Rules = MigrationContext[V2]()
-      
-      val xs = List[Versioned](
-        V1(),
-        V2("Nicky Hayden")        
-      )
-
-      xs.migrateTo[V2] shouldBe List(
-        V2("Leon Jones"),
-        V2("Nicky Hayden")
-      )
-    }
+   "multiple migrations at the product level" in {
+     @migration
+     val str1Rules = new Dsl[Str1] {
+     
+         'stringField2 -> "str2"
+         
+         'intField1 -> 25
+     }
+    
+     @migration
+     val str1Str2Rules = new Dsl[Str1Str2] {
+     
+        'intField1 -> 51
+       
+     }
+    
+     import str1Rules.exports._
+     import str1Str2Rules.exports._
+    
+     Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
+     Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 51)
+   }
+   
 
 ```
 

@@ -1,5 +1,6 @@
 package uk.camsw.shimrr
-
+import cats.instances.int._
+import cats.instances.string._
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 import shapeless.HNil

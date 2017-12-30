@@ -21,6 +21,7 @@ object MigrationFreeSpecMacros {
 
     val coproduct = c.weakTypeOf[A]
     val productsT = coproduct.typeSymbol.asClass.knownDirectSubclasses.map(_.asType)
+    
 
     val tests = for {
       inT <- productsT
