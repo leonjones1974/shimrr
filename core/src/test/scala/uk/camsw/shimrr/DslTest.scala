@@ -53,8 +53,8 @@ class DslTest extends FreeSpec {
 
 
           ('intField1, 51)
-//          'stringField1 -> uk.camsw.shimrr.Funcs.myLazy
-//          'stringField2 -> ((p: Str1Str2) => p.stringField1 + p.stringField2)
+          ('stringField1, uk.camsw.shimrr.Funcs.myLazy)
+          ('stringField2 ,  (p: Str1Str2) => p.stringField1 + p.stringField2)
 
           // Generates
 //          case class Str1Str2FieldDefaults(
@@ -93,7 +93,8 @@ class DslTest extends FreeSpec {
 //        import Str1Str2Rules._
 //        import StrStr2Rules.exports._
 //        println(s"fish is: ${rules.exports.fish}")
-        println(s"My class: ${x}")
+        println(s"rules: $rules")
+//        println(s"def: ${definition.intField1}")
 //        println(s"zz is :$zz")
         import context.scoped._
 

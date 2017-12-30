@@ -28,13 +28,13 @@ class MacroBundle(val c: whitebox.Context) {
     import c.universe._
 
 
-    println(showRaw(annottees))
+//    println(showRaw(annottees))
     annottees match {
       case x@List(q"""val $termName = $ass""") =>
         val out = x.head match {
           case q"""val $tName = $expr""" =>
-            println("woot if I find this I think i have all the pieces")
-            println(s"expr: ${expr}")
+//            println("woot if I find this I think i have all the pieces")
+//            println(s"expr: ${expr}")
             expr match {
               case q"new { ..$stat } with ..$inits { $self => ..$stats }" =>
                 println("found an anon one have i?")
@@ -66,12 +66,32 @@ class MacroBundle(val c: whitebox.Context) {
 
                               val termName = sym.toString()
                               println(s"termName: ${termName}")
+                              val tt = c.typecheck(sym)
+                              println(s"tt: ${tt}")
 
-                              val f1 = q"""val intField1: ${tv.tpe.widen} = $tv"""
+                              val fieldName = sym match {
+                                case q"""scala.Symbol($as)""" =>
+                                  println(s"found sym: ${as}")
+                                  println(s"ts: ${as.toString()}")
+
+
+                                  as.toString().drop(1).dropRight(1)
+                                case x =>
+                                  println(s"unmatched: ${x}")
+                                  c.abort(c.enclosingPosition, "Unable to find fieldname")
+                              }
+
+
+
+                              println(s"the field name is: ${fieldName}")
+                              println(s"the field name is: ${fieldName.getClass}")
+                              val fn = TermName(fieldName)
+                              val f1 = q"""val $fn: ${tv.tpe.widen} = $tv"""
                               val cc = q"""case class MyClass($f1)"""
                               //
 
  //                             println("rules representation: " + repr)
+//                              val q"fieldName: Symbol" = sym
     //
 
                               q"""
@@ -80,7 +100,10 @@ class MacroBundle(val c: whitebox.Context) {
                                     val gen = _root_.shapeless.LabelledGeneric[MyClass]
                                     val repr = gen.to(MyClass())
 
+                                    override def toString() = MyClass.unapply(MyClass()).get.toString
+
                                     object exports {
+                                      val definition = MyClass()
                                       implicit val ctx = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[$typ](repr)
                                       println("ctx: " + ctx)
                                       val x = "fish"
