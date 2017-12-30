@@ -1,9 +1,11 @@
 package uk.camsw.shimrr
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
-import uk.camsw.shimrr.context.scoped._
 import uk.camsw.shimrr.macros.migration
+import uk.camsw.shimrr.context.scoped._
 import uk.camsw.shimrr.syntax._
 
 class DslTest extends FreeSpec {
@@ -74,6 +76,7 @@ class DslTest extends FreeSpec {
 
         @migration
         val str1Str2Rules = new Dsl[Str1Str2] {
+
           'intField1 -> 51
         }
 
@@ -109,50 +112,26 @@ class DslTest extends FreeSpec {
         )
       }
 
-      "a migration containing inlined lazy and parameterized field defaulters" in {
-        @migration
-        val rules = new Dsl[NoFields] {
-          ('stringField1, "str1")
-          ('stringField2, () => "str2")
-          ('intField1, (n: NoFields) => 25)
-        }
+      // This needs to be declared outside the test
+      object func {
+        val counter = new AtomicInteger(0)
 
-        import rules.exports._
-
-        NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
+        val str2F = () => "str2"
       }
 
-      val lazyF = () => "str2"
-      val paramF = (n: NoFields) => 25
-      "a migration containing external lazy and parameterized field defaulters" in {
+      "a migration containing literal, inlined lazy and parameterized field defaulters" in {
 
         @migration
         val rules = new Dsl[NoFields] {
           ('stringField1, "str1")
-          ('stringField2, lazyF)
-          ('intField1, paramF)
+          ('stringField2, (from: NoFields) => from.getClass.getSimpleName)
+          ('intField1, func.counter.incrementAndGet _)
         }
 
         import rules.exports._
 
-        NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
-
-      }
-
-      "a migration containing embedded lazy and parameterized field defaulters" in {
-        val lazyF = () => "str2"
-        val paramF = (n: NoFields) => 25
-
-        @migration
-        val rules = new Dsl[NoFields] {
-          ('stringField1, "str1")
-          ('stringField2, lazyF)
-          ('intField1, paramF)
-        }
-
-        import rules.exports._
-
-        NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
+        NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "NoFields", 1)
+        NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "NoFields", 2)
       }
 
     }

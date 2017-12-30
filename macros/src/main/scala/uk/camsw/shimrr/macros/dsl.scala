@@ -15,7 +15,7 @@ class migration[FROM] extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = false
+  val enableDebugging = true
 
   import c.universe._
 
@@ -92,9 +92,9 @@ class MacroBundle(val c: whitebox.Context) {
                               override def toString() = RuleDefinition().toString
                               val definition = RuleDefinition()
 
-                              object exports {
-                                ..$stats
 
+                              object exports {
+                                ..$stats;
                                 implicit val $ctxName = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[$typ](repr)
                             }
                           }
