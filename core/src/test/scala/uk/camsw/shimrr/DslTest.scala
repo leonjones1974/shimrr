@@ -22,7 +22,7 @@ class DslTest extends FreeSpec {
 
         import str1Rules.exports._
 
-        Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1","str2", 25)
+        Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
       }
 
       "a migration using standard style tuple for field defaults" in {
@@ -66,28 +66,33 @@ class DslTest extends FreeSpec {
       "multiple migrations at the product level" in {
         @migration
         val str1Rules = new Dsl[Str1] {
-          ('stringField2, "str2")
-          ('intField1, 25)
+
+          'stringField2 -> "str2"
+
+          'intField1 -> 25
         }
 
         @migration
-        val str1Str2Rules =  new Dsl[Str1Str2] {
-          ('intField1, 51)
+        val str1Str2Rules = new Dsl[Str1Str2] {
+          'intField1 -> 51
         }
 
         import str1Rules.exports._
         import str1Str2Rules.exports._
 
-        Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1","str2", 25)
-        Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1","str2", 51)
+        Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
+        Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 51)
       }
 
       "single migration at the coproduct level" in {
         @migration
         val allRules = new Dsl[Version] {
-          ('stringField1, "str1")
-          ('stringField2, "str2")
-          ('intField1, 25)
+
+          'stringField1 -> "str1"
+
+          'stringField2 -> "str2"
+
+          'intField1 -> 25
         }
 
         import allRules.exports._
@@ -109,7 +114,7 @@ class DslTest extends FreeSpec {
         val rules = new Dsl[NoFields] {
           ('stringField1, "str1")
           ('stringField2, () => "str2")
-          ('intField1, (n: NoFields) => 25 )
+          ('intField1, (n: NoFields) => 25)
         }
 
         import rules.exports._
@@ -125,7 +130,7 @@ class DslTest extends FreeSpec {
         val rules = new Dsl[NoFields] {
           ('stringField1, "str1")
           ('stringField2, lazyF)
-          ('intField1,  paramF)
+          ('intField1, paramF)
         }
 
         import rules.exports._
