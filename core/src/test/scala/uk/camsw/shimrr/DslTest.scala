@@ -139,7 +139,7 @@ class DslTest extends FreeSpec {
 
       }
 
-      "a migration containing embedded lazy and parameterized field defaulters" ignore {
+      "a migration containing embedded lazy and parameterized field defaulters" in {
         val lazyF = () => "str2"
         val paramF = (n: NoFields) => 25
 

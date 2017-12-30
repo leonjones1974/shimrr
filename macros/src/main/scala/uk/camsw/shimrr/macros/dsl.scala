@@ -15,6 +15,7 @@ class migration[FROM] extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
+  val enableDebugging = false
 
   import c.universe._
 
@@ -26,7 +27,7 @@ class MacroBundle(val c: whitebox.Context) {
 
 
     def debug[A](extra: String, a: A): A = {
-      println(extra + s" [$a]")
+      if (enableDebugging) println(extra + s" [$a]")
       a
     }
 
@@ -44,11 +45,7 @@ class MacroBundle(val c: whitebox.Context) {
                 init match {
                   case tq"$dsl[$typ]" =>
                     debug("Found dsl for type", typ)
-
-
-
                     stats match {
-
                       case dslLines: List[_] =>
                         debug("Found dsl lines", dslLines)
 
@@ -96,6 +93,7 @@ class MacroBundle(val c: whitebox.Context) {
                               val definition = RuleDefinition()
 
                               object exports {
+                                ..$stats
 
                                 implicit val $ctxName = _root_.uk.camsw.shimrr.context.scoped.MigrationContext[$typ](repr)
                             }
