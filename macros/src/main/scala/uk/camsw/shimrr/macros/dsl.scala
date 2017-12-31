@@ -9,13 +9,13 @@ import scala.reflect.macros.whitebox
 
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class migration[FROM] extends StaticAnnotation {
+class migration extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro MacroBundle.dslF
 }
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = true
+  val enableDebugging = false
 
   import c.universe._
 

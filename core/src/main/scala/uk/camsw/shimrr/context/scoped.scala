@@ -3,7 +3,7 @@ package uk.camsw.shimrr.context
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
-import shapeless.{:+:, ::, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy}
+import shapeless.{:+:, ::, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy, record}
 import uk.camsw.shimrr.Migration
 
 object scoped {
@@ -12,6 +12,18 @@ object scoped {
 
   private[shimrr] trait MigrationContext[S, FieldDefaults <: HList] extends Scope[S] {
     val fieldDefaults: FieldDefaults
+
+    class Builder[S2, F2 <: HList] {
+      def apply[FOut <: HList](ctx2: MigrationContext[S2, F2])(
+        implicit
+        ev: S =:!= S2,
+        m: shapeless.ops.record.Merger.Aux[FieldDefaults, F2, FOut]
+      ): MigrationContext[S, FOut] = {
+        MigrationContext[S](m(fieldDefaults, ctx2.fieldDefaults))
+      }
+    }
+
+    def ++[S2, F2 <: HList] = new Builder[S2, F2]
 
     override def toString: String = s"MigrationContext($fieldDefaults)"
   }
@@ -24,7 +36,7 @@ object scoped {
       }
     }
 
-    def apply[S] = {
+    def apply[S]: ScopedBuilder[S] = {
       new ScopedBuilder[S]
     }
   }
