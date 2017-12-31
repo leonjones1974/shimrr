@@ -1,4 +1,4 @@
-# Use case 7 - Field type mapping
+# Use case 7 - Field type mapping & a need to refactor
 
 The newly recruited finance offer has spent the last 3 weeks tring to find the 4.5p discrepancy 
 in the figures.  Since the halfpenny has been out of circulation since 1984 the conclusion

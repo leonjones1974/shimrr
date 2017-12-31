@@ -56,7 +56,7 @@ object ProductService {
         */
       import shapeless.syntax.singleton.mkSingletonOps
 
-      /** Because you need to specifiy a rule you need to create a migration context.
+      /** Because you need to specify a rule you need to create a migration context.
         * In this case it will be a global one because you imported the global context
         * For fun, have a look at the type of allToV4 and you'll see why we've used the noinspection annotation
         */

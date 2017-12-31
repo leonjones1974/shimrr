@@ -13,7 +13,7 @@ object scoped {
   private[shimrr] trait MigrationContext[S, FieldDefaults <: HList] extends Scope[S] {
     val fieldDefaults: FieldDefaults
 
-    class Builder[S2, F2 <: HList] {
+    class ComposeBuilder[S2, F2 <: HList] {
       def apply[FOut <: HList](ctx2: MigrationContext[S2, F2])(
         implicit
         ev: S =:!= S2,
@@ -23,7 +23,7 @@ object scoped {
       }
     }
 
-    def ++[S2, F2 <: HList] = new Builder[S2, F2]
+    def ++[S2, F2 <: HList] = new ComposeBuilder[S2, F2]
 
     override def toString: String = s"MigrationContext($fieldDefaults)"
   }

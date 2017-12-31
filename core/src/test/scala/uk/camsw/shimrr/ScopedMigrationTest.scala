@@ -1,34 +1,34 @@
-//package uk.camsw.shimrr
-//import cats.instances.int._
-//import cats.instances.string._
-//import org.scalatest.FreeSpec
-//import org.scalatest.Matchers._
-//import shapeless.HNil
-//import shapeless.syntax.singleton.mkSingletonOps
-//import uk.camsw.shimrr.syntax._
+package uk.camsw.shimrr
+import cats.instances.int._
+import cats.instances.string._
+import org.scalatest.FreeSpec
+import org.scalatest.Matchers._
+import shapeless.HNil
+import shapeless.syntax.singleton.mkSingletonOps
+import uk.camsw.shimrr.syntax._
 //
 ////todo: See how much we really need this different set of classes
-//class ScopedMigrationTest extends FreeSpec {
-//
-//  sealed trait Entity
-//
-//  sealed trait Customer extends Entity
-//
-//  case class CustomerV1(name: String) extends Customer
-//
-//  case class CustomerV1Dup(name: String) extends Customer
-//
-//  case class CustomerV2(name: String, age: Int) extends Customer
-//
-//  case class CustomerV3(name: String, age: Int, shoeSize: Double) extends Customer
-//
-//  sealed trait Supplier extends Entity
-//
-//  case class SupplierV1(companyName: String) extends Supplier
-//
-//  case class SupplierV2(companyName: String, age: Int) extends Supplier
-//
-//  "Migration rules can be scoped" - {
+class ScopedMigrationTest extends FreeSpec {
+
+  sealed trait Entity
+
+  sealed trait Customer extends Entity
+
+  case class CustomerV1(name: String) extends Customer
+
+  case class CustomerV1Dup(name: String) extends Customer
+
+  case class CustomerV2(name: String, age: Int) extends Customer
+
+  case class CustomerV3(name: String, age: Int, shoeSize: Double) extends Customer
+
+  sealed trait Supplier extends Entity
+
+  case class SupplierV1(companyName: String) extends Supplier
+
+  case class SupplierV2(companyName: String, age: Int) extends Supplier
+
+  "Migration rules can be scoped" - {
 //
 //    "manually, using blocks and global migration context" in {
 //      import uk.camsw.shimrr.context.global._
@@ -119,32 +119,46 @@
 //      )
 //    }
 //
-//    "at the coproduct level" in {
-//      sealed trait Versioned {
-//        def name: String
-//      }
-//
-//      case class V1(name: String) extends Versioned
-//      case class V2(name: String, lengthOfName: Int) extends Versioned
-//
-//      import uk.camsw.shimrr.context.scoped._
-//
-//      val deriveLength: Versioned => Int = _.name.length
-//
-//      implicit val ctx = MigrationContext[Versioned](
-//        'lengthOfName ->> deriveLength :: HNil
-//      )
-//
-//      val xs = List[Versioned](
-//        V1("Leon Jones"),
-//        V2("Nicky Hayden", 12)
-//      )
-//
-//      xs.migrateTo[V2] shouldBe List(
-//        V2("Leon Jones", 10),
-//        V2("Nicky Hayden", 12)
-//      )
-//    }
-//  }
-//}
-//
+    "at the coproduct level" in {
+      sealed trait Versioned {
+        def name: String
+      }
+
+      case class V1(name: String) extends Versioned
+      case class V2(name: String, lengthOfName: Int) extends Versioned
+
+      import uk.camsw.shimrr.context.scoped._
+
+      implicit val ctx = MigrationContext[Versioned](
+        'lengthOfName ->> ((v: Versioned) => v.name.length) :: HNil
+      )
+
+      val xs = List[Versioned](
+        V1("Leon Jones"),
+        V2("Nicky Hayden", 12)
+      )
+
+      xs.migrateTo[V2] shouldBe List(
+        V2("Leon Jones", 10),
+        V2("Nicky Hayden", 12)
+      )
+    }
+
+    "at the coproduct level when migrating from the product level" in {
+      sealed trait Versioned {
+        def name: String
+      }
+
+      case class V1(name: String) extends Versioned
+      case class V2(name: String, lengthOfName: Int) extends Versioned
+
+      import uk.camsw.shimrr.context.scoped._
+
+      implicit val ctx = MigrationContext[Versioned](
+        'lengthOfName ->> ((v: Versioned) => v.name.length) :: HNil
+      )
+
+      V1("Leon Jones").migrateTo[V2] shouldBe V2("Leon Jones", 10)
+    }
+  }
+}

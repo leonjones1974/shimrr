@@ -25,7 +25,7 @@ As a potential customer
 
 At the end of this scenario you will have
 
- - Created a global rule to default a missing field to a given value
+ - Created a global rule to default a missing field to a given value 
  
 [The code]()
 

@@ -9,6 +9,16 @@ about potential use cases for the library and the overall shape of the API
 Somewhere along that path I realised that creating these scenarios in 'tutorial form' might solve two problems in one go.  
 So, due to my laziness, a tutorial for SHIMRR has become available sooner than perhaps it would have otherwise
 
+    NOTE The early stages of the tutorial expose you to some of the 
+    inner workings of SHIMRR.  You may wonder why your examples don't look as terse
+    or declarative as those on the README that tempted you here in the first place.
+    You may be concerned that you're being exposed to shapeless and defining implicits.
+            
+    Don't worry, once the concepts have been demonstrated in raw form we will eventually introduce
+    the DSL that makes it all easy.  This approach is deliberate. 'Magic' is less scary
+    if you're allowed to peek inside the cauldron first!  
+    
+
 ## The structure
 
 Each of the use-cases under this directory is self contained, can be built and contains passing tests
@@ -37,4 +47,6 @@ I hope the API makes life easy enough, feedback around this would be gratefully 
 4. [Defaulting a new field using SHIMRR](usecase4/README.md)
 5. [Defaulting a field lazily](usecase5/README.md)    
 6. [Scoped field defaulting](usecase6/README.md)
+7. [Field type mapping & a need to refactor](usecase7/README.md)
+8. [Rule composition](usecase8/README.md)
   

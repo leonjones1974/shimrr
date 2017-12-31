@@ -20,7 +20,6 @@ resolvers += Resolver.bintrayRepo("scalameta", "maven")
 
 
 lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
-  addCompilerPlugin("io.tryp" % "splain" % "0.2.7" cross CrossVersion.patch),
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full),
   scalacOptions += "-Xplugin-require:macroparadise",
   scalacOptions in(Compile, console) := Seq() // macroparadise plugin doesn't work in repl yet.
@@ -33,12 +32,12 @@ lazy val macros = project.settings(
 
 
 lazy val core = project
-  .settings(metaMacroSettings)
+  .settings(addCompilerPlugin("io.tryp" % "splain" % "0.2.7" cross CrossVersion.patch))
   .dependsOn(macros)
   .settings(libraryDependencies ++= catsDependencies ++ shapelessDependencies ++ testDependencies)
 
-lazy val tutorials = project.settings(
-  metaMacroSettings)
+lazy val tutorials = project.settings()
+  .settings(addCompilerPlugin("io.tryp" % "splain" % "0.2.7" cross CrossVersion.patch))
   .dependsOn(core)
 
 val scalameta: Seq[ModuleID] = Seq(
