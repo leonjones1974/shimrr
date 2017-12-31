@@ -30,19 +30,28 @@ You realise that pulling price up to Bicycle is not going to work as it will the
 be a float on the trait and we want it to be a BigDecimal in the new version
 You contemplate:
 - Adding a type parameter to Bicycle, i.e Bicycle[BigDecimal] 
-  - it feels too complex and will surely become crazy in the future
+  - it feels too complex, will surely become crazy in the future and besides, you 
+  don't like libraries that force you to work around them!
 - Having two fields, one for the old and one for the new
-  - it confuses you, let alone the consumers Bicycle
-- In the end       
+  - it confuses you, let alone the consumers of Bicycle
+- In the end you decide to scope the rules at the concrete level       
 
 ## Summary
 
 At the end of this scenario you will have
 
  - Scoped rules at the concrete (product) level
+ - Become extremely unhappy with the result of your efforts.  You have been forced
+   to duplicate all rules in order to achieve one specialisation 
  - Got a better understanding that a field is a combination of both its identifier
- and its type in SHIMRR 
- - Felt a little concerned that your migration code is beginning to look a bit *WET*
+ and its type in SHIMRR
+ 
+# Follow up
+
+Having got a better understanding of how basic scoping works you decide to take a step
+back and determine whether there's a refactor that will make the rules more representative
+of what they are trying to express  
+
  
 [The code]()
 

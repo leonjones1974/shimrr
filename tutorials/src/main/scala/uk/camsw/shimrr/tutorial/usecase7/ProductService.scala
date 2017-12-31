@@ -26,42 +26,48 @@ object ProductService {
       val discount4 = (b: BicycleV4) => discountService.discountFor(b.make, b.model)
       val discount5 = (b: BicycleV5) => discountService.discountFor(b.make, b.model)
 
+      val price1 = (b: BicycleV1) => BigDecimal(b.price.toString)
+      val price2 = (b: BicycleV2) => BigDecimal(b.price.toString)
+      val price3 = (b: BicycleV3) => BigDecimal(b.price.toString)
+      val price4 = (b: BicycleV4) => BigDecimal(b.price.toString)
+      val price5= (b: BicycleV5) => BigDecimal(b.price.toString)
+
       /*
         it feels like we might need hierarchical rules (??)
         i don't really want to have to pull everything down as soon as the model diverges
         */
       implicit val v1 = MigrationContext[BicycleV1](
         'discountPercentage ->> discount1
-          :: 'price ->> BigDecimal("1.2")
+          :: 'price ->> price1
           :: HNil
       )
 
       implicit val v2 = MigrationContext[BicycleV2](
         'discountPercentage ->> discount2
-          :: 'price ->> BigDecimal("1.2")
+          :: 'price ->> price2
           :: HNil
       )
 
       implicit val v3 = MigrationContext[BicycleV3](
         'discountPercentage ->> discount3
-          :: 'price ->> BigDecimal("1.2")
+          :: 'price ->> price3
           :: HNil
       )
 
       implicit val v4 = MigrationContext[BicycleV4](
         'discountPercentage ->> discount4
-          :: 'price ->> BigDecimal("1.2")
+          :: 'price ->> price4
           :: HNil
       )
 
       implicit val v5 = MigrationContext[BicycleV5](
         'discountPercentage ->> discount5
-          :: 'price ->> BigDecimal("1.2")
+          :: 'price ->> price5
           :: HNil
       )
 
-//      repository.findAll().migrateTo[BicycleV5]
-      ???
+      repository.findAll().migrateTo[BicycleV5]
+
     }
   }
 }
