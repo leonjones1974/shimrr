@@ -127,7 +127,6 @@ class PipelineTest extends FreeSpec {
           Str1Str2Int1("str1", "str2", 51),
         )
 
-        fail("come back and isolate these tests using generators")
       }
     }
   }

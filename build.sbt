@@ -32,7 +32,7 @@ lazy val macros = project.settings(
 
 
 lazy val core = project
-  .settings(addCompilerPlugin("io.tryp" % "splain" % "0.2.7" cross CrossVersion.patch))
+  .settings(metaMacroSettings)
   .dependsOn(macros)
   .settings(libraryDependencies ++= catsDependencies ++ shapelessDependencies ++ testDependencies)
 
