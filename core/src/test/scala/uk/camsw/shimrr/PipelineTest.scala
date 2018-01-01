@@ -1,11 +1,10 @@
 package uk.camsw.shimrr
 
 import org.scalatest.FreeSpec
-import shapeless.{Generic, HNil, LabelledGeneric}
-import org.scalatest.Matchers.{a, _}
+import org.scalatest.Matchers._
+import shapeless.HNil
 
 class PipelineTest extends FreeSpec {
-
 
   import context.scoped._
   import shapeless.syntax.singleton.mkSingletonOps
