@@ -6,7 +6,9 @@ import scala.language.higherKinds
 trait MigrationOps {
 
   implicit class MigrationFOps[F[_] : cats.Functor, A](fa: F[A]) {
+
     import cats.syntax.functor._
+
     def migrateTo[B](implicit m: Migration[A, B]): F[B] = fa map m.migrate
   }
 
@@ -19,6 +21,7 @@ trait MigrationOps {
 
   implicit class MigrationIterableOps[A](ia: Iterable[A]) {
     def migrateTo[B](implicit m: Migration[A, B]): Iterable[B] = ia map m.migrate
+
 
   }
 

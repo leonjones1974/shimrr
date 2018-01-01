@@ -1,13 +1,13 @@
-package uk.camsw.shimrr
-
-import java.util.concurrent.atomic.AtomicInteger
-
-import org.scalatest.FreeSpec
-import org.scalatest.Matchers._
-import uk.camsw.shimrr.macros.migration
-import uk.camsw.shimrr.context.scoped._
-import uk.camsw.shimrr.syntax._
-
+//package uk.camsw.shimrr
+//
+//import java.util.concurrent.atomic.AtomicInteger
+//
+//import org.scalatest.FreeSpec
+//import org.scalatest.Matchers._
+//import uk.camsw.shimrr.macros.migration
+//import uk.camsw.shimrr.context.scoped._
+//import uk.camsw.shimrr.syntax._
+//
 //class DslTest extends FreeSpec {
 //
 //  "The dsl" - {

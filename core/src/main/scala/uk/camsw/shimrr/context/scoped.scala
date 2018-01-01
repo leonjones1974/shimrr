@@ -3,8 +3,8 @@ package uk.camsw.shimrr.context
 import shapeless.labelled.{FieldType, field}
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
-import shapeless.{:+:, ::, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy, record}
-import uk.camsw.shimrr.Migration
+import shapeless.{:+:, ::, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy}
+import uk.camsw.shimrr.{Migration, Pipeline}
 
 object scoped {
 
@@ -16,7 +16,7 @@ object scoped {
     class ComposeBuilder[S2, F2 <: HList] {
       def apply[FOut <: HList](ctx2: MigrationContext[S2, F2])(
         implicit
-        ev: S =:!= S2,
+        evNe: S =:!= S2,
         m: shapeless.ops.record.Merger.Aux[FieldDefaults, F2, FOut]
       ): MigrationContext[S, FOut] = {
         MigrationContext[S](m(fieldDefaults, ctx2.fieldDefaults))
@@ -92,31 +92,41 @@ object scoped {
 
     }
 
-  implicit def fromProductPoly[
-  S,
-  A, ARepr <: HList,
-  B, BRepr <: HList,
-  Common <: HList,
-  Added <: HList,
-  Unaligned <: HList,
-  FieldDefaults <: HList](
-                           implicit
-                           scope: Scope[S],
-                           scopeEv: A <:< S,
-                           notEq: A =:!= S,
-                           genA: LabelledGeneric.Aux[A, ARepr],
-                           genB: LabelledGeneric.Aux[B, BRepr],
-                           inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
-                           diff: hlist.Diff.Aux[BRepr, Common, Added],
-                           defaulter: ScopedDefaulter[S, Added],
-                           prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
-                           align: hlist.Align[Unaligned, BRepr]
-                         ): Migration[A, B] =
-    Migration.instance {
-      a =>
-        genB.from(align(prepend(defaulter.defaultFor(a), inter(genA.to(a)))))
-
+    implicit def fromProductPipeline[
+      A, ARepr <: HList,
+      B, BRepr <: HList
+    ](implicit pipeline: Pipeline[A, B]) : Migration[A, B] = {
+      Migration.instance{
+        a =>
+          pipeline.upgrade(a)
+      }
     }
+
+//  implicit def fromProductPoly[
+//  S,
+//  A, ARepr <: HList,
+//  B, BRepr <: HList,
+//  Common <: HList,
+//  Added <: HList,
+//  Unaligned <: HList,
+//  FieldDefaults <: HList](
+//                           implicit
+//                           scope: Scope[S],
+//                           scopeEv: A <:< S,
+//                           notEq: A =:!= S,
+//                           genA: LabelledGeneric.Aux[A, ARepr],
+//                           genB: LabelledGeneric.Aux[B, BRepr],
+//                           inter: hlist.Intersection.Aux[ARepr, BRepr, Common],
+//                           diff: hlist.Diff.Aux[BRepr, Common, Added],
+//                           defaulter: ScopedDefaulter[S, Added],
+//                           prepend: hlist.Prepend.Aux[Added, Common, Unaligned],
+//                           align: hlist.Align[Unaligned, BRepr]
+//                         ): Migration[A, B] =
+//    Migration.instance {
+//      a =>
+//        genB.from(align(prepend(defaulter.defaultFor(a), inter(genA.to(a)))))
+//
+//    }
 
   implicit def literalDefaulter[S, FieldDefaults <: HList, K <: Symbol, H, T <: HList](
                                                                                         implicit
@@ -141,14 +151,13 @@ object scoped {
   implicit def parameterizedDefaulter[S, FieldDefaults <: HList, K <: Symbol, H, T <: HList](
                                                                                               implicit
                                                                                               ctx: MigrationContext[S, FieldDefaults],
-                                                                                              selector: Selector.Aux[FieldDefaults, K, (S) => H],
+                                                                                              selector: Selector.Aux[FieldDefaults, K, S => H],
                                                                                               dT: ScopedDefaulter[S, T]
                                                                                             ): ScopedDefaulter[S, FieldType[K, H] :: T] = {
     ScopedDefaulter.instance[S] { a =>
       field[K](selector(ctx.fieldDefaults)(a)) :: field[K](dT.defaultFor(a))
     }
   }
-
 
   implicit def fromHNil[S, FieldDefaults <: HList]: ScopedDefaulter[S, HNil] =
     ScopedDefaulter.instance(_ => HNil)
