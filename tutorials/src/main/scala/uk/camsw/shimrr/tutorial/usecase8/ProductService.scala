@@ -1,6 +1,7 @@
 package uk.camsw.shimrr.tutorial.usecase8
 
 import shapeless.HNil
+import uk.camsw.shimrr.Pipeline
 
 
 trait ProductService {
@@ -41,44 +42,32 @@ object ProductService {
       import uk.camsw.shimrr.context.scoped._
       import uk.camsw.shimrr.syntax._
 
-      val discountRule = MigrationContext[Bicycle](
-        'discountPercentage ->> ((b: Bicycle) => discountService.discountFor(b.make, b.model))
+
+      implicit val v1 = MigrationContext[BicycleV1](
+        'leadTime ->> 7
         :: HNil
       )
 
-      val price1 = (b: BicycleV1) => BigDecimal(b.price.toString)
-      val price2 = (b: BicycleV2) => BigDecimal(b.price.toString)
-      val price3 = (b: BicycleV3) => BigDecimal(b.price.toString)
-      val price4 = (b: BicycleV4) => BigDecimal(b.price.toString)
-      val price5 = (b: BicycleV5) => BigDecimal(b.price.toString)
-
-      implicit val v1 = MigrationContext[BicycleV1](
-          'price ->> price1
-          :: HNil
-      ) ++ discountRule
-
-      implicit val v2 = MigrationContext[BicycleV2](
-          'price ->> price2
-          :: HNil
-      ) ++ discountRule
+      implicit val v2 = MigrationContext[BicycleV2]()
 
       implicit val v3 = MigrationContext[BicycleV3](
-          'price ->> price3
+        'discountPercentage ->> ((b: BicycleV3) => discountService.discountFor(b.make, b.model))
           :: HNil
-      ) ++ discountRule
+      )
 
       implicit val v4 = MigrationContext[BicycleV4](
-          'price ->> price4
+        'price ->> ((b: BicycleV4) => BigDecimal(b.price.toString))
           :: HNil
-      ) ++ discountRule
+      )
 
-      implicit val v5 = MigrationContext[BicycleV5](
-          'price ->> price5
-          :: HNil
-      ) ++ discountRule
+      implicit val v5 = MigrationContext[BicycleV5]()
 
-//      repository.findAll().migrateTo[BicycleV5]
-      ???
+      implicit val (p1, p2, p3) = Pipeline[BicycleV1, BicycleV2, BicycleV3]
+        .to[BicycleV4]
+        .to[BicycleV5]
+        .build
+
+      repository.findAll().migrateTo[BicycleV5]
     }
   }
 }

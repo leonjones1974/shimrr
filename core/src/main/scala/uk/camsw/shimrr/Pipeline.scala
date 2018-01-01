@@ -6,30 +6,33 @@ trait Pipeline[A, B] {
 
 }
 
-private object p3 { implicit val dummy: p3.type = this }
-private object p4 { implicit val dummy: p4.type = this }
-
 object Pipeline {
 
   def instance[FROM, TO](f: FROM => TO): Pipeline[FROM, TO] = (from: FROM) => f(from)
 
   class PipelineBuilder3[A, B, C] {
 
-    def build(ma: Migration[A, B], mb: Migration[B, C]) = (
-      instance[A, B](ma.migrate),
-      instance[B, C](mb.migrate)
-    )
+    def build(implicit ma: Migration[A, B], mb: Migration[B, C]) = instance[A, C](a => mb.migrate(ma.migrate(a)))
 
-    def ++[D] = new PipelineBuilder4[A, B, C, D]
+    def to[D] = new PipelineBuilder4[A, B, C, D](this)
   }
 
-  class PipelineBuilder4[A, B, C, D] {
+  class PipelineBuilder4[A, B, C, D](b: PipelineBuilder3[A, B, C]) {
     def build(implicit ma: Migration[A, B], mb: Migration[B, C], mc: Migration[C, D]) = (
       instance[A, D](a => mc.migrate(mb.migrate(ma.migrate(a)))),
       instance[B, D](b => mc.migrate(mb.migrate(b)))
     )
+
+    def to[E] = new PipelineBuilder5[A, B, C, D, E](this)
   }
 
-  def apply[A, B, C](implicit ev: p3.type) = new PipelineBuilder3[A, B, C]
-  def apply[A, B, C, D](implicit ev: p4.type) = new PipelineBuilder4[A, B, C, D]
+  class PipelineBuilder5[A, B, C, D, E](b: PipelineBuilder4[A, B, C, D]) {
+    def build(implicit ma: Migration[A, B], mb: Migration[B, C], mc: Migration[C, D], md: Migration[D, E]) = (
+      instance[A, E](a => md.migrate(mc.migrate(mb.migrate(ma.migrate(a))))),
+      instance[B, E](b => md.migrate(mc.migrate(mb.migrate(b)))),
+      instance[C, E](c => md.migrate(mc.migrate(c)))
+    )
+  }
+
+  def apply[A, B, C] = new PipelineBuilder3[A, B, C]
 }

@@ -92,10 +92,9 @@ class PipelineTest extends FreeSpec {
 
         implicit val int1 = MigrationContext[Str1Str2Int1]()
 
-        // A -> D via B, C
-        val pipeline = Pipeline[NoFields, Str1, Str1Str2, Str1Str2Int1]
-
-        implicit val (p1, p2) = pipeline.build
+        implicit val (p1, p2) = Pipeline[NoFields, Str1, Str1Str2]
+          .to[Str1Str2Int1]
+          .build
 
         NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
 
@@ -128,6 +127,8 @@ class PipelineTest extends FreeSpec {
           Str1Str2Int1("str1", "str2", 25),
           Str1Str2Int1("str1", "str2", 51),
         )
+
+        fail("come back and isolate these tests using generators")
       }
     }
   }
