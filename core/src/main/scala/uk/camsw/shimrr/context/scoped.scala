@@ -30,6 +30,7 @@ object scoped {
 
   object MigrationContext {
 
+
     class ScopedBuilder[S] {
       def apply[FieldDefaults <: HList](defaults: FieldDefaults = HNil): MigrationContext[S, FieldDefaults] = new MigrationContext[S, FieldDefaults] {
         override val fieldDefaults: FieldDefaults = defaults
