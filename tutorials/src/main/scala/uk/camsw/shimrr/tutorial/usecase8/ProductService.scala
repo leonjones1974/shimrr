@@ -83,7 +83,8 @@ object ProductService {
       // into scope when you declared the rules
       //
       // ANOTHER DISCLAIMER:
-      // This is still 'under-the-hood' stuff to help with understanding.
+      // This is still 'under-the-hood' stuff to help with understanding. In the
+      // next tutorial we'll look at using the DSL to express our migration pipeline
       implicit val (p1, p2, p3) = Pipeline[BicycleV1, BicycleV2, BicycleV3]
         .to[BicycleV4]
         .to[BicycleV5]

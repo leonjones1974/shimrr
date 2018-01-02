@@ -43,14 +43,6 @@ class MigrationCompositionTest extends FreeSpec {
         NoFields().migrateTo[Str1Str2] shouldBe Str1Str2("str1", "str2")
       }
 
-      "func variance" in {
-        def f(g: Version  => String, v: Version): String = g(v)
-
-        f((_: Version) => "hello", Str1("str")) shouldBe "hello"
-        f((_: Version) => "hello", Str1("str")) shouldBe "hello"
-      }
-
-
       "we can compose at the coproduct level using parameterized rules" in {
         import context.scoped._
 
@@ -74,38 +66,6 @@ class MigrationCompositionTest extends FreeSpec {
         NoFields().asInstanceOf[Version].migrateTo[Str1Str2] shouldBe Str1Str2("str1", "NoFields")
         Str1("str1").asInstanceOf[Version].migrateTo[Str1Str2] shouldBe Str1Str2("str1", "Str1")
         Str1Str2("str1", "str2").asInstanceOf[Version].migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
-      }
-
-
-      "we can migrate via pipeline" in {
-
-        import context.scoped._
-        implicit val noFieldsCtx = MigrationContext[NoFields](
-          'stringField1 ->> "str1" :: HNil
-        )
-
-        implicit val str1 = MigrationContext[Str1](
-          'stringField2 ->> "str2" :: HNil
-        )
-
-        implicit val str1Str2 = MigrationContext[Str1Str2](
-          'intField1 ->> 25 :: HNil
-        )
-
-
-        import syntax._
-
-        val pipeline = noFieldsCtx :: str1Str2 :: Nil
-
-        def migrateUsing[A1, A2, A3, A4](a: A1)(
-          implicit
-          a1: Migration[A1, A2],
-          a2: Migration[A2, A3],
-          a3: Migration[A3, A4]
-        ): A4 =
-          a3.migrate(a2.migrate(a1.migrate(a)))
-
-        migrateUsing[NoFields, Str1, Str1Str2, Str1Str2Int1](NoFields()) shouldBe Str1Str2Int1("str1", "str2", 25)
       }
 
       "we can migrate via pipeline when list of coproducts at V1" in {
