@@ -1,9 +1,8 @@
 package uk.camsw.shimrr
 
-import org.scalacheck.Arbitrary
 import shapeless.HNil
-import uk.camsw.shimrr.macros.test.MigrationFreeSpec
 import shapeless.syntax.singleton.mkSingletonOps
+import uk.camsw.shimrr.macros.test.MigrationFreeSpec
 
 class MigrationCompositionGenTest extends MigrationFreeSpec {
 

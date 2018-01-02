@@ -1,6 +1,5 @@
 package uk.camsw.shimrr
 
-import org.scalacheck.{Arbitrary, Gen}
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.macros.test.MigrationFreeSpec

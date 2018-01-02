@@ -32,28 +32,43 @@ to find the latest enhancements
 ## At a glance...
 ```scala
 
-   "multiple migrations at the product level" in {
-     @migration
-     val str1Rules = new Dsl[Str1] {
-     
-         'stringField2 -> "str2"
-         
-         'intField1 -> 25
-     }
-    
-     @migration
-     val str1Str2Rules = new Dsl[Str1Str2] {
-     
-        'intField1 -> 51
-       
-     }
-    
-     import str1Rules.exports._
-     import str1Str2Rules.exports._
-    
-     Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 25)
-     Str1Str2("str1", "str2").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 51)
-   }
+  "Given a valid pipeline" - {
+  
+      @pipeline
+      val pipeline = new PipelineDsl[NoFields, Str1, Str1Str2, Str1Str2Int1] {
+  
+        from[NoFields] {
+          'stringField1 -> "str1"
+        }
+  
+        from[Str1] {
+          'stringField2 -> (() => "str2")
+        }
+  
+        from[Str1Str2] {
+          'intField1 -> ((_: Str1Str2) => 25)
+        }
+  
+        from[Str1Str2Int1] {}
+  
+      }
+  
+      import pipeline.exports._
+      import uk.camsw.shimrr.context.scoped._
+      import syntax._
+  
+      "any product can be migrated to the target product" - {
+  
+        allInACanBeMigratedToB[Version, Str1Str2Int1]
+  
+      }
+  
+      "a heterogeneous list of products can be migrated to the target product" - {
+  
+        allAInHListCanBeMigratedToB[Version, Str1Str2Int1]
+  
+      }
+    }
    
 
 ```

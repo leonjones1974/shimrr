@@ -22,11 +22,6 @@ class MigrationGenTest extends MigrationFreeSpec {
       allInACanBeMigratedToAnyInA[Version]
     }
   }
-
-
-
-
-
 }
 
 
