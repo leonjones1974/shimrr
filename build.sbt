@@ -28,7 +28,7 @@ lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
 
 lazy val macros = project.settings(
   metaMacroSettings
-).settings(libraryDependencies ++= scalameta ++ reflectionDependencies ++ shapelessDependencies)
+).settings(libraryDependencies ++= scalameta ++ reflectionDependencies ++ shapelessDependencies ++ testDependencies)
 
 
 lazy val core = project
