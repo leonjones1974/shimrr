@@ -94,8 +94,7 @@ object test {
             val listIn = _root_.org.scalacheck.Gen.listOf(30, inObj)
             _root_.org.scalatest.prop.GeneratorDrivenPropertyChecks.forAll((in: List[$coproduct]) => {
               import _root_.uk.camsw.shimrr.syntax._
-              val xs = in.migrateTo[$target]
-              println("migrated: " + xs.size)
+              in.migrateTo[$target]            
             })
          }
        """
