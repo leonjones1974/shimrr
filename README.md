@@ -1,34 +1,5 @@
 # SHIMRR
 
-## Overview
-
-SHIMRR is a type-safe read-repair library providing the following functionality:
-
- - Migrate/ Upgrade Coproducts/ Products
- - Compile time failure for any incomplete migrations
- - Automatically drop remove fields
- - Automatically re-order fields
- - Default new fields using a simple, type-safe rules dsl
- - Migrate collections of CoProducts/ Products (or anything for which a cats.Functor can be summoned)
- 
-## Why was this library created
-
-- Maintaining a stack of read-repair *shims* is hard work and becomes increasingly complex over time
-- The version mapping code is largely boiler-plate and is dull to work with
- 
-### Disclaimer
-
-The inspiration for this project (along with a reasonable amount of the initial code) was taken from the excellent book
-
-[The type astronaut's guide to shapeless](https://underscore.io/books/shapeless-guide/)
-
-## The tutorial
-
-The tutorial is a WIP and is being used to drive future development of the library.  Visit it regularly
-to find the latest enhancements
-
-[The SHIMRR tutorial is here](tutorials/src/main/scala/uk/camsw/shimrr/tutorial/README.md)
- 
 ## At a glance...
 ```scala
 
@@ -80,6 +51,37 @@ to find the latest enhancements
    
 
 ```
+
+## Overview
+
+SHIMRR is a type-safe read-repair library providing the following functionality:
+
+ - Migrate/ Upgrade Coproducts/ Products
+ - Compile time failure for any incomplete migrations
+ - Automatically drop remove fields
+ - Automatically re-order fields
+ - Default new fields using a simple, type-safe rules dsl
+ - Migrate collections of CoProducts/ Products (or anything for which a cats.Functor can be summoned)
+ 
+## Why was this library created
+
+- Maintaining a stack of read-repair *shims* is hard work and becomes increasingly complex over time
+- The version mapping code is largely boiler-plate and is dull to work with
+ 
+### Disclaimer
+
+The inspiration for this project (along with a reasonable amount of the initial code) was taken from the excellent book
+
+[The type astronaut's guide to shapeless](https://underscore.io/books/shapeless-guide/)
+
+## The tutorial
+
+The tutorial is a WIP and is being used to drive future development of the library.  Visit it regularly
+to find the latest enhancements
+
+[The SHIMRR tutorial is here](tutorials/src/main/scala/uk/camsw/shimrr/tutorial/README.md)
+ 
+
 
 ## How to build and test
 ```bash
