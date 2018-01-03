@@ -1,4 +1,5 @@
 package uk.camsw.shimrr
+
 trait Pipeline[A, B] {
 
   def upgrade(from: A): B

@@ -1,9 +1,9 @@
 package uk.camsw.shimrr
 
+import org.scalatest.Matchers._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import uk.camsw.shimrr.macros.pipeline
 import uk.camsw.shimrr.macros.test.MigrationFreeSpec
-import org.scalatest.Matchers._
 
 class DslPipelineGenTest extends MigrationFreeSpec {
 
@@ -29,7 +29,6 @@ class DslPipelineGenTest extends MigrationFreeSpec {
     }
 
     import pipeline.exports._
-    import uk.camsw.shimrr.context.scoped._
     import syntax._
 
     "any product can be migrated to the target product" - {
@@ -46,7 +45,6 @@ class DslPipelineGenTest extends MigrationFreeSpec {
 
     "all migrations should default correctly" in {
       GeneratorDrivenPropertyChecks.forAll((in: Version) => {
-        import syntax._
 
         val out = in.migrateTo[Str1Str2Int1]
         in match {
@@ -57,6 +55,5 @@ class DslPipelineGenTest extends MigrationFreeSpec {
         }
       })
     }
-
   }
 }

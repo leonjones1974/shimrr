@@ -205,7 +205,7 @@ class MacroBundle(val c: whitebox.Context) {
                       q"""
                         object $pipelineName {
 
-                          object exports {
+                          object exports extends _root_.uk.camsw.shimrr.context.Scoped {
                             import _root_.uk.camsw.shimrr.context.scoped._
                             ..${rules.flatten};
                             ..$pipelineParts;

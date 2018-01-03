@@ -32,43 +32,51 @@ to find the latest enhancements
 ## At a glance...
 ```scala
 
+   
+  sealed trait Version
+  case class NoFields() extends Version
+  case class Str1(stringField1: String) extends Version
+  case class Str1Str2(stringField1: String, stringField2: String) extends Version
+  case class Str1Str2Int1(stringField1: String, stringField2: String, intField1: Int) extends Version 
+  
+
   "Given a valid pipeline" - {
-  
-      @pipeline
-      val pipeline = new PipelineDsl[NoFields, Str1, Str1Str2, Str1Str2Int1] {
-  
-        from[NoFields] {
-          'stringField1 -> "str1"
-        }
-  
-        from[Str1] {
-          'stringField2 -> (() => "str2")
-        }
-  
-        from[Str1Str2] {
-          'intField1 -> ((_: Str1Str2) => 25)
-        }
-  
-        from[Str1Str2Int1] {}
-  
-      }
-  
-      import pipeline.exports._
-      import uk.camsw.shimrr.context.scoped._
-      import syntax._
-  
-      "any product can be migrated to the target product" - {
-  
-        allInACanBeMigratedToB[Version, Str1Str2Int1]
-  
-      }
-  
-      "a heterogeneous list of products can be migrated to the target product" - {
-  
-        allAInHListCanBeMigratedToB[Version, Str1Str2Int1]
-  
-      }
-    }
+ 
+     @pipeline
+     val pipeline = new PipelineDsl[NoFields, Str1, Str1Str2, Str1Str2Int1] {
+ 
+       from[NoFields] {
+         'stringField1 -> "str1"
+       }
+ 
+       from[Str1] {
+         'stringField2 -> (() => "str2")
+       }
+ 
+       from[Str1Str2] {
+         'intField1 -> ((_: Str1Str2) => 25)
+       }
+ 
+       from[Str1Str2Int1] {}
+ 
+     }
+ 
+     import pipeline.exports._
+     import syntax._
+      
+     "all migrations should default correctly" in {
+       GeneratorDrivenPropertyChecks.forAll((in: Version) => {
+ 
+         val out = in.migrateTo[Str1Str2Int1]
+         in match {
+           case _: NoFields => out shouldBe Str1Str2Int1("str1", "str2", 25)
+           case x: Str1 => out shouldBe Str1Str2Int1(x.stringField1, "str2", 25)
+           case x: Str1Str2 => out shouldBe Str1Str2Int1(x.stringField1, x.stringField2, 25)
+           case x: Str1Str2Int1 => out shouldBe Str1Str2Int1(x.stringField1, x.stringField2, x.intField1)
+         }
+       })
+     }
+   }
    
 
 ```
