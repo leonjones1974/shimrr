@@ -1,4 +1,5 @@
 # SHIMRR
+### A *type-safe* read-repair library (for scala)
 
 ## At a glance...
 ```scala
@@ -53,8 +54,6 @@
 ```
 
 ## Overview
-
-SHIMRR is a type-safe read-repair library providing the following functionality:
 
  - Migrate/ Upgrade Coproducts/ Products
  - Compile time failure for any incomplete migrations
