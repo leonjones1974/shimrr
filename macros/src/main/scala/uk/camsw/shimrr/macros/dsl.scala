@@ -20,7 +20,7 @@ class pipeline extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = true
+  val enableDebugging = false
 
   import c.universe._
 
@@ -141,14 +141,11 @@ class MacroBundle(val c: whitebox.Context) {
           case q"""val $pipelineName  = $pipelineDef""" =>
             pipelineDef match {
               case q"""new PipelineDsl[..$pipelineTypes] { ..$body } """ =>
-                println(s"Found types: ${pipelineTypes}")
-                println(s"stats: ${body}")
                 body match {
                   case dslLines: List[_] =>
                     debug("Found migration rules ", dslLines)
                     val rules = dslLines.collect {
                       case q"from[$from]{ ..$stats }" =>
-                        println(s"found a rule for: ${from}")
                         stats match {
                           case dslLines: List[_] =>
                             debug("Found dsl lines", dslLines)
@@ -215,7 +212,7 @@ class MacroBundle(val c: whitebox.Context) {
                         }
                       }
                     """
-                    println("I will be exporting: " + exports)
+                    debug("I will be exporting: ", exports)
                     exports
 
                 }

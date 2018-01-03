@@ -1,8 +1,9 @@
 package uk.camsw.shimrr
 
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import uk.camsw.shimrr.macros.pipeline
 import uk.camsw.shimrr.macros.test.MigrationFreeSpec
-
+import org.scalatest.Matchers._
 
 class DslPipelineGenTest extends MigrationFreeSpec {
 
@@ -42,5 +43,20 @@ class DslPipelineGenTest extends MigrationFreeSpec {
       allAInHListCanBeMigratedToB[Version, Str1Str2Int1]
 
     }
+
+    "all migrations should default correctly" in {
+      GeneratorDrivenPropertyChecks.forAll((in: Version) => {
+        import syntax._
+
+        val out = in.migrateTo[Str1Str2Int1]
+        in match {
+          case _: NoFields => out shouldBe Str1Str2Int1("str1", "str2", 25)
+          case x: Str1 => out shouldBe Str1Str2Int1(x.stringField1, "str2", 25)
+          case x: Str1Str2 => out shouldBe Str1Str2Int1(x.stringField1, x.stringField2, 25)
+          case x: Str1Str2Int1 => out shouldBe Str1Str2Int1(x.stringField1, x.stringField2, x.intField1)
+        }
+      })
+    }
+
   }
 }

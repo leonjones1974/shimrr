@@ -1,7 +1,7 @@
 package uk.camsw.shimrr.macros
 
-import org.scalacheck.{Gen, ScalacheckShapeless}
 import _root_.org.scalatest.FreeSpec
+import org.scalacheck.ScalacheckShapeless
 
 object test {
 
