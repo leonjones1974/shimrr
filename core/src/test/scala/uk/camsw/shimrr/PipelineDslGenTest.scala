@@ -26,6 +26,7 @@ class PipelineDslGenTest extends MigrationFreeSpec {
 
       from[Str1Str2Int1] {}
 
+
     }
 
     import pipeline.exports._

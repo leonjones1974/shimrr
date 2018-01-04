@@ -7,13 +7,13 @@ sourceGenerators in Compile += Def.task {
 
   val newLine = "\r\n"
 
-  val genClasses = for {
+  val getTraits = for {
     n <- 3 to 22
   } yield {
     val typeNames = for {tn <- 1 to n} yield s"A$tn"
     val types = typeNames.mkString(", ")
     s"""
-       |class PipelineDsl$n[$types] {
+       |trait PipelineDsl$n[$types] {
        |  val exports: Unit = ()
        |  def from[IN](block: => Unit): Unit = Unit
        |}""".stripMargin
@@ -21,23 +21,9 @@ sourceGenerators in Compile += Def.task {
   }
 
 
-  val genApply = for {
-    n <- 3 to 22
-  } yield {
-    val typeNames = for {tn <- 1 to n} yield s"A$tn"
-    val types = typeNames.mkString(", ")
-    s"""
-       |def apply[$types] = new PipelineDsl$n[$types]
-       """.stripMargin
-
-  }
-
   val gen = s"""
                |package uk.camsw.shimrr.dsl
-               |${genClasses.mkString(newLine)}
-               |object PipelineDsl {
-               |  ${genApply.mkString(newLine)}
-               |}
+               |${getTraits.mkString(newLine)}
    """.stripMargin
 
 

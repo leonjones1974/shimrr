@@ -38,4 +38,9 @@ object Pipeline {
   def apply[A, B, C] = new PipelineBuilder3[A, B, C]
   def apply[A, B, C, D] = new PipelineBuilder4[A, B, C, D]
   def apply[A, B, C, D, E] = new PipelineBuilder5[A, B, C, D, E]
+
+  object test {
+    Pipeline[String, String, String]
+
+  }
 }
