@@ -25,7 +25,7 @@ sourceGenerators in Compile += Def.task {
         s"""m$mn.migrate"""
       val closeB = List.fill(mChain.length)(")")
 
-      s"""Pipeline.instance[$inType, $outType](in => ${mChain.mkString("(")}(in)${closeB.mkString("")}"""
+      s"""Migration.instance[$inType, $outType](in => ${mChain.mkString("(")}(in)${closeB.mkString("")}"""
     }
     s"""
        |class PipelineBuilder$n[$types] {
@@ -51,7 +51,6 @@ sourceGenerators in Compile += Def.task {
   val gen = s"""
                |package uk.camsw.shimrr.dsl
                |import uk.camsw.shimrr.Migration
-               |import uk.camsw.shimrr.Pipeline
                |${getTraits.mkString(newLine)}
                |
                |object PipelineBuilder {

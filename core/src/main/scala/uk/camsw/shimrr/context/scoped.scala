@@ -4,8 +4,8 @@ import shapeless.labelled.{ FieldType, field }
 import shapeless.ops.hlist
 import shapeless.ops.record.Selector
 import shapeless.{ :+:, ::, =:!=, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, LabelledGeneric, Lazy }
+import uk.camsw.shimrr.Migration
 import uk.camsw.shimrr.context.scoped.{ MigrationContext, Scope }
-import uk.camsw.shimrr.{ Migration, Pipeline }
 
 trait Scoped {
   implicit def fromCNil[T <: CNil, B]: Migration[T, B] =
@@ -45,13 +45,6 @@ trait Scoped {
         genB.from(align(prepend(defaulter.defaultFor(a), inter(genA.to(a)))))
 
     }
-
-  implicit def fromProductPipeline[A, ARepr <: HList, B, BRepr <: HList](implicit pipeline: Pipeline[A, B]): Migration[A, B] = {
-    Migration.instance {
-      a =>
-        pipeline.upgrade(a)
-    }
-  }
 
   implicit def fromProductPoly[S, A, ARepr <: HList, B, BRepr <: HList, Common <: HList, Added <: HList, Unaligned <: HList, FieldDefaults <: HList](
     implicit
