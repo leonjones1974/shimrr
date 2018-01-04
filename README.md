@@ -15,7 +15,7 @@
   "Given a valid pipeline" - {
  
      @pipeline
-     val pipeline = new PipelineDsl[NoFields, Str1, Str1Str2, Str1Str2Int1] {
+     val pipeline = new PipelineDsl4[NoFields, Str1, Str1Str2, Str1Str2Int1] {
  
        from[NoFields] {
          'stringField1 -> "str1"
