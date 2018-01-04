@@ -10,8 +10,7 @@ class InMemoryRepositoryTest extends FreeSpec {
       InMemoryRepository.findAll() should contain only (
         BicycleV1("Raleigh", "Grifter", 124.99f),
         BicycleV1("Diamond Back", "Grind 2018", 230f),
-        BicycleV2("Mondraker", "Podium Carbon", 4395f, leadTime = 14)
-      )
+        BicycleV2("Mondraker", "Podium Carbon", 4395f, leadTime = 14))
     }
   }
 }

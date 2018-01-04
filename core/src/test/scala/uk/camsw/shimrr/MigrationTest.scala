@@ -16,7 +16,6 @@ class MigrationTest extends WordSpec {
     'intField1 ->> -99 ::
     HNil)
 
-
   val base = Str1Str2Int1()
 
   "product.migrateTo" should {
@@ -29,7 +28,6 @@ class MigrationTest extends WordSpec {
     "drop removed fields" in {
       base.migrateTo[NoFields] shouldBe base.withNoFields
     }
-
 
     "move fields" in {
       trait V
@@ -66,8 +64,7 @@ class MigrationTest extends WordSpec {
       xs.migrateTo[Str1Str2Int1] shouldBe List(
         Str1Str2Int1("str1", "STR2", -99),
         Str1Str2Int1("STR1", "STR2", -99),
-        base
-      )
+        base)
     }
   }
 }

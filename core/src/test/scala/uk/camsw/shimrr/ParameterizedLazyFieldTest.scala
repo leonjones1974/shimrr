@@ -19,8 +19,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
         'stringField1 ->> "str1"
           :: 'stringField2 ->> "str2"
           :: 'intField1 ->> nextCount
-          :: HNil
-      )
+          :: HNil)
 
       NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 0)
     }
@@ -33,8 +32,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       implicit val ctx = MigrationContext[NoFields](
         'stringField1 ->> str1 ::
           'stringField2 ->> str2 ::
-          'intField1 ->> nextCount :: HNil
-      )
+          'intField1 ->> nextCount :: HNil)
 
       NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }
@@ -45,8 +43,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
 
       implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> arity0 ::
-          'intField1 ->> arity1 :: HNil
-      )
+          'intField1 ->> arity1 :: HNil)
 
       Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }
@@ -56,8 +53,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
 
       implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> arity0 ::
-          'intField1 ->> 5 :: HNil
-      )
+          'intField1 ->> 5 :: HNil)
 
       Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }
@@ -67,8 +63,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
 
       implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> arity1 ::
-          'intField1 ->> 5 :: HNil
-      )
+          'intField1 ->> 5 :: HNil)
 
       Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }
@@ -80,8 +75,7 @@ class ParameterizedLazyFieldTest extends FreeSpec {
       implicit val ctx = MigrationContext[NoFields](
         'stringField1 ->> arity0 ::
           'stringField2 ->> arity1 ::
-          'intField1 ->> 5 :: HNil
-      )
+          'intField1 ->> 5 :: HNil)
 
       NoFields().migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }

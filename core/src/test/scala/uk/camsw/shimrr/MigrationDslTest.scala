@@ -104,12 +104,10 @@ class MigrationDslTest extends FreeSpec {
           NoFields(),
           Str1("str1"),
           Str1Str2("str1", "str2"),
-          Str1Str2Int1("str1", "str2", 25)
-        ).migrateTo[Str1Str2Int1]
+          Str1Str2Int1("str1", "str2", 25)).migrateTo[Str1Str2Int1]
 
         xs shouldBe List.fill(4)(
-          Str1Str2Int1("str1", "str2", 25)
-        )
+          Str1Str2Int1("str1", "str2", 25))
       }
 
       // This needs to be declared outside the test

@@ -4,9 +4,9 @@ import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 
 /**
-  * You realise this test feels suspiciously like the repository test
-  * but write it anyway
-  */
+ * You realise this test feels suspiciously like the repository test
+ * but write it anyway
+ */
 class ProductServiceTest extends FreeSpec {
 
   val repository = InMemoryRepository
@@ -17,8 +17,7 @@ class ProductServiceTest extends FreeSpec {
     "allProduct should return all products contained therein" in {
       service.allProducts() should contain only (
         Bicycle("Raleigh", "Grifter", 124.99f),
-        Bicycle("Diamond Back", "Grind 2018", 230f)
-      )
+        Bicycle("Diamond Back", "Grind 2018", 230f))
     }
   }
 }

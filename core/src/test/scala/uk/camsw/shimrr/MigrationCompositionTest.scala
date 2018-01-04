@@ -13,12 +13,10 @@ class MigrationCompositionTest extends FreeSpec {
 
         import context.scoped._
         val noFieldsCtx = MigrationContext[NoFields](
-          'stringField1 ->> "str1" :: HNil
-        )
+          'stringField1 ->> "str1" :: HNil)
 
         implicit val str1Ctx = MigrationContext[Str1](
-          'stringField2 ->> "str2" :: HNil
-        )
+          'stringField2 ->> "str2" :: HNil)
 
         implicit val composed = noFieldsCtx ++ str1Ctx
 
@@ -32,12 +30,10 @@ class MigrationCompositionTest extends FreeSpec {
         import context.scoped._
 
         val coproductCtx = MigrationContext[Version](
-          'stringField2 ->> "str2" :: HNil
-        )
+          'stringField2 ->> "str2" :: HNil)
 
         implicit val noCtx = MigrationContext[NoFields](
-          'stringField1 ->> "str1" :: HNil
-        ) ++ coproductCtx
+          'stringField1 ->> "str1" :: HNil) ++ coproductCtx
 
         import syntax._
         NoFields().migrateTo[Str1Str2] shouldBe Str1Str2("str1", "str2")
@@ -46,20 +42,15 @@ class MigrationCompositionTest extends FreeSpec {
       "we can compose at the coproduct level using parameterized rules" in {
         import context.scoped._
 
-
         val noFieldsCtx = MigrationContext[NoFields](
-          'stringField1 ->> "str1" :: HNil
-        )
+          'stringField1 ->> "str1" :: HNil)
 
         val str1Str2 = MigrationContext[Str1Str2](
-          'intField1 ->> 25 :: HNil
-        )
+          'intField1 ->> 25 :: HNil)
 
         implicit val coproductCtx = MigrationContext[Version](
           'stringField2 ->> ((v: Version) => v.getClass.getSimpleName)
-            :: HNil
-        ) ++ noFieldsCtx ++ str1Str2
-
+            :: HNil) ++ noFieldsCtx ++ str1Str2
 
         import syntax._
 
@@ -72,16 +63,13 @@ class MigrationCompositionTest extends FreeSpec {
 
         import context.scoped._
         implicit val noFieldsCtx = MigrationContext[NoFields](
-          'stringField1 ->> "str1" :: HNil
-        )
+          'stringField1 ->> "str1" :: HNil)
 
         implicit val str1 = MigrationContext[Str1](
-          'stringField2 ->> "str2" :: HNil
-        )
+          'stringField2 ->> "str2" :: HNil)
 
         implicit val str1Str2 = MigrationContext[Str1Str2](
-          'intField1 ->> 25 :: HNil
-        )
+          'intField1 ->> 25 :: HNil)
 
         import syntax._
 
@@ -89,19 +77,16 @@ class MigrationCompositionTest extends FreeSpec {
           implicit
           a1: Migration[A1, A2],
           a2: Migration[A2, A3],
-          a3: Migration[A3, A4]
-        ): A4 =
+          a3: Migration[A3, A4]): A4 =
           a3.migrate(a2.migrate(a1.migrate(a)))
 
         val xs = List[NoFields](
           NoFields(),
-          NoFields()
-        ).map(a => migrateUsing[NoFields, Str1, Str1Str2, Str1Str2Int1](a))
+          NoFields()).map(a => migrateUsing[NoFields, Str1, Str1Str2, Str1Str2Int1](a))
 
         xs shouldBe List(
           Str1Str2Int1("str1", "str2", 25),
-          Str1Str2Int1("str1", "str2", 25)
-        )
+          Str1Str2Int1("str1", "str2", 25))
       }
     }
   }

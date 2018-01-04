@@ -15,8 +15,7 @@ class ProductServiceTest extends FreeSpec {
         BicycleV4("Diamond Back", "Grind 2018", 230f, discountPercentage = 10),
         BicycleV4("Mondraker", "Podium Carbon", 4395f, discountPercentage = 10),
         BicycleV4("Qu-Ax", "Penny Farthing Gentlemen's bike", 483f, discountPercentage = 10),
-        BicycleV4("Brompton", "M1E", 855f, discountPercentage = 10)
-      )
+        BicycleV4("Brompton", "M1E", 855f, discountPercentage = 10))
     }
   }
 }

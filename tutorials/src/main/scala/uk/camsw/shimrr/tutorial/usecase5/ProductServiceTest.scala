@@ -16,8 +16,7 @@ class ProductServiceTest extends FreeSpec {
         BicycleV4("Mondraker", "Podium Carbon", 4395f, discountPercentage = 5),
         BicycleV4("Qu-Ax", "Penny Farthing Gentlemen's bike", 483f, discountPercentage = 5),
         // This one still has a discount of 10 because it is a version 4 in the database so doesn't need a migration
-        BicycleV4("Brompton", "M1E", 855f, discountPercentage = 10)
-      )
+        BicycleV4("Brompton", "M1E", 855f, discountPercentage = 10))
     }
   }
 }

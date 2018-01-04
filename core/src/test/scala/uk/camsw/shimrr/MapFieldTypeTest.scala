@@ -5,7 +5,6 @@ import org.scalatest.Matchers._
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 
-
 class MapFieldTypeTest extends FreeSpec {
 
   "field types can be changed" in {
@@ -19,19 +18,16 @@ class MapFieldTypeTest extends FreeSpec {
     val v1Price: V1 => BigDecimal = p => BigDecimal(p.price.toString)
 
     implicit val v1Rules = MigrationContext[V1](
-      'price ->> v1Price :: HNil
-    )
+      'price ->> v1Price :: HNil)
 
     implicit val v2Rules = MigrationContext[V2]()
 
     val xs = List[Versioned](
       V1("Leon Jones", 1.50f),
-      V2("Nicky Hayden", BigDecimal("1.25"))
-    )
+      V2("Nicky Hayden", BigDecimal("1.25")))
 
     xs.migrateTo[V2] shouldBe List(
       V2("Leon Jones", BigDecimal("1.50")),
-      V2("Nicky Hayden", BigDecimal("1.25"))
-    )
+      V2("Nicky Hayden", BigDecimal("1.25")))
   }
 }

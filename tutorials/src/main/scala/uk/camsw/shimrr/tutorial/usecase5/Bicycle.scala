@@ -10,4 +10,3 @@ case class BicycleV3(make: String, model: String, price: Float) extends Bicycle
 
 case class BicycleV4(make: String, model: String, price: Float, discountPercentage: Int) extends Bicycle
 
-

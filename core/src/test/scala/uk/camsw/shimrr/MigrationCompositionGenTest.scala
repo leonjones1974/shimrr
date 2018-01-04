@@ -6,21 +6,18 @@ import uk.camsw.shimrr.test._
 
 class MigrationCompositionGenTest extends MigrationFreeSpec {
 
-  "Given composed rules" -{
+  "Given composed rules" - {
 
     import uk.camsw.shimrr.context.scoped._
 
     val noFieldsCtx = MigrationContext[NoFields](
-      'stringField1 ->> "str1" :: HNil
-    )
+      'stringField1 ->> "str1" :: HNil)
 
     val str1 = MigrationContext[Str1](
-      'stringField2 ->> "str2" :: HNil
-    )
+      'stringField2 ->> "str2" :: HNil)
 
     val str2 = MigrationContext[Str1Str2](
-      'intField1 ->> 25 :: HNil
-    )
+      'intField1 ->> 25 :: HNil)
 
     implicit val pipelineStr1Int1 = MigrationContext[Str1Str2Int1]()
     implicit val pipelineStr1 = str1 ++ str2

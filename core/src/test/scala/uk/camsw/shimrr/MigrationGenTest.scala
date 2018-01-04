@@ -6,7 +6,6 @@ import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
 import uk.camsw.shimrr.test.MigrationFreeSpec
 
-
 class MigrationGenTest extends MigrationFreeSpec {
 
   "Given a coproduct with globally complete migration rules" - {
@@ -17,8 +16,7 @@ class MigrationGenTest extends MigrationFreeSpec {
         'stringField1 ->> "STR1" ::
           'stringField2 ->> "STR2" ::
           'intField1 ->> -99 ::
-          HNil
-    )
+          HNil)
 
     "any product can be migrated to any other product" - {
       allInACanBeMigratedToAnyInA[Version]
@@ -39,7 +37,4 @@ class MigrationGenTest extends MigrationFreeSpec {
     }
   }
 }
-
-
-
 

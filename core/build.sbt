@@ -1,4 +1,65 @@
+
 name := "shimrr-core"
 version := "1.0.0-SNAPSHOT"
 scalaVersion := "2.12.4"
 
+
+val newLine = "\r\n"
+sourceGenerators in Compile += Def.task {
+  val file = (sourceManaged in Compile).value / "uk" / "camsw" / "shimrr" / "dsl" / "PipelineBuilder.scala"
+
+  val getTraits = for {
+    n <- 3 to 22
+  } yield {
+    val typeNames = for {tn <- 1 to n} yield s"A$tn"
+    val types = typeNames.mkString(", ")
+
+    val implicitM = for {tn <- 1 until n} yield
+      s"""m$tn: Migration[A$tn, A${tn+1}]"""
+
+
+    val impls = for {tn <- 0 until n - 2} yield {
+      val inType = typeNames(tn)
+      val outType = typeNames.last
+      val mChain = for {mn <- (1 until n).reverse.dropRight(tn)} yield
+        s"""m$mn.migrate"""
+      val closeB = List.fill(mChain.length)(")")
+
+      s"""Pipeline.instance[$inType, $outType](in => ${mChain.mkString("(")}(in)${closeB.mkString("")}"""
+    }
+    s"""
+       |class PipelineBuilder$n[$types] {
+       |  def build(implicit ${implicitM.mkString(", ")}) = {
+       |    (
+       |    ${impls.mkString(",\n")}
+       |    )
+       |  }
+       |}
+       |""".stripMargin
+  }
+
+  val apply = for{
+    n <-3 to 22
+  } yield {
+    val typeNames = for {tn <- 1 to n} yield s"A$tn"
+    val types = typeNames.mkString(", ")
+    s"""def apply[$types] = new PipelineBuilder$n[$types]"""
+  }
+
+
+
+  val gen = s"""
+               |package uk.camsw.shimrr.dsl
+               |import uk.camsw.shimrr.Migration
+               |import uk.camsw.shimrr.Pipeline
+               |${getTraits.mkString(newLine)}
+               |
+               |object PipelineBuilder {
+               |  ${apply.mkString(newLine)}
+               |}
+   """.stripMargin
+
+
+  IO.write(file, gen)
+  Seq(file)
+}.taskValue

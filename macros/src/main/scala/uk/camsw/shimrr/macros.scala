@@ -2,10 +2,9 @@ package uk.camsw.shimrr
 
 import macrocompat.bundle
 
-import scala.annotation.{StaticAnnotation, compileTimeOnly}
+import scala.annotation.{ StaticAnnotation, compileTimeOnly }
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
-
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
 class migration extends StaticAnnotation {
@@ -29,14 +28,13 @@ class MacroBundle(val c: whitebox.Context) {
     def abort(msg: String): Unit =
       c.abort(c.enclosingPosition, msg)
 
-
     def debug[A](extra: String, a: A): A = {
       if (enableDebugging) println(extra + s" [$a]")
       a
     }
 
     val migration = annottees match {
-      case xs@List(q"""val $rulesValName = $unused""") =>
+      case xs @ List(q"""val $rulesValName = $unused""") =>
         val rulesObjectName = TermName(rulesValName.toString())
         debug("Attempting to expand", rulesObjectName)
 
@@ -67,7 +65,7 @@ class MacroBundle(val c: whitebox.Context) {
                             debug("Identified type of field", fieldValue.tpe.widen)
 
                             q"""val $fieldName: ${fieldValue.tpe.widen} = $fieldValue"""
-                          case x@q"$lhs -> $rhs" =>
+                          case x @ q"$lhs -> $rhs" =>
                             //TODO: Dry this up
                             debug("Identified arrow style field defaulter", x)
                             val fieldName = TermName(lhs match {
@@ -108,7 +106,8 @@ class MacroBundle(val c: whitebox.Context) {
             }
         }
       case bad =>
-        c.abort(c.enclosingPosition,
+        c.abort(
+          c.enclosingPosition,
           s"""@migration can only be applied to definition
              |   val xxx = new Dsl[FROM_TYPE] { .. }
              |But was: [$bad]
@@ -117,8 +116,7 @@ class MacroBundle(val c: whitebox.Context) {
     }
     debug("Created migration", migration)
     c.Expr(
-      migration
-    ).tree
+      migration).tree
   }
 
   def dslPipeline(annottees: Tree*): Tree = {
@@ -127,14 +125,13 @@ class MacroBundle(val c: whitebox.Context) {
     def abort(msg: String): Unit =
       c.abort(c.enclosingPosition, msg)
 
-
     def debug[A](extra: String, a: A): A = {
       if (enableDebugging) println(extra + s" [$a]")
       a
     }
 
     val pipeline = annottees match {
-      case xs@List(q"""val $pipelineName  = $unused""") =>
+      case xs @ List(q"""val $pipelineName  = $unused""") =>
         debug("GOT THIS ONE ***************", unused)
         xs.head match {
           case q"""val $pipelineName  = $pipelineDef""" =>
@@ -163,7 +160,7 @@ class MacroBundle(val c: whitebox.Context) {
                                 debug("Identified type of field", fieldValue.tpe.widen)
 
                                 q"""val $fieldName: ${fieldValue.tpe.widen} = $fieldValue"""
-                              case x@q"$lhs -> $rhs" =>
+                              case x @ q"$lhs -> $rhs" =>
                                 //TODO: Dry this up
                                 debug("Identified arrow style field defaulter", x)
                                 val fieldName = TermName(lhs match {
@@ -193,12 +190,11 @@ class MacroBundle(val c: whitebox.Context) {
                         }
                     }
 
-
                     val pipelineParts = for {
                       n <- 1 to rules.length - 2
                       name = TermName(s"p$n")
                       part = TermName(s"_$n")
-                    } yield q"implicit val $name = _root_.uk.camsw.shimrr.Pipeline[..$pipelineTypes].build.$part"
+                    } yield q"implicit val $name = _root_.uk.camsw.shimrr.dsl.PipelineBuilder[..$pipelineTypes].build.$part"
 
                     val exports =
                       q"""
@@ -218,7 +214,8 @@ class MacroBundle(val c: whitebox.Context) {
             }
         }
       case bad =>
-        c.abort(c.enclosingPosition,
+        c.abort(
+          c.enclosingPosition,
           s"""@migration can only be applied to definition
              |   val xxx = new Pipeline[T1, T2, Tn] { .. }
              |But was: [$bad]
@@ -228,8 +225,7 @@ class MacroBundle(val c: whitebox.Context) {
 
     debug("Created migration", pipeline)
     c.Expr(
-      pipeline
-    ).tree
+      pipeline).tree
   }
 
 }

@@ -17,8 +17,7 @@ class LazyFieldTest extends FreeSpec {
     def nextCount: () => Int = () => counter.incrementAndGet()
 
     implicit val ctx = MigrationContext(
-      'intField1 ->> nextCount :: HNil
-    )
+      'intField1 ->> nextCount :: HNil)
 
     "an arity0 function can be used to default a field" in {
 
@@ -42,8 +41,7 @@ class LazyFieldTest extends FreeSpec {
 
       implicit val ctx = MigrationContext[Str1](
         'stringField2 ->> str2Name ::
-          'intField1 ->> nextCount :: HNil
-      )
+          'intField1 ->> nextCount :: HNil)
 
       Str1("str1").migrateTo[Str1Str2Int1] shouldBe Str1Str2Int1("str1", "str2", 5)
     }

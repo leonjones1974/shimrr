@@ -26,7 +26,6 @@ object MigrationFreeSpecMacros {
     val coproduct = c.weakTypeOf[A]
     val productsT = coproduct.typeSymbol.asClass.knownDirectSubclasses.map(_.asType)
 
-
     val tests = for {
       inT <- productsT
       outT <- productsT
@@ -44,8 +43,7 @@ object MigrationFreeSpecMacros {
     c.Expr(
       q"""
          ..$tests
-       """
-    )
+       """)
   }
 
   def generateAllToSpecific[A: c.WeakTypeTag, B: c.WeakTypeTag](c: blackbox.Context): c.Expr[Any] = {
@@ -71,8 +69,7 @@ object MigrationFreeSpecMacros {
     c.Expr(
       q"""
          ..$tests
-       """
-    )
+       """)
   }
 
   def generateAllInHListToSpecific[A: c.WeakTypeTag, B: c.WeakTypeTag](c: blackbox.Context): c.Expr[Any] = {
@@ -100,8 +97,7 @@ object MigrationFreeSpecMacros {
     c.Expr(
       q"""
          ..$tests
-       """
-    )
+       """)
   }
 
 }

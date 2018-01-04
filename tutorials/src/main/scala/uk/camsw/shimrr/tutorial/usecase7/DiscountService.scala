@@ -1,9 +1,9 @@
 package uk.camsw.shimrr.tutorial.usecase7
 
 /**
-  * The service has been updated to provide make/ model specific discounts
-  */
-case class DiscountService(defaultDiscountPercentage: Int ) {
+ * The service has been updated to provide make/ model specific discounts
+ */
+case class DiscountService(defaultDiscountPercentage: Int) {
   val defaultProductDiscount: () => Int = () => defaultDiscountPercentage
 
   def discountFor(model: String, make: String): Int = {
