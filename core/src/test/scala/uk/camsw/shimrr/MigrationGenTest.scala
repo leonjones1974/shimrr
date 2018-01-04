@@ -4,7 +4,8 @@ import org.scalatest.Matchers._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
-import uk.camsw.shimrr.macros.test.MigrationFreeSpec
+import uk.camsw.shimrr.test.MigrationFreeSpec
+
 
 class MigrationGenTest extends MigrationFreeSpec {
 

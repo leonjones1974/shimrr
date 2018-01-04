@@ -4,8 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
-import uk.camsw.shimrr.macros.migration
 import uk.camsw.shimrr.context.scoped._
+import uk.camsw.shimrr.dsl.MigrationDsl
 import uk.camsw.shimrr.syntax._
 
 class MigrationDslTest extends FreeSpec {

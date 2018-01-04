@@ -2,8 +2,8 @@ package uk.camsw.shimrr
 
 import org.scalatest.Matchers._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import uk.camsw.shimrr.macros.pipeline
-import uk.camsw.shimrr.macros.test.MigrationFreeSpec
+import uk.camsw.shimrr.dsl._
+import uk.camsw.shimrr.test._
 
 class PipelineDslGenTest extends MigrationFreeSpec {
 

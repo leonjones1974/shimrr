@@ -1,5 +1,4 @@
-package uk.camsw.shimrr.macros
-
+package uk.camsw.shimrr
 
 import macrocompat.bundle
 

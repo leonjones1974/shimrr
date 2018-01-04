@@ -2,7 +2,7 @@ package uk.camsw.shimrr
 
 import shapeless.HNil
 import shapeless.syntax.singleton.mkSingletonOps
-import uk.camsw.shimrr.macros.test.MigrationFreeSpec
+import uk.camsw.shimrr.test._
 
 class MigrationCompositionGenTest extends MigrationFreeSpec {
 
