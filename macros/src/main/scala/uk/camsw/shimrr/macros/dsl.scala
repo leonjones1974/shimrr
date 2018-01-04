@@ -10,7 +10,7 @@ import scala.reflect.macros.whitebox
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
 class migration extends StaticAnnotation {
-  def macroTransform(annottees: Any*): Any = macro MacroBundle.dslF
+  def macroTransform(annottees: Any*): Any = macro MacroBundle.dslMigration
 }
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
@@ -24,7 +24,7 @@ class MacroBundle(val c: whitebox.Context) {
 
   import c.universe._
 
-  def dslF(annottees: Tree*): Tree = {
+  def dslMigration(annottees: Tree*): Tree = {
     import c.universe._
 
     def abort(msg: String): Unit =
@@ -136,11 +136,11 @@ class MacroBundle(val c: whitebox.Context) {
 
     val pipeline = annottees match {
       case xs@List(q"""val $pipelineName  = $unused""") =>
-
+        debug("GOT THIS ONE ***************", unused)
         xs.head match {
           case q"""val $pipelineName  = $pipelineDef""" =>
             pipelineDef match {
-              case q"""new PipelineDsl[..$pipelineTypes] { ..$body } """ =>
+              case q"""new $pipelineDsl[..$pipelineTypes] { ..$body } """ =>
                 body match {
                   case dslLines: List[_] =>
                     debug("Found migration rules ", dslLines)
