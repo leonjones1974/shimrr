@@ -55,4 +55,4 @@ of what they are trying to express
  
 [The code]()
 
-To be continued...
+[Next use case](../usecase8/README.md)

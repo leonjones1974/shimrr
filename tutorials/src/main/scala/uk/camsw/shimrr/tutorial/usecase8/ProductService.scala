@@ -33,10 +33,12 @@ object ProductService {
      * You feel there are two possible requirements here trying to get out
      *  - Perhaps rules could be composed, allowing you to reuse rules at the
      *    coproduct Bicycle level
-     *  - But,.. oerhaps rules should not define a migration from say, V1 ~> V5, but
-     *    should be more of the form V1 ~> V2 ~> V3 ~> V4 ~> V5
+     *  - But,.. perhaps rules should not define a migration from say,
+     *       V1 ~> V5,
+     *    but should be more of the form
+     *      V1 ~> V2 ~> V3 ~> V4 ~> V5
      *
-     * You refer to the documentation again and stumble upon the notion of pipelines!
+     * You refer to the documentation again and stumble upon the concept of pipelines!
      */
     override def allProducts(): Iterable[BicycleV5] = {
       import shapeless.syntax.singleton.mkSingletonOps

@@ -132,7 +132,6 @@ class MacroBundle(val c: whitebox.Context) {
 
     val pipeline = annottees match {
       case xs @ List(q"""val $pipelineName  = $unused""") =>
-        debug("GOT THIS ONE ***************", unused)
         xs.head match {
           case q"""val $pipelineName  = $pipelineDef""" =>
             pipelineDef match {

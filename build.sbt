@@ -36,8 +36,9 @@ lazy val core = project
   .dependsOn(macros)
   .settings(libraryDependencies ++= catsDependencies ++ shapelessDependencies ++ testDependencies)
 
-lazy val tutorials = project.settings()
-  .settings(addCompilerPlugin("io.tryp" % "splain" % "0.2.7" cross CrossVersion.patch))
+lazy val tutorials = project.settings(metaMacroSettings)
+  .settings(addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full))
+  .dependsOn(macros)
   .dependsOn(core)
 
 val scalameta: Seq[ModuleID] = Seq(

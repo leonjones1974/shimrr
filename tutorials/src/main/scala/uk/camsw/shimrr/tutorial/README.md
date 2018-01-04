@@ -14,9 +14,11 @@ So, due to my laziness, a tutorial for SHIMRR has become available sooner than p
     or declarative as those on the README that tempted you here in the first place.
     You may be concerned that you're being exposed to shapeless and defining implicits.
             
-    Don't worry, once the concepts have been demonstrated in raw form we will eventually introduce
+    Don't worry, once the concepts have been demonstrated in raw form we will introduce
     the DSL that makes it all easy.  This approach is deliberate. 'Magic' is less scary
-    if you're allowed to peek inside the cauldron first!  
+    if you're allowed to peek inside the cauldron first!  If you want a view of how your
+    code might look before investing more time reading, skip to [Use case 9 - Using the DSL](usecase9/README.md)
+    
     
 
 ## The structure
@@ -49,4 +51,5 @@ I hope the API makes life easy enough, feedback around this would be gratefully 
 6. [Scoped field defaulting](usecase6/README.md)
 7. [Field type mapping & a need to refactor](usecase7/README.md)
 8. [Rule composition](usecase8/README.md)
+9. [Using the DSL](usecase9/README.md)
   
