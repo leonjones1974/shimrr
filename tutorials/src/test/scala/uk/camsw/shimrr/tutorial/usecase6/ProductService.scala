@@ -48,8 +48,7 @@ object ProductService {
        * I become convinced of its redundancy.  Until then, you have the choice.
        * NOTE: If you use the global context though, you wont have access to Bicycle in the defaulters
        */
-      //repository.findAll().migrateTo[BicycleV4]
-      ???
+      repository.findAll().migrateTo[BicycleV4]
     }
   }
 }

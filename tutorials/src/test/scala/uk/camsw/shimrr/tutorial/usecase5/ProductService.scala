@@ -35,8 +35,7 @@ object ProductService {
        * () => T (lazy)
        * (A) => T (mapped) - more about that later!
        */
-      //      repository.findAll().migrateTo[BicycleV4]
-      ???
+      repository.findAll().migrateTo[BicycleV4]
     }
   }
 }

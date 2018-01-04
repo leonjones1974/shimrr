@@ -1,4 +1,6 @@
 package uk.camsw.shimrr.dsl
 
-trait MigrationDsl[A]
+trait MigrationDsl[A] {
+  val exports: Unit = ()
+}
 

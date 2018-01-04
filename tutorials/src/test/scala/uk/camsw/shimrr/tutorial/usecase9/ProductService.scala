@@ -72,6 +72,5 @@ object ProductService {
 
       repository.findAll().migrateTo[BicycleV6]
     }
-
   }
 }

@@ -36,8 +36,7 @@ object ProductService {
       import uk.camsw.shimrr.syntax._
 
       // Your iterable now has a migrateTo extension method which can be used to make your tests pass
-      //      repository.findAll().migrateTo[BicycleV3]
-      ???
+      repository.findAll().migrateTo[BicycleV3]
     }
 
   }
