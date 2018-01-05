@@ -9,7 +9,7 @@ sourceGenerators in Compile += Def.task {
   val file = (sourceManaged in Compile).value / "uk" / "camsw" / "shimrr" / "dsl" / "PipelineBuilder.scala"
 
   val getTraits = for {
-    n <- 3 to 22
+    n <- 1 to 22
   } yield {
     val typeNames = for {tn <- 1 to n} yield s"A$tn"
     val types = typeNames.mkString(", ")
@@ -24,12 +24,18 @@ sourceGenerators in Compile += Def.task {
       val mChain = for {mn <- (1 until n).reverse.dropRight(tn)} yield
         s"""m$mn.migrate"""
       val closeB = List.fill(mChain.length)(")")
-
       s"""Migration.instance[$inType, $outType](in => ${mChain.mkString("(")}(in)${closeB.mkString("")}"""
     }
+
+    val buildDef = if (implicitM.isEmpty)
+      s"""def build"""
+    else
+      s"""def build(implicit ${implicitM.mkString(", ")})"""
+
+
     s"""
        |class PipelineBuilder$n[$types] {
-       |  def build(implicit ${implicitM.mkString(", ")}) = {
+       |  $buildDef = {
        |    (
        |    ${impls.mkString(",\n")}
        |    )
@@ -39,7 +45,7 @@ sourceGenerators in Compile += Def.task {
   }
 
   val apply = for{
-    n <-3 to 22
+    n <-1 to 22
   } yield {
     val typeNames = for {tn <- 1 to n} yield s"A$tn"
     val types = typeNames.mkString(", ")

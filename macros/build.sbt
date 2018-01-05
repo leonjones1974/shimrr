@@ -9,7 +9,7 @@ sourceGenerators in Compile += Def.task {
 
 
   val getTraits = for {
-    n <- 3 to 22
+    n <- 1 to 22
   } yield {
     val typeNames = for {tn <- 1 to n} yield s"A$tn"
     val types = typeNames.mkString(", ")
