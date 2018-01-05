@@ -70,4 +70,37 @@ val catsDependencies: Seq[ModuleID] = Seq(
 )
 
 
+publishTo in ThisBuild := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+credentials += Credentials(Path.userHome / ".sonatype" / ".credentials")
+
+publishMavenStyle := true
+publishArtifact in Test := true
+
+pomExtra := (
+  <url>http://camsw.uk/shimrr</url>
+    <licenses>
+      <license>
+        <name>BSD-style</name>
+        <url>http://www.opensource.org/licenses/bsd-license.php</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>
+    <scm>
+      <url>git@github.com:leonjones1974/shimrr.git</url>
+      <connection>scm:git:git@github.com:leonjones1974/shimrr.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>leonjones1974</id>
+        <name>Leon Jones</name>
+        <url>http://camsw.uk</url>
+      </developer>
+    </developers>)
 

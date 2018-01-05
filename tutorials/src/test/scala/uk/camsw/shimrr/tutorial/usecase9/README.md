@@ -38,5 +38,4 @@ At the end of this scenario you will have
  
 [The code]()
 
-That covers the basics and, I think, the majority of use cases.  For more information, 
-examples, patterns and testing - refer to [the cookbook](../cookbook/README.md)
+That covers the basics. More examples and recipes will be added later.
