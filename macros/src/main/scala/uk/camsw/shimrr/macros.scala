@@ -18,7 +18,7 @@ class pipeline extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = true
+  val enableDebugging = false
 
   import c.universe._
 
@@ -203,7 +203,7 @@ class MacroBundle(val c: whitebox.Context) {
                             import _root_.uk.camsw.shimrr.context.scoped._
                             ..${rules.flatten};
                             ..$pipelineParts;
-                        }
+                          }
                       }
                     """
                     debug("I will be exporting: ", exports)
