@@ -38,6 +38,7 @@ sourceGenerators in Compile += Def.task {
        |  $buildDef = {
        |    (
        |    ${impls.mkString(",\n")}
+       |    ${if (impls.length == 1) """ , "dummy" """ else ""}
        |    )
        |  }
        |}

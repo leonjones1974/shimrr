@@ -18,7 +18,7 @@ class pipeline extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = false
+  val enableDebugging = true
 
   import c.universe._
 
