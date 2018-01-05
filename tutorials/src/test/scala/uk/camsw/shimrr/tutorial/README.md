@@ -17,9 +17,9 @@ So, due to my laziness, a tutorial for SHIMRR has become available sooner than p
     Don't worry, once the concepts have been demonstrated in raw form we will introduce
     the DSL that makes it all easy.  This approach is deliberate. 'Magic' is less scary
     if you're allowed to peek inside the cauldron first!  If you want a view of how your
-    code might look before investing more time reading, skip to [Use case 9 - Using the DSL](usecase9/README.md)
+    code might look before investing more time reading, skip to...
     
-    
+[Use case 9 - Using the DSL](usecase9/README.md)    
 
 ## The structure
 
