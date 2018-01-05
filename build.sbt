@@ -1,7 +1,7 @@
 name in ThisBuild := "shimrr"
 organization in ThisBuild := "uk.camsw"
 scalaVersion in ThisBuild := "2.12.4"
-version in ThisBuild := "1.0.0-SNAPSHOT"
+version in ThisBuild := "1.1.0-SNAPSHOT"
 
 val scalatestVersion = "3.0.4"
 val scalacheckVersion = "1.13.5"
