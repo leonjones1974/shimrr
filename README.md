@@ -78,7 +78,7 @@ The inspiration for this project (along with a reasonable amount of the initial 
 The tutorial is a WIP and is being used to drive future development of the library.  Visit it regularly
 to find the latest enhancements
 
-[The SHIMRR tutorial is here](tutorials/src/main/scala/uk/camsw/shimrr/tutorial/README.md)
+[The SHIMRR tutorial is here](tutorials/src/test/scala/uk/camsw/shimrr/tutorial/README.md)
  
 
 ## How to build and test
