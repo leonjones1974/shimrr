@@ -18,7 +18,7 @@ class pipeline extends StaticAnnotation {
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = false
+  val enableDebugging = true
 
   import c.universe._
 
@@ -83,7 +83,7 @@ class MacroBundle(val c: whitebox.Context) {
 
                         }
                         val rulesDefinition = q"""case class RuleDefinition(..$fields)"""
-                        val ctxName = TermName(rulesObjectName.toString + "_ctx")
+                        val ctxName = TermName(rulesObjectName.toString.replaceAll("\\.", "_") + "_ctx")
                         debug("Exporting migration context as", ctxName)
                         q"""
                             object $rulesObjectName {
@@ -175,11 +175,14 @@ class MacroBundle(val c: whitebox.Context) {
 
                                 q"""val $fieldName: ${fieldValue.tpe.widen} = $fieldValue"""
                             }
-                            val ctxName = TermName(from.toString.toLowerCase() + "Ctx")
-                            val rulesName = TypeName(from.toString + "Rules")
-                            val rulesTerm = TermName(from.toString + "Rules")
-                            val rulesGen = TermName(from.toString.toLowerCase + "_gen")
-                            val rulesRepr = TermName(from.toString.toLowerCase + "_repr")
+
+                            def ensureValid(str: String): String = str.replaceAll("\\.", "_")
+
+                            val ctxName = TermName(ensureValid(from.toString.toLowerCase()) + "Ctx")
+                            val rulesName = TypeName(ensureValid(from.toString) + "Rules")
+                            val rulesTerm = TermName(ensureValid(from.toString) + "Rules")
+                            val rulesGen = TermName(ensureValid(from.toString.toLowerCase) + "_gen")
+                            val rulesRepr = TermName(ensureValid(from.toString.toLowerCase) + "_repr")
 
                             Seq(
                               q"""case class $rulesName(..$fields)""",
@@ -207,6 +210,7 @@ class MacroBundle(val c: whitebox.Context) {
                       }
                     """
                     debug("I will be exporting: ", exports)
+                    println(exports)
                     exports
 
                 }

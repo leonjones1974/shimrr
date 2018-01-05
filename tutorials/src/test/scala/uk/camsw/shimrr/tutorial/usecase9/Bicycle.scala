@@ -5,6 +5,10 @@ sealed trait Bicycle {
   def model: String
 }
 
+object Bicycle {
+  type Latest = BicycleV6
+}
+
 case class BicycleV1(make: String, model: String, price: Float) extends Bicycle
 
 case class BicycleV2(make: String, model: String, price: Float, leadTime: Int) extends Bicycle

@@ -16,9 +16,8 @@ class OptionalFieldsTest extends FreeSpec {
       from[V1] {
         'age -> Option.empty[Int]
       }
-      from[V2] {
-        'fish -> "Bony"
-      }
+
+      from[V2] {}
     }
 
     import pipeline.exports._

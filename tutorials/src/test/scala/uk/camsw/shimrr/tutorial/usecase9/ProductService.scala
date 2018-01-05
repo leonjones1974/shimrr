@@ -5,7 +5,7 @@ import uk.camsw.shimrr.pipeline
 
 trait ProductService {
 
-  def allProducts(): Iterable[BicycleV6]
+  def allProducts(): Iterable[Bicycle.Latest]
 
 }
 
@@ -33,15 +33,19 @@ object ProductService {
      *
      * It compiles so it looks like we can rename fields as we'd hoped
      */
-    override def allProducts(): Iterable[BicycleV6] = {
+    override def allProducts(): Iterable[Bicycle.Latest] = {
 
       // You declare the pipeline and aren't overly surprised to find there is a 22 limit on versions
       // ... more about that later
       // The types defined the order of the migration
       // (future versions may infer the ordering from the internal migration definitions - we'll see)
       // Don't forget the annotation!!
+      //
+      // Note also in this case that we've introduced a type alias for our 'lastest' version of bicycle
+      // This makes for fewer changes both in our own code, but also in the code of downstream consumers
+      // who are now isolated from non-breaking changes
       @pipeline
-      val pipeline = new PipelineDsl6[BicycleV1, BicycleV2, BicycleV3, BicycleV4, BicycleV5, BicycleV6] {
+      val pipeline = new PipelineDsl6[BicycleV1, BicycleV2, BicycleV3, BicycleV4, BicycleV5, Bicycle.Latest] {
 
         from[BicycleV1] {
           'leadTime -> 7
@@ -61,7 +65,7 @@ object ProductService {
           'retailPrice -> ((b: BicycleV5) => b.price)
         }
 
-        from[BicycleV6] {}
+        from[Bicycle.Latest] {}
       }
 
       // Now we can just import everything the pipeline exports
@@ -70,7 +74,7 @@ object ProductService {
       import pipeline.exports._
       import uk.camsw.shimrr.syntax._
 
-      repository.findAll().migrateTo[BicycleV6]
+      repository.findAll().migrateTo[Bicycle.Latest]
     }
   }
 }
