@@ -81,7 +81,6 @@ to find the latest enhancements
 [The SHIMRR tutorial is here](tutorials/src/main/scala/uk/camsw/shimrr/tutorial/README.md)
  
 
-
 ## How to build and test
 ```bash
 sbt clean update test

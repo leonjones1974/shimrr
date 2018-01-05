@@ -7,18 +7,17 @@ import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class migration extends StaticAnnotation {
+class migration(enableDebugging: Boolean = false) extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro MacroBundle.dslMigration
 }
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class pipeline extends StaticAnnotation {
+class pipeline(enableDebugging: Boolean = false) extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro MacroBundle.dslPipeline
 }
 
 @bundle
 class MacroBundle(val c: whitebox.Context) {
-  val enableDebugging = true
 
   import c.universe._
 
@@ -27,6 +26,12 @@ class MacroBundle(val c: whitebox.Context) {
 
     def abort(msg: String): Unit =
       c.abort(c.enclosingPosition, msg)
+
+    val enableDebugging: Boolean = c.prefix.tree match {
+      case q"new migration($b)" => c.eval[Boolean](c.Expr(b))
+      case q"new migration(enabledDebugging = $b)" => c.eval[Boolean](c.Expr(b))
+      case q"new migration()" => false
+    }
 
     def debug[A](extra: String, a: A): A = {
       if (enableDebugging) println(extra + s" [$a]")
@@ -125,6 +130,12 @@ class MacroBundle(val c: whitebox.Context) {
     def abort(msg: String): Unit =
       c.abort(c.enclosingPosition, msg)
 
+    val enableDebugging: Boolean = c.prefix.tree match {
+      case q"new pipeline($b)" => c.eval[Boolean](c.Expr(b))
+      case q"new pipeline()" => false
+    }
+
+
     def debug[A](extra: String, a: A): A = {
       if (enableDebugging) println(extra + s" [$a]")
       a
@@ -209,7 +220,6 @@ class MacroBundle(val c: whitebox.Context) {
                           }
                       }
                     """
-                    debug("I will be exporting: ", exports)
                     println(exports)
                     exports
 
