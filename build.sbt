@@ -86,7 +86,7 @@ publishArtifact in (Compile, packageDoc) := false
 publishArtifact in (Compile, packageSrc) := false
 publishArtifact := false
 
-pomExtra := (
+pomExtra in ThisBuild := (
   <url>http://camsw.uk/shimrr</url>
     <licenses>
       <license>
