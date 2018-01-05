@@ -81,7 +81,10 @@ publishTo in ThisBuild := {
 credentials += Credentials(Path.userHome / ".sonatype" / ".credentials")
 
 publishMavenStyle := true
-publishArtifact in Test := true
+publishArtifact in Test := false
+publishArtifact in (Compile, packageDoc) := false
+publishArtifact in (Compile, packageSrc) := false
+publishArtifact := false
 
 pomExtra := (
   <url>http://camsw.uk/shimrr</url>

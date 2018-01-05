@@ -1,8 +1,10 @@
-
 name := "shimrr-core"
-version := "1.0.0-SNAPSHOT"
-scalaVersion := "2.12.4"
 
+
+publishArtifact in Test := false
+publishArtifact in (Compile, packageDoc) := false
+publishArtifact in (Compile, packageSrc) := false
+publishArtifact := true
 
 val newLine = "\r\n"
 sourceGenerators in Compile += Def.task {

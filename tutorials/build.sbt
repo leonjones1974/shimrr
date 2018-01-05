@@ -1,4 +1,8 @@
 name := "shimrr-tutorial"
-version := "1.0.0-SNAPSHOT"
-scalaVersion := "2.12.4"
+
+
+publishArtifact in Test := false
+publishArtifact in (Compile, packageDoc) := false
+publishArtifact in (Compile, packageSrc) := false
+publishArtifact := false
     
