@@ -19,10 +19,10 @@ class MigrationCompositionGenTest extends MigrationFreeSpec {
     val str2 = MigrationContext[Str1Str2](
       'intField1 ->> 25 :: HNil)
 
-    implicit val pipelineStr1Int1 = MigrationContext[Str1Str2Int1]()
-    implicit val pipelineStr1 = str1 ++ str2
-    implicit val pipelineStr2 = str2
-    implicit val pipelineNoFields = noFieldsCtx ++ pipelineStr1
+    implicit val mStr1Int1 = MigrationContext[Str1Str2Int1]()
+    implicit val mStr1 = str1 ++ str2
+    implicit val mStr2 = str2
+    implicit val mNoFields = noFieldsCtx ++ mStr1
 
     "Any product can be migrated using the composed rules" - {
 

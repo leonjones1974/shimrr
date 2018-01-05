@@ -135,7 +135,6 @@ class MacroBundle(val c: whitebox.Context) {
       case q"new pipeline()" => false
     }
 
-
     def debug[A](extra: String, a: A): A = {
       if (enableDebugging) println(extra + s" [$a]")
       a
@@ -214,13 +213,11 @@ class MacroBundle(val c: whitebox.Context) {
                         object $pipelineName {
 
                           object exports extends _root_.uk.camsw.shimrr.context.Scoped {
-                            import _root_.uk.camsw.shimrr.context.scoped._
                             ..${rules.flatten};
                             ..$pipelineParts;
                           }
                       }
                     """
-                    println(exports)
                     exports
 
                 }
@@ -230,13 +227,13 @@ class MacroBundle(val c: whitebox.Context) {
         c.abort(
           c.enclosingPosition,
           s"""@migration can only be applied to definition
-             |   val xxx = new Pipeline[T1, T2, Tn] { .. }
+             |   val xxx = new PipelineDsl<n>[T1, T2, Tn] { .. }
              |But was: [$bad]
           """.stripMargin)
         q"()"
     }
 
-    debug("Created migration", pipeline)
+    debug("Created pipeline", pipeline)
     c.Expr(
       pipeline).tree
   }
