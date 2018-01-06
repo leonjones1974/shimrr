@@ -73,6 +73,31 @@ The inspiration for this project (along with a reasonable amount of the initial 
 
 [The type astronaut's guide to shapeless](https://underscore.io/books/shapeless-guide/)
 
+## Getting started
+
+1. Add the shimrr core and shimrr macros projects as dependencies
+2. Include the macro paradise compiler plugin
+```scala
+
+val shimrrDependencies: Seq[ModuleID] =Seq(
+  "uk.camsw" %% "shimrr-core" % "1.0.0",
+  "uk.camsw" %% "shimrr-macros" % "1.0.0"
+)
+
+
+lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
+  addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full),
+  scalacOptions += "-Xplugin-require:macroparadise",
+  scalacOptions in(Compile, console) := Seq() 
+)
+
+lazy val myProject = project
+  .settings(metaMacroSettings)
+  .settings(libraryDependencies ++= shimrrDependencies)
+  
+```
+
+
 ## The tutorial
 
 The tutorial is a WIP and is being used to drive future development of the library.  Visit it regularly
