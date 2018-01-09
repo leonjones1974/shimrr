@@ -15,8 +15,8 @@ val scalametaVersion = "1.8.0"
 (testOptions in Test) += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest-report")
 logBuffered in Test := false
 
-resolvers += Resolver.sonatypeRepo("releases")
-resolvers += Resolver.bintrayRepo("scalameta", "maven")
+resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
+resolvers in ThisBuild += Resolver.bintrayRepo("scalameta", "maven")
 
 
 lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
