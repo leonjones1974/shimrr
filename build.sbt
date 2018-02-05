@@ -38,8 +38,8 @@ lazy val core = project
 
 lazy val tutorials = project.settings(metaMacroSettings)
   .settings(addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full))
-  .dependsOn(macros)
   .dependsOn(core)
+  .dependsOn(macros)
 
 val scalameta: Seq[ModuleID] = Seq(
   "org.scalameta" %% "scalameta" % scalametaVersion
