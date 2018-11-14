@@ -4,7 +4,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 name in ThisBuild := "shimrr"
 organization in ThisBuild := "uk.camsw"
 scalaVersion in ThisBuild := "2.12.4"
-version in ThisBuild := "1.1.0-SNAPSHOT"
+version in ThisBuild := "1.1.0"
 credentials in ThisBuild += Credentials(Path.userHome / ".sbt" / ".credentials")
 
 val scalatestVersion = "3.0.4"
