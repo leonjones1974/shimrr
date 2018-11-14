@@ -59,7 +59,7 @@ sourceGenerators in Compile += Def.task {
 
   val gen = s"""
                |package uk.camsw.shimrr.dsl
-               |import uk.camsw.shimrr.Migration
+               |import uk.camsw.shimrr.context.Migration
                |${getTraits.mkString(newLine)}
                |
                |object PipelineBuilder {

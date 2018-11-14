@@ -1,7 +1,11 @@
+import org.scalajs.sbtplugin.ScalaJSPlugin.AutoImport.scalaJSModuleKind
+import sbt.Keys.libraryDependencies
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 name in ThisBuild := "shimrr"
 organization in ThisBuild := "uk.camsw"
 scalaVersion in ThisBuild := "2.12.4"
 version in ThisBuild := "1.1.0-SNAPSHOT"
+credentials in ThisBuild += Credentials(Path.userHome / ".sbt" / ".credentials")
 
 val scalatestVersion = "3.0.4"
 val scalacheckVersion = "1.13.5"
@@ -25,21 +29,35 @@ lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
   scalacOptions in(Compile, console) := Seq() // macroparadise plugin doesn't work in repl yet.
 )
 
+lazy val shimrr = (project in file("."))
+  .aggregate(coreJVM)
+  .aggregate(coreJS)
+  .aggregate(tutorials)
+  .aggregate(macros)
+
 
 lazy val macros = project.settings(
   metaMacroSettings
 ).settings(libraryDependencies ++= scalameta ++ reflectionDependencies ++ shapelessDependencies ++ testDependencies)
 
 
-lazy val core = project
-  .settings(metaMacroSettings)
-  .dependsOn(macros)
-  .settings(libraryDependencies ++= catsDependencies ++ shapelessDependencies ++ testDependencies)
+lazy val core = crossProject(JVMPlatform, JSPlatform)
+  .jvmSettings(
+    metaMacroSettings,
+    libraryDependencies ++= catsDependencies ++ shapelessDependencies ++ testDependencies
+  )
+  .jsSettings(
+    libraryDependencies ++= catsDependencies ++ shapelessDependencies ++ testDependencies
+  )
+
+lazy val coreJVM = core.jvm
+  .dependsOn(macros % "compile->compile;test->test")
+lazy val coreJS = core.js
 
 lazy val tutorials = project.settings(metaMacroSettings)
   .settings(addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full))
   .dependsOn(macros)
-  .dependsOn(core)
+  .dependsOn(coreJVM)
 
 val scalameta: Seq[ModuleID] = Seq(
   "org.scalameta" %% "scalameta" % scalametaVersion
@@ -58,8 +76,8 @@ val shapelessDependencies: Seq[ModuleID] = Seq(
 val testDependencies: Seq[ModuleID] = Seq(
   "org.pegdown" % "pegdown" % pegdownVersion % "test",
   "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test",
-  "org.typelevel" % "shapeless-scalacheck_2.12" % shapelessScalacheckVersion % "test",
   "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6",
+  "org.typelevel" % "shapeless-scalacheck_2.12" % shapelessScalacheckVersion % "test",
   "org.scalatest" %% "scalatest" % scalatestVersion
 )
 
