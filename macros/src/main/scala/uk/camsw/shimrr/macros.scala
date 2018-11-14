@@ -212,7 +212,7 @@ class MacroBundle(val c: whitebox.Context) {
                       q"""
                         object $pipelineName {
 
-                          object exports extends _root_.uk.camsw.shimrr.context.Scoped {
+                          object exports extends _root_.uk.camsw.shimrr.context.ScopedContext {
                             ..${rules.flatten};
                             ..$pipelineParts;
                           }
